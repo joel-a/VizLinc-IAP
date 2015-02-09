@@ -1344,6 +1344,65 @@ public class GraphManager implements VLQueryListener {
         };
         centralityTask.run();
     }
+    
+      /**
+     * Closeness Centrality, invoked from GraphToolsTopComponent.
+     */
+   
+    public void closeness(final boolean showBySize) {
+        final VizLincLongTask centralityTask = new VizLincLongTask("Running Closeness Centrality") {
+            Closeness centrality = new Closeness();
+            boolean cancelled = false;
+
+            @Override
+            public boolean cancel() {
+                cancelled = centrality.cancel();
+                return cancelled;
+            }
+
+            @Override
+            public void execute() {
+                startComputation();
+                try {
+                    visibleGraph.readLock();
+
+                    // Centrality runs on the visible view.
+                    // centrality will take care of displaying progress.
+                    centrality.setProgressTicket(this.getProgressTicket());
+                    centrality.setDirected(false);
+                    centrality.execute(graphModel, attributeModel);
+                    if (cancelled) {
+                        return;
+                    }
+
+                    // Now visualize the centrality.
+                    RankingController rankingController = Lookup.getDefault().lookup(RankingController.class);
+                    AttributeColumn col = attributeModel.getNodeTable().getColumn(Closeness.CLOSENESS);
+                    
+                    // Vary over the visible graph, not the whole graph.
+                    rankingController.setUseLocalScale(true);
+                    // S-shaped interpolator: exaggerate differences near extrema.
+                    rankingController.setInterpolator(new Interpolator.BezierInterpolator(1.0f, 0.0f, 0.0f, 1.0f));
+                    Ranking centralityRanking = rankingController.getModel().getRanking(Ranking.NODE_ELEMENT, col.getId());
+
+                    if (showBySize) {
+                        AbstractSizeTransformer sizeTransformer = (AbstractSizeTransformer) rankingController.getModel().getTransformer(Ranking.NODE_ELEMENT, Transformer.RENDERABLE_SIZE);
+                        sizeTransformer.setMinSize(4.0f);
+                        sizeTransformer.setMaxSize(20.0f);
+                        rankingController.transform(centralityRanking, sizeTransformer);
+                        graphToolsWin.setGraphNodeSizeInfo(NODE_INFO_CENTRALITY);
+                    }
+
+                 
+
+                    visibleGraph.readUnlockAll();
+                } finally {
+                    stopComputation();    // Even if cancelled.
+                }
+            }
+        };
+        centralityTask.run();
+    }
 
     /**
      * limit display to n hops. Invoked from GraphToolsTopComponent.

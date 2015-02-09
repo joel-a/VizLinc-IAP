@@ -124,6 +124,9 @@ public final class GraphToolsTopComponent extends TopComponent implements GraphO
         jButtonShowAllInQuery = new javax.swing.JButton();
         jLabelGraphStatus = new javax.swing.JLabel();
         clusterLayoutBtn = new javax.swing.JButton();
+        jCheckBoxClosenessShowBySize = new javax.swing.JCheckBox();
+        jButtonCloseness = new javax.swing.JButton();
+        jCheckBoxClosenessShowByColor = new javax.swing.JCheckBox();
 
         org.openide.awt.Mnemonics.setLocalizedText(jCheckBoxShowEdges, org.openide.util.NbBundle.getMessage(GraphToolsTopComponent.class, "GraphToolsTopComponent.jCheckBoxShowEdges.text")); // NOI18N
         jCheckBoxShowEdges.addActionListener(new java.awt.event.ActionListener() {
@@ -233,89 +236,130 @@ public final class GraphToolsTopComponent extends TopComponent implements GraphO
             }
         });
 
+        jCheckBoxClosenessShowBySize.setSelected(true);
+        org.openide.awt.Mnemonics.setLocalizedText(jCheckBoxClosenessShowBySize, org.openide.util.NbBundle.getMessage(GraphToolsTopComponent.class, "GraphToolsTopComponent.jCheckBoxClosenessShowBySize.text")); // NOI18N
+        jCheckBoxClosenessShowBySize.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jCheckBoxClosenessShowBySizeActionPerformed(evt);
+            }
+        });
+
+        org.openide.awt.Mnemonics.setLocalizedText(jButtonCloseness, org.openide.util.NbBundle.getMessage(GraphToolsTopComponent.class, "GraphToolsTopComponent.jButtonCloseness.text")); // NOI18N
+        jButtonCloseness.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonClosenessActionPerformed(evt);
+            }
+        });
+
+        org.openide.awt.Mnemonics.setLocalizedText(jCheckBoxClosenessShowByColor, org.openide.util.NbBundle.getMessage(GraphToolsTopComponent.class, "GraphToolsTopComponent.jCheckBoxClosenessShowByColor.text")); // NOI18N
+        jCheckBoxClosenessShowByColor.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jCheckBoxClosenessShowByColor1ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabelGraphStatus)
+                .addContainerGap(972, Short.MAX_VALUE))
+            .addGroup(layout.createSequentialGroup()
+                .addGap(8, 8, 8)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jCheckBoxShowEdges)
+                    .addComponent(jCheckBoxShowAllLabels))
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jButtonResetSizes, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jButtonResetColors))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jSpinnerResetSizesValue, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(jLabelGraphStatus))
+                        .addComponent(jCheckBoxPageRankShowBySize)
+                        .addGap(1, 1, 1)
+                        .addComponent(jCheckBoxPageRankShowByColor, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jButtonPageRank, javax.swing.GroupLayout.PREFERRED_SIZE, 97, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(8, 8, 8)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jCheckBoxShowEdges)
-                            .addComponent(jCheckBoxShowAllLabels))
-                        .addGap(18, 18, 18)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jButtonResetSizes, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jButtonResetColors))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jSpinnerResetSizesValue, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(jCheckBoxPageRankShowBySize)
-                                .addGap(1, 1, 1)
-                                .addComponent(jCheckBoxPageRankShowByColor, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(jButtonPageRank, javax.swing.GroupLayout.PREFERRED_SIZE, 97, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(18, 18, 18)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(jCheckBoxCentralityShowBySize)
-                                .addGap(1, 1, 1)
-                                .addComponent(jCheckBoxCentralityShowByColor))
-                            .addComponent(jButtonCentrality, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addGap(18, 18, 18)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabelLogLambda)
-                            .addComponent(jButtonCluster))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(clusterLayoutBtn)
-                            .addComponent(jSpinnerClusterLambda, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(18, 18, 18)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(jButtonOneHop)
-                                .addGap(23, 23, 23)
-                                .addComponent(jButtonTwoHop))
-                            .addComponent(jButtonShowAllInQuery))))
-                .addContainerGap(55, Short.MAX_VALUE))
+                        .addComponent(jCheckBoxCentralityShowBySize)
+                        .addGap(1, 1, 1)
+                        .addComponent(jCheckBoxCentralityShowByColor))
+                    .addComponent(jButtonCentrality, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jButtonCloseness, javax.swing.GroupLayout.PREFERRED_SIZE, 97, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jCheckBoxClosenessShowBySize)
+                        .addGap(1, 1, 1)
+                        .addComponent(jCheckBoxClosenessShowByColor)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabelLogLambda)
+                    .addComponent(jButtonCluster))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(clusterLayoutBtn)
+                    .addComponent(jSpinnerClusterLambda, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jButtonOneHop)
+                        .addGap(23, 23, 23)
+                        .addComponent(jButtonTwoHop))
+                    .addComponent(jButtonShowAllInQuery))
+                .addGap(59, 59, 59))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGap(14, 14, 14)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(jCheckBoxShowEdges)
-                        .addComponent(jButtonResetSizes)
-                        .addComponent(jSpinnerResetSizesValue, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jButtonPageRank)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(jButtonCentrality)
-                        .addComponent(jButtonCluster)
-                        .addComponent(jButtonOneHop)
-                        .addComponent(jButtonTwoHop)
-                        .addComponent(clusterLayoutBtn)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(jCheckBoxPageRankShowBySize)
-                        .addComponent(jCheckBoxShowAllLabels)
-                        .addComponent(jButtonResetColors))
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(jSpinnerClusterLambda, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jLabelLogLambda)
-                        .addComponent(jCheckBoxCentralityShowBySize)
-                        .addComponent(jCheckBoxPageRankShowByColor)
-                        .addComponent(jCheckBoxCentralityShowByColor)
-                        .addComponent(jButtonShowAllInQuery)))
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                        .addGroup(layout.createSequentialGroup()
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(jCheckBoxShowEdges)
+                                    .addComponent(jButtonResetSizes)
+                                    .addComponent(jSpinnerResetSizesValue, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addComponent(jButtonPageRank)
+                                .addComponent(jButtonCentrality))
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(jCheckBoxPageRankShowBySize)
+                                    .addComponent(jCheckBoxShowAllLabels)
+                                    .addComponent(jButtonResetColors))
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(jCheckBoxCentralityShowBySize)
+                                    .addComponent(jCheckBoxPageRankShowByColor)
+                                    .addComponent(jCheckBoxCentralityShowByColor))))
+                        .addGroup(layout.createSequentialGroup()
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(jButtonCluster)
+                                .addComponent(jButtonOneHop)
+                                .addComponent(jButtonTwoHop)
+                                .addComponent(clusterLayoutBtn))
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(jSpinnerClusterLambda, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(jLabelLogLambda)
+                                .addComponent(jButtonShowAllInQuery)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(jCheckBoxClosenessShowBySize)
+                                    .addComponent(jCheckBoxClosenessShowByColor)))))
+                    .addComponent(jButtonCloseness))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jLabelGraphStatus)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(21, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -378,10 +422,25 @@ public final class GraphToolsTopComponent extends TopComponent implements GraphO
         manager.showSuperNodeGraph();
     }//GEN-LAST:event_clusterLayoutBtnActionPerformed
 
+    private void jButtonClosenessActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonClosenessActionPerformed
+        final boolean bySize = true;//jCheckBoxClosenessShowBySize.isSelected();
+        //final boolean byColor = jCheckBoxClosenessShowByColor.isSelected();
+        GraphManager.getInstance().closeness(bySize);
+    }//GEN-LAST:event_jButtonClosenessActionPerformed
+
+    private void jCheckBoxClosenessShowByColor1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBoxClosenessShowByColor1ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jCheckBoxClosenessShowByColor1ActionPerformed
+
+    private void jCheckBoxClosenessShowBySizeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBoxClosenessShowBySizeActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jCheckBoxClosenessShowBySizeActionPerformed
+
    
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton clusterLayoutBtn;
     private javax.swing.JButton jButtonCentrality;
+    private javax.swing.JButton jButtonCloseness;
     private javax.swing.JButton jButtonCluster;
     private javax.swing.JButton jButtonOneHop;
     private javax.swing.JButton jButtonPageRank;
@@ -391,6 +450,8 @@ public final class GraphToolsTopComponent extends TopComponent implements GraphO
     private javax.swing.JButton jButtonTwoHop;
     private javax.swing.JCheckBox jCheckBoxCentralityShowByColor;
     private javax.swing.JCheckBox jCheckBoxCentralityShowBySize;
+    private javax.swing.JCheckBox jCheckBoxClosenessShowByColor;
+    private javax.swing.JCheckBox jCheckBoxClosenessShowBySize;
     private javax.swing.JCheckBox jCheckBoxPageRankShowByColor;
     private javax.swing.JCheckBox jCheckBoxPageRankShowBySize;
     private javax.swing.JCheckBox jCheckBoxShowAllLabels;
