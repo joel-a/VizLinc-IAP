@@ -42,7 +42,7 @@ import org.openide.util.NbBundle;
  *
  * @author Glorimar
  */
-public class Closeness extends GraphDistance implements Statistics, LongTask{
+public class Closeness implements Statistics, LongTask{
     
     public static final String  CLOSENESS = "closeness";
     private double[]            closeness;
