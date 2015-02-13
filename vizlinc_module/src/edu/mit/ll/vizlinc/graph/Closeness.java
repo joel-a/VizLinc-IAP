@@ -111,6 +111,8 @@ public class Closeness implements Statistics, LongTask{
      * @return 
      */
     private void initializeAttributeColunms(AttributeModel attributeModel) {
+        
+       // Glorimar-TODO: try to add  org.gephi.attribute.api.Table or change Table to attributeTable in org.gephi.data.attribute.api.Table
        Table nodeTable = attributeModel.getNodeTable();  //it need to import org.gephi.attribute.api.Table;
        if (!nodeTable.hasColumn(CLOSENESS)) {
             nodeTable.addColumn(CLOSENESS, "Closeness Centrality", Double.class, new Double(0));
@@ -137,18 +139,18 @@ public class Closeness implements Statistics, LongTask{
          
         for (Node s : hgraph.getNodes()) {
             int s_index = indicies.get(s);
+            //Glorimar-TODO: check why setAttribute method is not recognized 
             s.setAttribute(CLOSENESS, nodeCloseness[s_index]);
+            
         }
           
     }
     
-     private void setInitParametetrsForNode(Node s, LinkedList<Node>[] P, double[] theta, int[] d, int index, int n) {           
+     private void setInitParametetrsForNode(LinkedList<Node>[] P, int[] d, int index, int n) {           
             for (int j = 0; j < n; j++) {
                 P[j] = new LinkedList<Node>();
-                theta[j] = 0;
                 d[j] = -1;
             }
-            theta[index] = 1;
             d[index] = 0;
     }
      
@@ -207,7 +209,7 @@ public class Closeness implements Statistics, LongTask{
             int[]               d       = new int[n];
             int                 s_index = indicies.get(s);
             
-            setInitParametetrsForNode(s, P, theta, d, s_index, n); //????????????????????????????????
+            setInitParametetrsForNode(P, d, s_index, n); //????????????????????????????????
 
             LinkedList<Node> Q = new LinkedList<Node>();
             Q.addLast(s);
@@ -226,7 +228,6 @@ public class Closeness implements Statistics, LongTask{
                         d[r_index] = d[v_index] + 1;
                     }
                     if (d[r_index] == (d[v_index] + 1)) {
-                        theta[r_index] = theta[r_index] + theta[v_index];
                         P[r_index].addLast(v);
                     }
                 }
@@ -278,7 +279,7 @@ public class Closeness implements Statistics, LongTask{
 
     @Override
     public boolean cancel() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return isCanceled;
     }
 
     @Override

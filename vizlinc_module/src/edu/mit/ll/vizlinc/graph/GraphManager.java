@@ -1369,7 +1369,6 @@ public class GraphManager implements VLQueryListener {
                     // Centrality runs on the visible view.
                     // centrality will take care of displaying progress.
                     centrality.setProgressTicket(this.getProgressTicket());
-                    centrality.setDirected(false);
                     centrality.execute(graphModel, attributeModel);
                     if (cancelled) {
                         return;
@@ -1377,6 +1376,7 @@ public class GraphManager implements VLQueryListener {
 
                     // Now visualize the centrality.
                     RankingController rankingController = Lookup.getDefault().lookup(RankingController.class);
+                    //Glorimar-Note: This wont work right now since Closeness class is not adding the closeness column
                     AttributeColumn col = attributeModel.getNodeTable().getColumn(Closeness.CLOSENESS);
                     
                     // Vary over the visible graph, not the whole graph.
