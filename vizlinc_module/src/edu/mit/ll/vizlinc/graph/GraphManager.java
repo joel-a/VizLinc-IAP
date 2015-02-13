@@ -97,7 +97,7 @@ import org.openide.util.Exceptions;
 import org.openide.util.NbPreferences;
 import org.openide.windows.WindowManager;
 
-/**
+/**z
  * Manages the graph view
  */
 public class GraphManager implements VLQueryListener {
