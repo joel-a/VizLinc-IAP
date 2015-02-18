@@ -507,6 +507,7 @@ public class DBUtils
 
     private static void printCountsToFile(List<LocationValue> facetValues) 
     {
+        /*
         try (PrintWriter out = new PrintWriter("C:\\Users\\jo21372\\Desktop\\locCount.txt")) {
             for(LocationValue l: facetValues)
             {
@@ -515,6 +516,7 @@ public class DBUtils
         } catch (FileNotFoundException ex) {
             Exceptions.printStackTrace(ex);
         }
+                */
     }
     
 }
