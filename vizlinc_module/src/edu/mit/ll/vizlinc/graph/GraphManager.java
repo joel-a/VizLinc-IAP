@@ -688,9 +688,11 @@ public class GraphManager implements VLQueryListener {
         return Integer.parseInt(node.getNodeData().getId());
     }
 
+    
+    //Glorimar-Note
     public AttributeColumn addAttributeColumn(String name, String title, AttributeType type, AttributeOrigin origin, Object defaultValue) {
-        AttributeTable nodeTable = attributeModel.getNodeTable();
-        AttributeColumn column = nodeTable.getColumn(name);
+        AttributeTable  nodeTable = attributeModel.getNodeTable();
+        AttributeColumn column      = nodeTable.getColumn(name);
         if (nodeTable.getColumn(name) == null) {
             column = nodeTable.addColumn(name, title, type, origin, defaultValue);
         }
@@ -1148,7 +1150,7 @@ public class GraphManager implements VLQueryListener {
                 Progress.progress(getProgressTicket());
 
             }
-
+//Note-Glorimar: estudiar
             void setAttributes(File cluFile, String[] indexToNodeIdString) throws FileNotFoundException, IOException {
                 Progress.setDisplayName(this.getProgressTicket(), "Clustering: displaying results ...");
                 Progress.switchToIndeterminate(getProgressTicket());

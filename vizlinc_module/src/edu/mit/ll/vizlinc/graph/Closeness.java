@@ -7,34 +7,21 @@ package edu.mit.ll.vizlinc.graph;
 
 
 import java.util.HashMap;
-import java.util.Map;
-import org.gephi.data.attributes.api.AttributeColumn;
+import java.util.HashSet;
 import org.gephi.data.attributes.api.AttributeModel;
 import org.gephi.graph.api.GraphModel;
-import org.gephi.statistics.plugin.GraphDistance;
-import org.gephi.statistics.spi.Statistics;
-import org.gephi.utils.longtask.spi.LongTask;
-import org.gephi.utils.progress.ProgressTicket;
 import org.gephi.graph.api.Graph;
 import org.gephi.graph.api.Node;
-import org.h2.table.Column;
-import java.io.IOException;
 import org.gephi.statistics.spi.Statistics;
 import org.gephi.graph.api.*;
 import java.util.LinkedList;
-import java.util.ListIterator;
-import java.util.Stack;
-//import org.gephi.attribute.api.AttributeModel;
-//import org.gephi.attribute.api.Column;
-//import org.gephi.attribute.api.Table;
-//import org.gephi.utils.TempDirUtils;
-//import org.gephi.utils.TempDirUtils.TempDir;
+import java.util.Set;
+import org.gephi.data.attributes.api.AttributeOrigin;
+import org.gephi.data.attributes.api.AttributeTable;
+import org.gephi.data.attributes.api.AttributeType;
 import org.gephi.utils.longtask.spi.LongTask;
 import org.gephi.utils.progress.Progress;
 import org.gephi.utils.progress.ProgressTicket;
-import org.openide.util.Exceptions;
-import org.openide.util.Lookup;
-import org.openide.util.NbBundle;
 
 
 /**
@@ -47,28 +34,38 @@ public class Closeness implements Statistics, LongTask{
     public static final String  CLOSENESS = "closeness";
     private double[]            closeness;
     private double              avgDist;
-    private int                 N;    //ammount of node in the visible graph
+    private int                 N;                          //ammount of node in the visible graph
     private ProgressTicket      progress;
     private boolean             isCanceled;
     private int                 shortestPaths;
     private boolean             isNormalized;
     private boolean             isDirected;
-    private int                 numRuns = 100;
+    private int                 numRuns;
+    private GeodesicAlgorithm   geodAlgorithm;
  
     
-    
+    //--------------------------------------------------------------------------
+    //CONSTRUCTORS
+    //--------------------------------------------------------------------------
     public Closeness(){
-        isDirected = false;  //for now Vizlin just work with undirected graph
-        /*
-        GraphController graphController = Lookup.getDefault().lookup(GraphController.class);
-        if (graphController != null && graphController.getGraphModel() != null) {
-            isDirected = graphController.getGraphModel().isDirected();
-        }
-        */
+        isDirected      = false;  //for now Vizlin just work with undirected graph
+        isNormalized    = true;
+        geodAlgorithm   = GeodesicAlgorithm.DIJKSTRA;
+        numRuns         = 100;
+        
     }
-    //----------------------------------------------
+    
+    public Closeness(boolean isDirected, boolean isNormalized, GeodesicAlgorithm geodAlgorithm){
+        this.isDirected     = isDirected;
+        this.isNormalized   = isNormalized;
+        this.geodAlgorithm  = geodAlgorithm;
+        this.numRuns        = 100;
+    }
+    
+    
+    //--------------------------------------------------------------------------
     //Methods
-    //----------------------------------------------
+    //--------------------------------------------------------------------------
     @Override
     public void execute(GraphModel gm, AttributeModel am) {
         Graph graph = gm.getGraphVisible();
@@ -78,19 +75,18 @@ public class Closeness implements Statistics, LongTask{
     
     public void execute(Graph hgraph, AttributeModel attributeModel){
         //Initials set ups
-        isCanceled = false;
+        hgraph.readLock();                              //lock the visible graph so any future change cannot be made by othe process
+        isCanceled      = false;
+        this.N          = hgraph.getNodeCount();
+        closeness       = new double[N];
+        avgDist         = 0;
+        shortestPaths   = 0;
         initializeAttributeColunms(attributeModel);
-        hgraph.readLock();                              //lock the visible graph so any future change can be made by othe process
-        this.N = hgraph.getNodeCount();
-        initializeStartValues(); 
-        
-        //---
-        Progress.start(progress, numRuns);
-        
+  
         HashMap<Node, Integer> indicies = createIndiciesMap(hgraph); //a hashmap to relate a node with a position index
 
         //Closeness centrality calculation:
-        closeness = calculateClosenessMetrics(hgraph, indicies, isDirected, isNormalized);
+        this.closeness = calculateClosenessMetrics(hgraph, indicies);
         
         //Save values to nodes:
         saveCalculatedValues(hgraph, indicies, closeness);
@@ -102,9 +98,6 @@ public class Closeness implements Statistics, LongTask{
     
     
     
-    //------------------
-    //PRIVATE METHODS
-    //------------------
     /**
      * Add the attribute of Closeness Centrality to the node attribute table
      * @param attributeModel
@@ -113,17 +106,12 @@ public class Closeness implements Statistics, LongTask{
     private void initializeAttributeColunms(AttributeModel attributeModel) {
         
        // Glorimar-TODO: try to add  org.gephi.attribute.api.Table or change Table to attributeTable in org.gephi.data.attribute.api.Table
-       Table nodeTable = attributeModel.getNodeTable();  //it need to import org.gephi.attribute.api.Table;
+       AttributeTable nodeTable = attributeModel.getNodeTable();  //it need to import org.gephi.attribute.api.Table;
        if (!nodeTable.hasColumn(CLOSENESS)) {
-            nodeTable.addColumn(CLOSENESS, "Closeness Centrality", Double.class, new Double(0));
+            nodeTable.addColumn(CLOSENESS, "Closeness Centrality", AttributeType.DOUBLE, AttributeOrigin.COMPUTED, new Double(0));
         }
     }
     
-    private void initializeStartValues() {
-        closeness = new double[N];
-        avgDist = 0;
-        shortestPaths = 0;
-    }
      
     private  HashMap<Node, Integer> createIndiciesMap(Graph hgraph) {
        HashMap<Node, Integer> indicies = new HashMap<Node, Integer>();
@@ -139,20 +127,24 @@ public class Closeness implements Statistics, LongTask{
          
         for (Node s : hgraph.getNodes()) {
             int s_index = indicies.get(s);
-            //Glorimar-TODO: check why setAttribute method is not recognized 
-            s.setAttribute(CLOSENESS, nodeCloseness[s_index]);
-            
+            s.getAttributes().setValue(CLOSENESS, new Double(nodeCloseness[s_index]));
         }
           
     }
-    
+    private void setInitParametetrsForNode(double[] d, int index, int n) {           
+            for (int j = 0; j < n; j++) {
+                d[j] = -1;
+            }
+            d[index] = 0;
+    }
+    /* to use just for keep a record of the shorterst path
      private void setInitParametetrsForNode(LinkedList<Node>[] P, int[] d, int index, int n) {           
             for (int j = 0; j < n; j++) {
                 P[j] = new LinkedList<Node>();
                 d[j] = -1;
             }
             d[index] = 0;
-    }
+    }*/
      
      /**
       * Return a EdgeIterable object that depend of the type of graph. 
@@ -163,15 +155,7 @@ public class Closeness implements Statistics, LongTask{
       * @param directed
       * @return 
       */
-     private EdgeIterable getEdgeIter(Graph hgraph, Node v, boolean directed) {
-            EdgeIterable edgeIter = null;
-            if (directed) {
-                edgeIter = ((DirectedGraph) hgraph).getOutEdges(v);
-            } else {
-                edgeIter = hgraph.getEdges(v);
-             }
-            return edgeIter;
-    }
+
     
     /**
      * If the isNormalized field is set to true this method normalize the nodes closeness value 
@@ -181,9 +165,9 @@ public class Closeness implements Statistics, LongTask{
      * @param directed
      * @param normalized 
      */
-    private void calculateCorrection(Graph hgraph, HashMap<Node, Integer> indicies, double[] nodeCloseness, boolean directed, boolean normalized) {
+    private void calculateCorrection(Graph hgraph, HashMap<Node, Integer> indicies, double[] nodeCloseness) {
          
-         if (normalized){
+         if (this.isNormalized){
             for (Node s : hgraph.getNodes()) {
                 int s_index = indicies.get(s);
                 nodeCloseness[s_index] = (nodeCloseness[s_index] == 0) ? 0 : 1.0 / nodeCloseness[s_index]; 
@@ -192,32 +176,73 @@ public class Closeness implements Statistics, LongTask{
          
      }
     
-    
-    private double[] calculateClosenessMetrics(Graph hgraph, HashMap<Node, Integer> indicies, boolean directed, boolean normalized) {
-        
-        int n = hgraph.getNodeCount();
-        
-        double[] nodeCloseness = new double[n];
-        
-        Progress.start(progress, hgraph.getNodeCount());
-        int count = 0;
-        
-        
-        for (Node s : hgraph.getNodes()) {
-            LinkedList<Node>[]  P       = new LinkedList[n];
-            double[]            theta   = new double[n]; //???????????????????????????????????????????????
-            int[]               d       = new int[n];
-            int                 s_index = indicies.get(s);
-            
-            setInitParametetrsForNode(P, d, s_index, n); //????????????????????????????????
+    //Glorimar-TODO: terminar
+    private void calculateDijkstraAlgorithm(Graph hgraph, HashMap<Node, Integer> indicies, Node sourceNode, double[] d){
+     
+        Set<Node>               unsettledNodes  = new HashSet<Node>(); //S
+        Set<Node>               settledNodes    = new HashSet<Node>();
+        HashMap<Node, Double>   distances       = new HashMap<Node, Double>();
+        HashMap<Node,Edge>      predecessors    = new HashMap<Node, Edge>();   
+        double                  maxDistance     = 0;
 
-            LinkedList<Node> Q = new LinkedList<Node>();
-            Q.addLast(s);
+        //Initialize
+        for (Node node : hgraph.getNodes()) {
+            distances.put(node, Double.POSITIVE_INFINITY);
+        }
+        distances.put(sourceNode, 0d);
+        unsettledNodes.add(sourceNode);
+
+        while (!unsettledNodes.isEmpty()) {
+
+            // find node with smallest distance value
+            Double minDistance = Double.POSITIVE_INFINITY;
+            Node minDistanceNode = null;
+            for (Node k : unsettledNodes) {
+                Double dist = distances.get(k);
+                if (minDistanceNode == null) {
+                    minDistanceNode = k;
+                }
+
+                if (dist.compareTo(minDistance) < 0) {
+                    minDistance = dist;
+                    minDistanceNode = k;
+                }
+            }
+            unsettledNodes.remove(minDistanceNode);
+            settledNodes.add(minDistanceNode);
+
+            for (Edge edge : hgraph.getEdges(minDistanceNode)) {
+                Node neighbor = hgraph.getOpposite(minDistanceNode, edge);
+                if (!settledNodes.contains(neighbor)) {
+                    double shortestDist = distances.get(minDistanceNode);
+                    double dist = shortestDist + edge.getWeight();
+                    if (distances.get(neighbor) > dist) {
+
+                        distances.put(neighbor, dist);
+                        predecessors.put(neighbor, edge);
+                        unsettledNodes.add(neighbor);
+                        maxDistance = Math.max(maxDistance, dist);
+                    }
+                }
+            }
+        }
+        
+        for (Node node : hgraph.getNodes()) {
+            d[indicies.get(node)] = (distances.get(node) == Double.POSITIVE_INFINITY ? -1 : distances.get(node));
+        }
+
+    }
+    
+   
+    private void calculateBreadthFirstSearch(Graph hgraph, HashMap<Node, Integer> indicies, Node source, double[] d){
+        
+        LinkedList<Node> Q = new LinkedList<Node>();
+            Q.addLast(source);
             while (!Q.isEmpty()) {
                 Node v = Q.removeFirst();
                 int v_index = indicies.get(v);
 
-                EdgeIterable edgeIter = getEdgeIter(hgraph, v, directed);
+                EdgeIterable edgeIter = hgraph.getEdges(v);
 
                 for (Edge edge : edgeIter) {
                     Node reachable = hgraph.getOpposite(v, edge);
@@ -227,11 +252,42 @@ public class Closeness implements Statistics, LongTask{
                         Q.addLast(reachable);
                         d[r_index] = d[v_index] + 1;
                     }
+                    /* To keep record of path
                     if (d[r_index] == (d[v_index] + 1)) {
                         P[r_index].addLast(v);
-                    }
+                    }*/
                 }
             }
+    }
+    
+    /**
+     * Method for calculate the closeness centrality for each node in the visible graph.
+     * @param hgraph
+     * @param indicies
+     * @param directed
+     * @param normalized
+     * @return 
+     */
+    private double[] calculateClosenessMetrics(Graph hgraph, HashMap<Node, Integer> indicies) {
+        int         count           = 0;
+        int         n               = hgraph.getNodeCount();    //ammount of node in the visible graph
+        double[]    nodeCloseness   = new double[n];            //array to save the closeness value for each node. the index in the array represent the node n with indice = to index in the inicies hashmap
+        //Glorimar-NOTE: this is the command controling the progress of the algorithm
+        Progress.start(progress, numRuns);
+        
+        for (Node s : hgraph.getNodes()) {
+            //LinkedList<Node>[]  P       = new LinkedList[n];
+            double[]            d       = new double[n];  //arreglo de distancias
+            int                 s_index = indicies.get(s);
+            
+            setInitParametetrsForNode(d, s_index, n); 
+            
+            if(geodAlgorithm == GeodesicAlgorithm.BREADTH_FIRST_SEARCH){
+                calculateBreadthFirstSearch(hgraph, indicies, s, d);
+            }else{
+                calculateDijkstraAlgorithm(hgraph, indicies, s, d);
+            }
+
             double reachable = 0;
             for (int i = 0; i < n; i++) {
                 if (d[i] > 0) {
@@ -248,27 +304,24 @@ public class Closeness implements Statistics, LongTask{
 
             shortestPaths += reachable;
 
-            count++;
+            ++count;
             if (isCanceled) {
                 hgraph.readUnlockAll();
                 return nodeCloseness;
             }
-            Progress.progress(progress, count);
+            
+            Progress.progress(progress, count); //solo calcula los primeros 100 nodo
+            if(count == numRuns){
+                break;
+            }
         }
 
         avgDist /= shortestPaths;//mN * (mN - 1.0f);
 
-        calculateCorrection(hgraph, indicies, nodeCloseness, directed, normalized);
+        calculateCorrection(hgraph, indicies, nodeCloseness);
         
         return nodeCloseness;
     }
-    
-    
-    
-    
-    
-    
-    
     
     
     
@@ -282,34 +335,29 @@ public class Closeness implements Statistics, LongTask{
         return isCanceled;
     }
 
+    //***************************************************************************
+    //Setters
+    //***************************************************************************
     @Override
     public void setProgressTicket(ProgressTicket pt) {
         this.progress = pt;    
     }
     
-    /*
-     for (Node n : graph.getNodes()) {
-            int inDegree = 0;
-            int outDegree = 0;
-            int degree = 0;
-            if (isDirected) {
-                inDegree = calculateInDegree(directedGraph, n);
-                outDegree = calculateOutDegree(directedGraph, n);
-            }
-            degree = calculateDegree(graph, n);
-
-            if (updateAttributes) {
-                n.setAttribute(DEGREE, degree);
-                if (isDirected) {
-                    n.setAttribute(INDEGREE, inDegree);
-                    n.setAttribute(OUTDEGREE, outDegree);
-                    updateDegreeDists(inDegree, outDegree, degree);
-                } else {
-                    updateDegreeDists(degree);
-
-                }
-            }
-    */
+    /**
+     * To indicate if the graph is directed(true) or undirected(false).
+     * @param isDirected 
+     */
+    public void setIsDirectedGraph(boolean isDirected){
+        this.isDirected = isDirected;
+    }
+    
+    
+    
+    
+    public enum GeodesicAlgorithm{
+        DIJKSTRA,
+        BREADTH_FIRST_SEARCH;
+    }
     
     
 }
