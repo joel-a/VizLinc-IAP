@@ -1376,7 +1376,7 @@ public class GraphManager implements VLQueryListener {
 
                     // Now visualize the centrality.
                     RankingController rankingController = Lookup.getDefault().lookup(RankingController.class);
-                    //Glorimar-Note: This wont work right now since Closeness class is not adding the closeness column
+                    
                     AttributeColumn col = attributeModel.getNodeTable().getColumn(Closeness.CLOSENESS);
                     
                     // Vary over the visible graph, not the whole graph.

@@ -24,6 +24,11 @@ import org.gephi.graph.api.*;
 import java.util.LinkedList;
 import java.util.ListIterator;
 import java.util.Stack;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import org.gephi.data.attributes.api.AttributeOrigin;
+import org.gephi.data.attributes.api.AttributeTable;
+import org.gephi.data.attributes.api.AttributeType;
 //import org.gephi.attribute.api.AttributeModel;
 //import org.gephi.attribute.api.Column;
 //import org.gephi.attribute.api.Table;
@@ -87,11 +92,13 @@ public class Closeness implements Statistics, LongTask{
         //---
         Progress.start(progress, numRuns);
         
-        HashMap<Node, Integer> indicies = createIndiciesMap(hgraph); //a hashmap to relate a node with a position index
+        HashMap<Node, Integer> indicies = createIndiciesMap(hgraph); //hashmap to relate the node with an index position
 
         //Closeness centrality calculation:
+        JOptionPane.showMessageDialog(null, "Antes de hacer calculo", CLOSENESS, JOptionPane.ERROR_MESSAGE);
         closeness = calculateClosenessMetrics(hgraph, indicies, isDirected, isNormalized);
         
+        JOptionPane.showMessageDialog(null, "Guardando valores", CLOSENESS, JOptionPane.ERROR_MESSAGE);
         //Save values to nodes:
         saveCalculatedValues(hgraph, indicies, closeness);
         
@@ -111,11 +118,11 @@ public class Closeness implements Statistics, LongTask{
      * @return 
      */
     private void initializeAttributeColunms(AttributeModel attributeModel) {
-        
-       // Glorimar-TODO: try to add  org.gephi.attribute.api.Table or change Table to attributeTable in org.gephi.data.attribute.api.Table
-       Table nodeTable = attributeModel.getNodeTable();  //it need to import org.gephi.attribute.api.Table;
-       if (!nodeTable.hasColumn(CLOSENESS)) {
-            nodeTable.addColumn(CLOSENESS, "Closeness Centrality", Double.class, new Double(0));
+      
+        AttributeTable nodeTable = attributeModel.getNodeTable();
+        AttributeColumn column = nodeTable.getColumn(CLOSENESS);
+        if (column == null) {
+             nodeTable.addColumn(CLOSENESS, "Closeness Centrality", AttributeType.DOUBLE, AttributeOrigin.COMPUTED, new Double(0));
         }
     }
     
@@ -140,7 +147,7 @@ public class Closeness implements Statistics, LongTask{
         for (Node s : hgraph.getNodes()) {
             int s_index = indicies.get(s);
             //Glorimar-TODO: check why setAttribute method is not recognized 
-            s.setAttribute(CLOSENESS, nodeCloseness[s_index]);
+            s.getAttributes().setValue(CLOSENESS, nodeCloseness[s_index]);
             
         }
           
@@ -202,25 +209,38 @@ public class Closeness implements Statistics, LongTask{
         Progress.start(progress, hgraph.getNodeCount());
         int count = 0;
         
-        
         for (Node s : hgraph.getNodes()) {
+            JOptionPane.showMessageDialog(null, "Loop para el nodo " + s.toString(), CLOSENESS, JOptionPane.ERROR_MESSAGE);
             LinkedList<Node>[]  P       = new LinkedList[n];
-            double[]            theta   = new double[n]; //???????????????????????????????????????????????
-            int[]               d       = new int[n];
+                      
+            //double[]            theta   = new double[n]; //???????????????????????????????????????????????
+            int[]               d       = new int[n];  //distance
+            
             int                 s_index = indicies.get(s);
             
-            setInitParametetrsForNode(P, d, s_index, n); //????????????????????????????????
+            //setInitParametetrsForNode(P, d, s_index, n); //????????????????????????????????
+            
+            //Inicializa arreglo de lista logada de nodos asi como arreglo de enteros para distancia
+            for (int j = 0; j < n; j++) {
+                P[j] = new LinkedList<Node>();
+                d[j] = -1;
+            }
+             
+            d[s_index] = 0;
 
-            LinkedList<Node> Q = new LinkedList<Node>();
+            LinkedList<Node> Q = new LinkedList<Node>();            
             Q.addLast(s);
+             
+            
             while (!Q.isEmpty()) {
                 Node v = Q.removeFirst();
                 int v_index = indicies.get(v);
 
                 EdgeIterable edgeIter = getEdgeIter(hgraph, v, directed);
-
+                
+            JOptionPane.showMessageDialog(null, "edge iteration" + s.toString(), CLOSENESS, JOptionPane.ERROR_MESSAGE);
                 for (Edge edge : edgeIter) {
-                    Node reachable = hgraph.getOpposite(v, edge);
+                    Node reachable = hgraph.getOpposite(v, edge);  
 
                     int r_index = indicies.get(reachable);
                     if (d[r_index] < 0) {
@@ -231,8 +251,9 @@ public class Closeness implements Statistics, LongTask{
                         P[r_index].addLast(v);
                     }
                 }
+                 JOptionPane.showMessageDialog(null, "edge iteration finished" + s.toString(), CLOSENESS, JOptionPane.ERROR_MESSAGE);
             }
-            double reachable = 0;
+            double reachable = 0;  //cantidad de nodos alcanzables por el nodo en estudio
             for (int i = 0; i < n; i++) {
                 if (d[i] > 0) {
                     avgDist += d[i];
