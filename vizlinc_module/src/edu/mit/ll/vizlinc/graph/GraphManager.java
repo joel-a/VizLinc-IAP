@@ -1351,11 +1351,11 @@ public class GraphManager implements VLQueryListener {
      * Closeness Centrality, invoked from GraphToolsTopComponent.
      */
    
-    public void closeness(final boolean showBySize) {
+    public void closeness(final boolean showBySize, final Closeness.GeodesicAlgorithm geodAlg) {
         final VizLincLongTask centralityTask = new VizLincLongTask("Running Closeness Centrality") {
             Closeness centrality = new Closeness();
             boolean cancelled = false;
-
+            
             @Override
             public boolean cancel() {
                 cancelled = centrality.cancel();
@@ -1371,6 +1371,7 @@ public class GraphManager implements VLQueryListener {
                     // Centrality runs on the visible view.
                     // centrality will take care of displaying progress.
                     centrality.setProgressTicket(this.getProgressTicket());
+                    centrality.setGeodesicAlgorithm(geodAlg);
                     centrality.execute(graphModel, attributeModel);
                     if (cancelled) {
                         return;

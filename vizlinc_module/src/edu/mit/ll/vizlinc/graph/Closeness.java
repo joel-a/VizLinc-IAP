@@ -50,7 +50,7 @@ public class Closeness implements Statistics, LongTask{
     public Closeness(){
         isDirected      = false;  //for now Vizlin just work with undirected graph
         isNormalized    = true;
-        geodAlgorithm   = GeodesicAlgorithm.DIJKSTRA;
+        geodAlgorithm   = GeodesicAlgorithm.BREADTH_FIRST_SEARCH;
         numRuns         = 100;
         
     }
@@ -349,6 +349,10 @@ public class Closeness implements Statistics, LongTask{
      */
     public void setIsDirectedGraph(boolean isDirected){
         this.isDirected = isDirected;
+    }
+    
+    public void setGeodesicAlgorithm(GeodesicAlgorithm geoAlg){
+        this.geodAlgorithm = geoAlg;
     }
     
     
