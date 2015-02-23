@@ -289,6 +289,7 @@ public class Closeness implements Statistics, LongTask{
             }
 
             double reachable = 0;
+            //Glorimar-TODO - utilizar un temp variable
             for (int i = 0; i < n; i++) {
                 if (d[i] > 0) {
                     avgDist += d[i];
@@ -298,6 +299,7 @@ public class Closeness implements Statistics, LongTask{
             }
 
 
+            //Glorimar-TODO: hacer reciproco aqui
             if (reachable != 0) {
                 nodeCloseness[s_index] /= reachable;
             }
