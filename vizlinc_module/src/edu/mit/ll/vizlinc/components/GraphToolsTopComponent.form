@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 
 <Form version="1.5" maxVersion="1.8" type="org.netbeans.modules.form.forminfo.JPanelFormInfo">
+  <NonVisualComponents>
+    <Component class="javax.swing.ButtonGroup" name="buttonGroup1">
+    </Component>
+  </NonVisualComponents>
   <AuxValues>
     <AuxValue name="FormSettings_autoResourcing" type="java.lang.Integer" value="1"/>
     <AuxValue name="FormSettings_autoSetComponentName" type="java.lang.Boolean" value="false"/>
@@ -16,74 +20,84 @@
   <Layout>
     <DimensionLayout dim="0">
       <Group type="103" groupAlignment="0" attributes="0">
-          <Group type="102" attributes="0">
-              <EmptySpace max="-2" attributes="0"/>
-              <Component id="jLabelGraphStatus" max="-2" attributes="0"/>
-              <EmptySpace max="32767" attributes="0"/>
-          </Group>
           <Group type="102" alignment="0" attributes="0">
-              <EmptySpace min="-2" pref="8" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="jCheckBoxShowEdges" alignment="0" min="-2" max="-2" attributes="0"/>
-                  <Component id="jCheckBoxShowAllLabels" alignment="0" min="-2" max="-2" attributes="0"/>
-              </Group>
-              <EmptySpace type="separate" max="-2" attributes="0"/>
-              <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="jButtonResetSizes" alignment="0" min="-2" pref="105" max="-2" attributes="0"/>
-                  <Component id="jButtonResetColors" alignment="0" min="-2" max="-2" attributes="0"/>
-              </Group>
-              <EmptySpace max="-2" attributes="0"/>
-              <Component id="jSpinnerResetSizesValue" min="-2" max="-2" attributes="0"/>
-              <EmptySpace type="separate" max="-2" attributes="0"/>
-              <Group type="103" groupAlignment="0" attributes="0">
-                  <Group type="102" attributes="0">
-                      <Component id="jCheckBoxPageRankShowBySize" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace min="-2" pref="1" max="-2" attributes="0"/>
-                      <Component id="jCheckBoxPageRankShowByColor" min="-2" pref="51" max="-2" attributes="0"/>
-                  </Group>
-                  <Component id="jButtonPageRank" min="-2" pref="97" max="-2" attributes="0"/>
-              </Group>
-              <EmptySpace type="separate" max="-2" attributes="0"/>
-              <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                  <Group type="102" attributes="0">
-                      <Component id="jCheckBoxCentralityShowBySize" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace min="-2" pref="1" max="-2" attributes="0"/>
-                      <Component id="jCheckBoxCentralityShowByColor" min="-2" max="-2" attributes="0"/>
-                  </Group>
-                  <Component id="jButtonCentrality" max="32767" attributes="0"/>
-              </Group>
-              <EmptySpace type="unrelated" max="-2" attributes="0"/>
-              <Group type="103" groupAlignment="0" attributes="0">
-                  <Group type="102" attributes="0">
-                      <Component id="jButtonCloseness" min="-2" pref="97" max="-2" attributes="0"/>
-                      <EmptySpace min="0" pref="8" max="32767" attributes="0"/>
-                  </Group>
-                  <Group type="102" attributes="0">
-                      <Component id="jCheckBoxClosenessShowBySize" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace max="-2" attributes="0"/>
-                      <Component id="jCheckBoxClosenessShowByColor" min="-2" max="-2" attributes="0"/>
-                  </Group>
-              </Group>
-              <EmptySpace type="unrelated" max="-2" attributes="0"/>
-              <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="jLabelLogLambda" alignment="0" min="-2" max="-2" attributes="0"/>
-                  <Component id="jButtonCluster" alignment="0" min="-2" max="-2" attributes="0"/>
-              </Group>
-              <EmptySpace max="-2" attributes="0"/>
-              <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="clusterLayoutBtn" min="-2" max="-2" attributes="0"/>
-                  <Component id="jSpinnerClusterLambda" min="-2" max="-2" attributes="0"/>
-              </Group>
-              <EmptySpace type="separate" max="-2" attributes="0"/>
-              <Group type="103" groupAlignment="0" max="-2" attributes="0">
                   <Group type="102" alignment="0" attributes="0">
-                      <Component id="jButtonOneHop" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace min="-2" pref="23" max="-2" attributes="0"/>
-                      <Component id="jButtonTwoHop" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace min="-2" pref="8" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Component id="jCheckBoxShowEdges" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="jCheckBoxShowAllLabels" alignment="0" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace type="separate" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Component id="jButtonResetSizes" alignment="0" min="-2" pref="105" max="-2" attributes="0"/>
+                          <Component id="jButtonResetColors" alignment="0" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="jSpinnerResetSizesValue" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace type="separate" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Group type="102" attributes="0">
+                              <Component id="jCheckBoxPageRankShowBySize" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace min="-2" pref="1" max="-2" attributes="0"/>
+                              <Component id="jCheckBoxPageRankShowByColor" min="-2" pref="51" max="-2" attributes="0"/>
+                          </Group>
+                          <Component id="jButtonPageRank" min="-2" pref="97" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace type="separate" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                          <Group type="102" attributes="0">
+                              <Component id="jCheckBoxCentralityShowBySize" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace min="-2" pref="1" max="-2" attributes="0"/>
+                              <Component id="jCheckBoxCentralityShowByColor" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                          <Component id="jButtonCentrality" max="32767" attributes="0"/>
+                      </Group>
                   </Group>
-                  <Component id="jButtonShowAllInQuery" min="-2" max="-2" attributes="0"/>
+                  <Group type="102" alignment="0" attributes="0">
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="jLabelGraphStatus" max="-2" attributes="0"/>
+                  </Group>
               </Group>
-              <EmptySpace min="-2" pref="59" max="-2" attributes="0"/>
+              <EmptySpace type="unrelated" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="0" attributes="0">
+                  <Group type="102" attributes="0">
+                      <Component id="dijkstraRadBtn" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                      <Component id="bfsRadBtn" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace max="32767" attributes="0"/>
+                  </Group>
+                  <Group type="102" attributes="0">
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Component id="jButtonCloseness" min="-2" pref="97" max="-2" attributes="0"/>
+                          <Group type="102" attributes="0">
+                              <Component id="jCheckBoxClosenessShowBySize" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Component id="jCheckBoxClosenessShowByColor" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                      </Group>
+                      <EmptySpace min="0" pref="5" max="32767" attributes="0"/>
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Component id="jLabelLogLambda" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="jButtonCluster" alignment="0" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Component id="clusterLayoutBtn" min="-2" max="-2" attributes="0"/>
+                          <Component id="jSpinnerClusterLambda" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace type="separate" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                          <Group type="102" alignment="0" attributes="0">
+                              <Component id="jButtonOneHop" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace min="-2" pref="23" max="-2" attributes="0"/>
+                              <Component id="jButtonTwoHop" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                          <Component id="jButtonShowAllInQuery" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace min="-2" pref="59" max="-2" attributes="0"/>
+                  </Group>
+              </Group>
           </Group>
       </Group>
     </DimensionLayout>
@@ -92,59 +106,63 @@
           <Group type="102" attributes="0">
               <EmptySpace min="-2" pref="14" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Group type="102" alignment="0" attributes="0">
-                      <Group type="103" groupAlignment="1" attributes="0">
-                          <Group type="102" attributes="0">
-                              <Group type="103" groupAlignment="0" attributes="0">
-                                  <Group type="103" groupAlignment="3" attributes="0">
-                                      <Component id="jCheckBoxShowEdges" alignment="3" min="-2" max="-2" attributes="0"/>
-                                      <Component id="jButtonResetSizes" alignment="3" min="-2" max="-2" attributes="0"/>
-                                      <Component id="jSpinnerResetSizesValue" alignment="3" min="-2" max="-2" attributes="0"/>
-                                  </Group>
-                                  <Component id="jButtonPageRank" min="-2" max="-2" attributes="0"/>
-                                  <Component id="jButtonCentrality" min="-2" max="-2" attributes="0"/>
-                              </Group>
-                              <EmptySpace max="-2" attributes="0"/>
-                              <Group type="103" groupAlignment="0" attributes="0">
-                                  <Group type="103" groupAlignment="3" attributes="0">
-                                      <Component id="jCheckBoxPageRankShowBySize" alignment="3" min="-2" max="-2" attributes="0"/>
-                                      <Component id="jCheckBoxShowAllLabels" alignment="3" min="-2" max="-2" attributes="0"/>
-                                      <Component id="jButtonResetColors" alignment="3" min="-2" max="-2" attributes="0"/>
-                                  </Group>
-                                  <Group type="103" alignment="0" groupAlignment="3" attributes="0">
-                                      <Component id="jCheckBoxCentralityShowBySize" alignment="3" min="-2" max="-2" attributes="0"/>
-                                      <Component id="jCheckBoxPageRankShowByColor" alignment="3" min="-2" max="-2" attributes="0"/>
-                                      <Component id="jCheckBoxCentralityShowByColor" alignment="3" min="-2" max="-2" attributes="0"/>
-                                  </Group>
-                              </Group>
-                          </Group>
-                          <Group type="102" attributes="0">
+                  <Group type="103" alignment="0" groupAlignment="1" attributes="0">
+                      <Group type="102" attributes="0">
+                          <Group type="103" groupAlignment="0" attributes="0">
                               <Group type="103" groupAlignment="3" attributes="0">
-                                  <Component id="jButtonCluster" alignment="3" min="-2" max="-2" attributes="0"/>
-                                  <Component id="jButtonOneHop" alignment="3" min="-2" max="-2" attributes="0"/>
-                                  <Component id="jButtonTwoHop" alignment="3" min="-2" max="-2" attributes="0"/>
-                                  <Component id="clusterLayoutBtn" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="jCheckBoxShowEdges" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="jButtonResetSizes" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="jSpinnerResetSizesValue" alignment="3" min="-2" max="-2" attributes="0"/>
                               </Group>
-                              <EmptySpace max="-2" attributes="0"/>
-                              <Group type="103" groupAlignment="0" attributes="0">
-                                  <Group type="103" alignment="0" groupAlignment="3" attributes="0">
-                                      <Component id="jCheckBoxClosenessShowByColor" alignment="3" min="-2" max="-2" attributes="0"/>
-                                      <Component id="jCheckBoxClosenessShowBySize" alignment="3" min="-2" max="-2" attributes="0"/>
-                                  </Group>
-                                  <Group type="103" groupAlignment="3" attributes="0">
-                                      <Component id="jSpinnerClusterLambda" alignment="3" min="-2" max="-2" attributes="0"/>
-                                      <Component id="jLabelLogLambda" alignment="3" min="-2" max="-2" attributes="0"/>
-                                      <Component id="jButtonShowAllInQuery" alignment="3" min="-2" max="-2" attributes="0"/>
-                                  </Group>
+                              <Component id="jButtonPageRank" min="-2" max="-2" attributes="0"/>
+                              <Component id="jButtonCentrality" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="0" attributes="0">
+                              <Group type="103" groupAlignment="3" attributes="0">
+                                  <Component id="jCheckBoxPageRankShowBySize" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="jCheckBoxShowAllLabels" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="jButtonResetColors" alignment="3" min="-2" max="-2" attributes="0"/>
+                              </Group>
+                              <Group type="103" alignment="0" groupAlignment="3" attributes="0">
+                                  <Component id="jCheckBoxCentralityShowBySize" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="jCheckBoxPageRankShowByColor" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="jCheckBoxCentralityShowByColor" alignment="3" min="-2" max="-2" attributes="0"/>
                               </Group>
                           </Group>
                       </Group>
-                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                      <Component id="jLabelGraphStatus" min="-2" max="-2" attributes="0"/>
+                      <Group type="102" attributes="0">
+                          <Group type="103" groupAlignment="3" attributes="0">
+                              <Component id="jButtonCluster" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="jButtonOneHop" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="jButtonTwoHop" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="clusterLayoutBtn" alignment="3" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="0" attributes="0">
+                              <Group type="103" alignment="0" groupAlignment="3" attributes="0">
+                                  <Component id="jCheckBoxClosenessShowByColor" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="jCheckBoxClosenessShowBySize" alignment="3" min="-2" max="-2" attributes="0"/>
+                              </Group>
+                              <Group type="103" groupAlignment="3" attributes="0">
+                                  <Component id="jSpinnerClusterLambda" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="jLabelLogLambda" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="jButtonShowAllInQuery" alignment="3" min="-2" max="-2" attributes="0"/>
+                              </Group>
+                          </Group>
+                      </Group>
                   </Group>
                   <Component id="jButtonCloseness" alignment="0" min="-2" max="-2" attributes="0"/>
               </Group>
-              <EmptySpace pref="21" max="32767" attributes="0"/>
+              <EmptySpace max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="0" attributes="0">
+                  <Component id="jLabelGraphStatus" min="-2" max="-2" attributes="0"/>
+                  <Group type="103" alignment="0" groupAlignment="3" attributes="0">
+                      <Component id="dijkstraRadBtn" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="bfsRadBtn" alignment="3" min="-2" max="-2" attributes="0"/>
+                  </Group>
+              </Group>
+              <EmptySpace pref="17" max="32767" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -360,6 +378,33 @@
       </Properties>
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jCheckBoxClosenessShowByColor1ActionPerformed"/>
+      </Events>
+    </Component>
+    <Component class="javax.swing.JRadioButton" name="dijkstraRadBtn">
+      <Properties>
+        <Property name="buttonGroup" type="javax.swing.ButtonGroup" editor="org.netbeans.modules.form.RADComponent$ButtonGroupPropertyEditor">
+          <ComponentRef name="buttonGroup1"/>
+        </Property>
+        <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+          <ResourceString bundle="edu/mit/ll/vizlinc/components/Bundle.properties" key="GraphToolsTopComponent.dijkstraRadBtn.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+        </Property>
+      </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="dijkstraRadBtnActionPerformed"/>
+      </Events>
+    </Component>
+    <Component class="javax.swing.JRadioButton" name="bfsRadBtn">
+      <Properties>
+        <Property name="buttonGroup" type="javax.swing.ButtonGroup" editor="org.netbeans.modules.form.RADComponent$ButtonGroupPropertyEditor">
+          <ComponentRef name="buttonGroup1"/>
+        </Property>
+        <Property name="selected" type="boolean" value="true"/>
+        <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+          <ResourceString bundle="edu/mit/ll/vizlinc/components/Bundle.properties" key="GraphToolsTopComponent.bfsRadBtn.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+        </Property>
+      </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="bfsRadBtnActionPerformed"/>
       </Events>
     </Component>
   </SubComponents>
