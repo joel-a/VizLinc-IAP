@@ -8,18 +8,26 @@ import edu.mit.ll.vizlinc.model.VLQueryListener;
 import edu.mit.ll.vizlinc.utils.DBUtils;
 import edu.mit.ll.vizlinc.utils.UIUtils;
 import edu.mit.ll.vizlincdb.document.Document;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.sql.SQLException;
 import java.text.DecimalFormat;
 import java.util.List;
 import javax.swing.DefaultListModel;
+import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
 import org.netbeans.api.settings.ConvertAsProperties;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
+import org.openide.util.Exceptions;
 import org.openide.windows.TopComponent;
 import org.openide.util.NbBundle.Messages;
 import org.openide.windows.WindowManager;
@@ -87,8 +95,13 @@ public final class DocListTopComponent extends TopComponent implements VLQueryLi
                     enableOpenBtn = false;
                 }
                 openBtn.setEnabled(enableOpenBtn);
+              
             }
         });
+        //If list is not empty save button is enable
+        if(documentTable.getRowCount() > 0){
+            saveDocLstBtn.setEnabled(true);
+        }
         final VLQueryListener thisAsAListener = this;
         WindowManager.getDefault().invokeWhenUIReady(new Runnable()
         {
@@ -132,6 +145,7 @@ public final class DocListTopComponent extends TopComponent implements VLQueryLi
         openBtn = new javax.swing.JButton();
         jScrollPane2 = new javax.swing.JScrollPane();
         documentTable = new javax.swing.JTable();
+        saveDocLstBtn = new javax.swing.JButton();
 
         org.openide.awt.Mnemonics.setLocalizedText(jButton1, org.openide.util.NbBundle.getMessage(DocListTopComponent.class, "DocListTopComponent.jButton1.text")); // NOI18N
 
@@ -156,6 +170,14 @@ public final class DocListTopComponent extends TopComponent implements VLQueryLi
         });
         jScrollPane2.setViewportView(documentTable);
 
+        org.openide.awt.Mnemonics.setLocalizedText(saveDocLstBtn, org.openide.util.NbBundle.getMessage(DocListTopComponent.class, "DocListTopComponent.saveDocLstBtn.text")); // NOI18N
+        saveDocLstBtn.setEnabled(false);
+        saveDocLstBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                saveDocLstBtnActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -165,6 +187,8 @@ public final class DocListTopComponent extends TopComponent implements VLQueryLi
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(docNumberLabel)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(saveDocLstBtn)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(openBtn))
                     .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 390, Short.MAX_VALUE))
                 .addContainerGap())
@@ -175,7 +199,8 @@ public final class DocListTopComponent extends TopComponent implements VLQueryLi
                 .addGap(1, 1, 1)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(docNumberLabel)
-                    .addComponent(openBtn))
+                    .addComponent(openBtn)
+                    .addComponent(saveDocLstBtn))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 295, Short.MAX_VALUE))
         );
@@ -195,12 +220,48 @@ public final class DocListTopComponent extends TopComponent implements VLQueryLi
             openSelectedDocument();
         }
     }//GEN-LAST:event_openSelectedDocOnDoubleClick
+
+    /**
+     * BtnActionPerformed for the saveDocList button. This method is for save in a text file the names of the documents showed by Document Table.
+     * @param evt 
+     */
+    private void saveDocLstBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveDocLstBtnActionPerformed
+        FileNameExtensionFilter     fileExten   = new FileNameExtensionFilter("Text Document", "txt");
+        JFileChooser                fileChooser = new JFileChooser();
+        fileChooser.setFileFilter(fileExten);
+        
+        //If the person select a file to save the results then all the docuements names in the documentTable are save to the file
+        if(fileChooser.showSaveDialog(null) == JFileChooser.APPROVE_OPTION){
+            try {
+                File            file    = new File(fileChooser.getSelectedFile() + ".txt");
+                BufferedWriter  bw      = new BufferedWriter(new FileWriter(file, true));
+                file.createNewFile();
+                
+                for(int i = 0; i < documentTable.getRowCount(); i++){
+                    String temp = documentTable.getValueAt(i, 0).toString();
+                    String result = temp.substring(0, temp.lastIndexOf(".txt"));
+                    bw.write(result);
+                    bw.newLine();
+                }
+                bw.close();
+                
+                
+            } catch (IOException ex) {
+                //TODO-Glorimar enternder que hasce esto                
+                UIUtils.reportException(this, ex);
+            }
+            
+        } 
+        
+    }//GEN-LAST:event_saveDocLstBtnActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel docNumberLabel;
     private javax.swing.JTable documentTable;
     private javax.swing.JButton jButton1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JButton openBtn;
+    private javax.swing.JButton saveDocLstBtn;
     // End of variables declaration//GEN-END:variables
 
     @Override
@@ -247,7 +308,7 @@ public final class DocListTopComponent extends TopComponent implements VLQueryLi
     }
 
     private void updateListAndDocLabel(List<Document> docs)
-    {
+    {    
         ResultDocSetTableModel model = getTableModel();
         try
         {
@@ -263,6 +324,9 @@ public final class DocListTopComponent extends TopComponent implements VLQueryLi
         updateDocNumLabel(listSize);
         //Enable list
         documentTable.setEnabled(true);
+        //Enable Save Button
+        saveDocLstBtn.setEnabled(true);
+        
         //if there is something selected in the list enable open button
         if (documentTable.getSelectedRow() != -1)
         {
@@ -307,6 +371,7 @@ public final class DocListTopComponent extends TopComponent implements VLQueryLi
                 {
                     docNumberLabel.setText("Please Wait...");
                     documentTable.setEnabled(false);
+                    saveDocLstBtn.setEnabled(false);
                 }
             });
         }

@@ -68,9 +68,14 @@ import org.openide.util.NbBundle.Messages;
 import org.openide.windows.WindowManager;
 import edu.mit.ll.vizlinc.ui.elements.PersonListCellRenderer;
 import java.awt.Frame;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.SortedSet;
 import java.util.TreeSet;
+import javax.swing.JFileChooser;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 /**
  * Top component that displays the faceted search controls and entities extracted.
@@ -269,6 +274,8 @@ public final class FacetedSearchTopComponent extends TopComponent implements Gra
         jScrollPane3 = new javax.swing.JScrollPane();
         peopleList = new javax.swing.JList();
         showWeakAcrossDocPeopleBtn = new javax.swing.JCheckBox();
+        savePeopleResult = new javax.swing.JButton();
+        importPeopleLst = new javax.swing.JButton();
 
         org.openide.awt.Mnemonics.setLocalizedText(jButton1, org.openide.util.NbBundle.getMessage(FacetedSearchTopComponent.class, "FacetedSearchTopComponent.jButton1.text")); // NOI18N
 
@@ -453,20 +460,43 @@ public final class FacetedSearchTopComponent extends TopComponent implements Gra
             }
         });
 
+        org.openide.awt.Mnemonics.setLocalizedText(savePeopleResult, org.openide.util.NbBundle.getMessage(FacetedSearchTopComponent.class, "FacetedSearchTopComponent.savePeopleResult.text")); // NOI18N
+        savePeopleResult.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                savePeopleResultActionPerformed(evt);
+            }
+        });
+
+        org.openide.awt.Mnemonics.setLocalizedText(importPeopleLst, org.openide.util.NbBundle.getMessage(FacetedSearchTopComponent.class, "FacetedSearchTopComponent.importPeopleLst.text")); // NOI18N
+        importPeopleLst.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                importPeopleLstActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 403, Short.MAX_VALUE)
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(showWeakAcrossDocPeopleBtn)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addComponent(showWeakAcrossDocPeopleBtn)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(importPeopleLst)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(savePeopleResult))
+                    .addComponent(jScrollPane3, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 383, Short.MAX_VALUE))
+                .addContainerGap())
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
-                .addComponent(showWeakAcrossDocPeopleBtn)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(showWeakAcrossDocPeopleBtn)
+                    .addComponent(savePeopleResult)
+                    .addComponent(importPeopleLst))
                 .addGap(0, 0, 0)
                 .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 167, Short.MAX_VALUE))
         );
@@ -707,6 +737,45 @@ public final class FacetedSearchTopComponent extends TopComponent implements Gra
     }//GEN-LAST:event_showWeakAcrossDocPeopleBtnActionPerformed
 
     /**
+     * Save all the People List to the selected file by the user
+     * @param evt 
+     */
+    private void savePeopleResultActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_savePeopleResultActionPerformed
+        FileNameExtensionFilter     fileExten   = new FileNameExtensionFilter("Text Document", "txt");
+        JFileChooser                fileChooser = new JFileChooser();
+        fileChooser.setFileFilter(fileExten);
+        
+        if(fileChooser.showSaveDialog(null) == JFileChooser.APPROVE_OPTION){
+            try {
+                File            file    = new File(fileChooser.getSelectedFile() + ".txt");
+                BufferedWriter  bw      = new BufferedWriter(new FileWriter(file, true));
+                file.createNewFile();
+                
+                for(int i = 0; i < peopleList.getModel().getSize(); i++){
+                    String strTemp  = peopleList.getModel().getElementAt(i).toString();
+                    String result   = strTemp.substring(0, strTemp.indexOf("("));
+                    bw.write(result);
+                    bw.newLine();
+                }//end of for
+                
+                bw.close();
+                
+            } catch (IOException ex) {
+                //TODO-Glorimar enternder que hasce esto                
+                UIUtils.reportException(this, ex);
+            }
+            
+        }
+    }//GEN-LAST:event_savePeopleResultActionPerformed
+
+    //TODO-Glorimar : import a csv file with the names of the node to show
+    private void importPeopleLstActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_importPeopleLstActionPerformed
+        // TODO add your handling code here:
+        JFileChooser fileChooser = new JFileChooser();
+        
+    }//GEN-LAST:event_importPeopleLstActionPerformed
+
+    /**
      * Finds a value in a selected facet of the facet tree.
      *
      * @param forward if true, tries to find value down starting from the
@@ -749,6 +818,7 @@ public final class FacetedSearchTopComponent extends TopComponent implements Gra
     private javax.swing.JTextField findInFacetTreeTextField;
     private javax.swing.JButton findNextInFacetTreeBtn;
     private javax.swing.JButton findPreviousInFacetTreeBtn;
+    private javax.swing.JButton importPeopleLst;
     private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel3;
@@ -766,6 +836,7 @@ public final class FacetedSearchTopComponent extends TopComponent implements Gra
     private javax.swing.JCheckBox neighborhoodCheckbox;
     private javax.swing.JList orgList;
     private javax.swing.JList peopleList;
+    private javax.swing.JButton savePeopleResult;
     private javax.swing.JCheckBox showWeakAcrossDocPeopleBtn;
     private javax.swing.JRadioButton sortByAlphaButton;
     private javax.swing.ButtonGroup sortByButtonGroup;
