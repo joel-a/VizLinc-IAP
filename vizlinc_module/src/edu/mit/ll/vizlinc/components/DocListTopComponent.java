@@ -1,6 +1,9 @@
 package edu.mit.ll.vizlinc.components;
 
+import edu.mit.ll.vizlinc.concurrency.VizLincLongTask;
+import edu.mit.ll.vizlinc.model.AllFacetListModels;
 import edu.mit.ll.vizlinc.model.DBManager;
+import edu.mit.ll.vizlinc.model.FacetValue;
 import edu.mit.ll.vizlinc.model.LocationValue;
 import edu.mit.ll.vizlinc.model.PersonValue;
 import edu.mit.ll.vizlinc.model.ResultDocSetTableModel;
@@ -12,8 +15,14 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import static java.nio.file.StandardCopyOption.*;
+import java.nio.file.DirectoryStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.sql.SQLException;
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 import java.util.List;
 import javax.swing.DefaultListModel;
 import javax.swing.JFileChooser;
@@ -24,6 +33,9 @@ import javax.swing.event.ListSelectionListener;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
+import org.apache.lucene.store.Directory;
+import org.gephi.utils.progress.Progress;
+import org.gephi.utils.progress.ProgressTicket;
 import org.netbeans.api.settings.ConvertAsProperties;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
@@ -146,6 +158,7 @@ public final class DocListTopComponent extends TopComponent implements VLQueryLi
         jScrollPane2 = new javax.swing.JScrollPane();
         documentTable = new javax.swing.JTable();
         saveDocLstBtn = new javax.swing.JButton();
+        exportDocBtn = new javax.swing.JButton();
 
         org.openide.awt.Mnemonics.setLocalizedText(jButton1, org.openide.util.NbBundle.getMessage(DocListTopComponent.class, "DocListTopComponent.jButton1.text")); // NOI18N
 
@@ -178,6 +191,13 @@ public final class DocListTopComponent extends TopComponent implements VLQueryLi
             }
         });
 
+        org.openide.awt.Mnemonics.setLocalizedText(exportDocBtn, org.openide.util.NbBundle.getMessage(DocListTopComponent.class, "DocListTopComponent.exportDocBtn.text")); // NOI18N
+        exportDocBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                exportDocBtnActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -187,6 +207,8 @@ public final class DocListTopComponent extends TopComponent implements VLQueryLi
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(docNumberLabel)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(exportDocBtn)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(saveDocLstBtn)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(openBtn))
@@ -200,7 +222,8 @@ public final class DocListTopComponent extends TopComponent implements VLQueryLi
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(docNumberLabel)
                     .addComponent(openBtn)
-                    .addComponent(saveDocLstBtn))
+                    .addComponent(saveDocLstBtn)
+                    .addComponent(exportDocBtn))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 295, Short.MAX_VALUE))
         );
@@ -255,9 +278,80 @@ public final class DocListTopComponent extends TopComponent implements VLQueryLi
         
     }//GEN-LAST:event_saveDocLstBtnActionPerformed
 
+    private void exportDocBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exportDocBtnActionPerformed
+
+         
+         //Perform query in a different thread
+        final VizLincLongTask task = new VizLincLongTask("Executing Or query...")
+        {
+            @Override
+            public void execute()
+            {
+                ProgressTicket pt = this.getProgressTicket();
+                Progress.setDisplayName(pt, "Exporting...");
+                Progress.start(pt);
+                
+                JFileChooser    fileChooser         = new JFileChooser();
+                File            outputDirectory;                                    //Directory to copy all the documents in the documentTable
+                File            documentsDirectory;                                 //Directory with all the source documents
+                int             userSelectionOption;                                //variable to save the result of the user selection option: Ok or Cancel
+                DirectoryStream<Path> filesInDocDir;
+                List            docList;                                            //list with all documents in documentTable
+
+                fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+                userSelectionOption = fileChooser.showOpenDialog(null); //TODO-Glorimar : use the vizlinc main component
+
+                if(userSelectionOption != JFileChooser.APPROVE_OPTION){
+                    return;
+                }
+                documentsDirectory = fileChooser.getSelectedFile();
+                userSelectionOption = fileChooser.showSaveDialog(null);
+
+                if(userSelectionOption != JFileChooser.APPROVE_OPTION){
+                    return;
+                }
+                outputDirectory = fileChooser.getSelectedFile();
+
+                try {
+                    filesInDocDir = Files.newDirectoryStream(Paths.get(documentsDirectory.getAbsolutePath()) );
+
+                    docList = new ArrayList<String>();
+
+                    for(int i = 0; i < documentTable.getRowCount(); i++){
+                        String fileName = documentTable.getValueAt(i, 0).toString().substring(0, documentTable.getValueAt(i, 0).toString().lastIndexOf(".txt"));
+                        docList.add(fileName);
+
+                    }
+
+
+                    //TODO-Glorimar: verify the comparision in docList.Cont 
+                    for(Path p : filesInDocDir){
+                        String fileName = p.getFileName().toString();
+                        Path pathToCopyFile = Paths.get(outputDirectory.getPath() + "\\" + fileName);
+
+
+
+                        if(docList.contains(fileName)){
+                            //Path tempPath = Paths.get(outputDirectory.getPath() + "\\" + p.getFileName());
+                            Files.createFile(pathToCopyFile);
+                            Files.copy(p, pathToCopyFile, REPLACE_EXISTING);
+                        }
+                    }
+                    filesInDocDir.close();
+                } catch (IOException ex) {
+                    Exceptions.printStackTrace(ex);
+                }
+            }
+        };
+        task.run();
+        
+        
+    }//GEN-LAST:event_exportDocBtnActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel docNumberLabel;
     private javax.swing.JTable documentTable;
+    private javax.swing.JButton exportDocBtn;
     private javax.swing.JButton jButton1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JButton openBtn;
@@ -398,10 +492,12 @@ public final class DocListTopComponent extends TopComponent implements VLQueryLi
         int selectedRow = documentTable.getSelectedRow();
         if (selectedRow != -1)
         {
+            
             Document selectedDocument = getTableModel().getDocumentByRow(documentTable.convertRowIndexToModel(selectedRow));
             //Lookup doc content window
             DocViewTopComponent docWin = (DocViewTopComponent) WindowManager.getDefault().findTopComponent("DocViewTopComponent");
             docWin.setDoc(selectedDocument);
+            
         }
     }
 }

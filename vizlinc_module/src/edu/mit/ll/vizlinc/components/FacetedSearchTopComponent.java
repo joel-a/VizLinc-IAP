@@ -110,6 +110,7 @@ public final class FacetedSearchTopComponent extends TopComponent implements Gra
     private MapTopComponent mapWin;
     private VLQueryTopComponent queryWin;
     private Set<VLQueryListener> queryListeners;
+    private ArrayList<FacetValue> queryOrList;
     
     public FacetedSearchTopComponent()
     {
@@ -610,7 +611,7 @@ public final class FacetedSearchTopComponent extends TopComponent implements Gra
         getPersonListModel().sort(sortCriterion);
     }
     
-    kjh
+    //TODO-Glorimar : metodo importante
     private void addFilterBtnActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_addFilterBtnActionPerformed
     {//GEN-HEADEREND:event_addFilterBtnActionPerformed
         //Get selected facet value
@@ -775,9 +776,10 @@ public final class FacetedSearchTopComponent extends TopComponent implements Gra
    
     //TODO-Glorimar : import a csv file with the names of the node to show
     //TODO-Glorimar : Make te filechooser just accept csv files
-    //TODO-Glorimar coorect ort
     /**
-     * It recive a csv file with two column: first Node ID, second Node Label.
+     * The import button receives a csv file where the first column have to be a person id for 
+     * the DB, then look for all the documents that mention at least one of the person on the file 
+     * and update the UI
      * @param evt 
      */
     private void importPeopleLstActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_importPeopleLstActionPerformed
@@ -786,22 +788,38 @@ public final class FacetedSearchTopComponent extends TopComponent implements Gra
         int                 userSelection   = (fileChooser.showOpenDialog(null));
         File                inputFile;
         BufferedReader      bufReader;
-        ArrayList<String[]> fileRows        = new ArrayList<String[]>();                                                  
+        HashMap             idHashPersonValue = getIdToPersonValueHashMap();
+        queryOrList = new ArrayList<>();          //List with people in imported file
         
-      
+        //File import and file reading 
         if( userSelection == JFileChooser.APPROVE_OPTION){
             inputFile   = fileChooser.getSelectedFile();
+            if(!inputFile.getPath().substring(inputFile.getPath().lastIndexOf(".") + 1).equalsIgnoreCase("csv") ){
+                JOptionPane.showMessageDialog(UIUtils.getFirstParentComponent(this),"Input file have to be a csv file");
+                return;
+            }
             
             try{
                 bufReader = new BufferedReader(new FileReader(inputFile));
                 
-                String[] row;
-                while((row = bufReader.readLine().split(",")) != null ){
-                    fileRows.add(row);
+                String[]    row;
+                String      temp;
+                int         personId;
+                //add to queryOrList all the persons listed on the imported file
+                while((temp = bufReader.readLine()) != null ){
+                    row = temp.split(",");
+                    personId = Integer.parseInt(row[0]);
+                    //only add the person if he or she exist on the DB
+                    if(idHashPersonValue.containsKey(personId)){
+                        queryOrList.add((FacetValue) idHashPersonValue.get(personId));
+                    }
+                    
                 }
                 bufReader.close();
                 
-                peopleList.get
+                performOrQueryAndUpdateUI();
+                
+            
                 
             } catch (FileNotFoundException ex) {
                 Exceptions.printStackTrace(ex);
@@ -949,6 +967,20 @@ public final class FacetedSearchTopComponent extends TopComponent implements Gra
         return getPersonListModel().getList();
     }
 
+    /**
+     * Return a HashMap that map the person Id to its PersonValue.All the persons added are the one returned by DBUtils.getPersons()
+     * @return 
+     */
+    public HashMap<Integer, PersonValue> getIdToPersonValueHashMap(){
+        HashMap<Integer, PersonValue> result = new HashMap();
+        List<PersonValue>   people         = DBUtils.getPersons();
+         for(PersonValue p : people)
+        {
+            result.put(p.getId(), p);
+        }
+         return result;
+        
+    }
     public void addPersonWithIdToQuery(Integer facetId)
     {
         List<PersonValue> people = getPeopleInFacetTree();
@@ -1250,6 +1282,38 @@ public final class FacetedSearchTopComponent extends TopComponent implements Gra
         }
     }
     
+    /**
+     * Do the same as createNewFacetListModels method but instead of using queryWin use queryOrList
+     * @param resultDocList
+     * @param showNeighborhoodOnly
+     * @return 
+     */
+     private AllFacetListModels createNewFacetListModelsForOrQuery(List<Document> resultDocList, boolean showNeighborhoodOnly)
+    {
+        AllFacetListModels allModels = null;
+        int sort = getSortCriterion();
+        
+        if (queryOrList.isEmpty())
+        {
+            allModels = new AllFacetListModels(sort, showWeakAcrossDocPeopleBtn.isSelected());
+        } else
+        {
+            /**
+             * * Disabled for now. TODO: Add text neighborhood functionality.              *
+             * if(showNeighborhoodOnly) {
+             *
+             * }else {*
+             */
+            try
+            {
+                allModels = new AllFacetListModels(resultDocList, sort, showWeakAcrossDocPeopleBtn.isSelected());
+            } catch (Exception e)
+            {
+                UIUtils.reportException(this, e);
+            }
+        }
+        return allModels;
+    }
     private AllFacetListModels createNewFacetListModels(List<Document> resultDocList, boolean showNeighborhoodOnly)
     {
         AllFacetListModels allModels = null;
@@ -1571,6 +1635,7 @@ public final class FacetedSearchTopComponent extends TopComponent implements Gra
         }
     }
     
+
     public void addFacetValueToQuery(FacetValue fv)
     {
         //Add filter to stack
@@ -1586,6 +1651,62 @@ public final class FacetedSearchTopComponent extends TopComponent implements Gra
         GraphManager.getInstance().highlightPeople(people);
     }
     
+    /**
+     * look for all the documents that mention at least one person in the queryOrList
+     */
+    private void performOrQueryAndUpdateUI(){
+         //Perform query in a different thread
+        final VizLincLongTask task = new VizLincLongTask("Executing Or query...")
+        {
+            @Override
+            public void execute()
+            {
+                ProgressTicket pt = this.getProgressTicket();
+                Progress.setDisplayName(pt, "Executing query...");
+                Progress.start(pt);
+                 //Prepare this window's UI for query processing
+                enableAppropriateControls(false);
+                //Notify listeners
+                triggerAboutToExecuteQueryEvent();
+                
+                List<Document> resultDocList = new ArrayList<Document>(0);
+                try
+                {
+                    //getAllDocumentsForFacetValues resturn all the documents that mention all the people in the parameter list, for that reason a list with just one element is created
+                    for(FacetValue fv : queryOrList){
+                        //Create a list with just one element
+                        List<FacetValue> tempList = new ArrayList<>();
+                        tempList.add(fv);
+                        List<Document> tempDocList = DBUtils.getAllDocumentsForFacetValues(tempList);
+                        for(Document doc : tempDocList){
+                            if(!resultDocList.contains(doc)){
+                                resultDocList.add(doc);
+                            }
+                        }
+                        
+                    }
+                } catch (SQLException ex)
+                {
+                    UIUtils.reportException(ex);
+                }
+
+                
+                //Create new facet tree model based on query results
+                //FacetTreeModel newModel = createNewFacetTreeModel(resultDocList, showNeighborhoodOnly);
+                AllFacetListModels newModels = createNewFacetListModelsForOrQuery(resultDocList, neighborhoodCheckbox.isSelected());
+                //Update this UI when all other components have been notified.
+                //updateFacetTree(newModel);
+                updateAllFacetLists(newModels);
+                //Notify listeners
+                triggerQueryFinishedEvent(resultDocList);
+                //Enable query now that all components have been notified.
+                enableAppropriateControls(true);
+                
+                clearFiltersBtn.setEnabled(true);
+            }
+        };
+        task.run();
+    }
     private void performQueryAndUpdateUI()
     {
         performQueryAndUpdateUI(neighborhoodCheckbox.isSelected());
@@ -1608,7 +1729,6 @@ public final class FacetedSearchTopComponent extends TopComponent implements Gra
         task.run();
     }
     //TODO-Glorimar: este metodo es importante
-    sdkmfes
     private void performQueryAndUpdateUIInThread(boolean showNeighborhoodOnly)
     {
         //Prepare this window's UI for query processing

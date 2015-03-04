@@ -30,6 +30,8 @@
                   <Group type="102" attributes="0">
                       <Component id="docNumberLabel" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="32767" attributes="0"/>
+                      <Component id="exportDocBtn" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
                       <Component id="saveDocLstBtn" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="openBtn" min="-2" max="-2" attributes="0"/>
@@ -48,6 +50,7 @@
                   <Component id="docNumberLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="openBtn" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="saveDocLstBtn" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="exportDocBtn" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
               <Component id="jScrollPane2" pref="295" max="32767" attributes="0"/>
@@ -111,6 +114,16 @@
       </Properties>
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="saveDocLstBtnActionPerformed"/>
+      </Events>
+    </Component>
+    <Component class="javax.swing.JButton" name="exportDocBtn">
+      <Properties>
+        <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+          <ResourceString bundle="edu/mit/ll/vizlinc/components/Bundle.properties" key="DocListTopComponent.exportDocBtn.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+        </Property>
+      </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="exportDocBtnActionPerformed"/>
       </Events>
     </Component>
   </SubComponents>
