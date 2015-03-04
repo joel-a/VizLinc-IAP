@@ -68,8 +68,11 @@ import org.openide.util.NbBundle.Messages;
 import org.openide.windows.WindowManager;
 import edu.mit.ll.vizlinc.ui.elements.PersonListCellRenderer;
 import java.awt.Frame;
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.SortedSet;
@@ -607,6 +610,7 @@ public final class FacetedSearchTopComponent extends TopComponent implements Gra
         getPersonListModel().sort(sortCriterion);
     }
     
+    kjh
     private void addFilterBtnActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_addFilterBtnActionPerformed
     {//GEN-HEADEREND:event_addFilterBtnActionPerformed
         //Get selected facet value
@@ -768,10 +772,45 @@ public final class FacetedSearchTopComponent extends TopComponent implements Gra
         }
     }//GEN-LAST:event_savePeopleResultActionPerformed
 
+   
     //TODO-Glorimar : import a csv file with the names of the node to show
+    //TODO-Glorimar : Make te filechooser just accept csv files
+    //TODO-Glorimar coorect ort
+    /**
+     * It recive a csv file with two column: first Node ID, second Node Label.
+     * @param evt 
+     */
     private void importPeopleLstActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_importPeopleLstActionPerformed
         // TODO add your handling code here:
-        JFileChooser fileChooser = new JFileChooser();
+        JFileChooser        fileChooser     = new JFileChooser();
+        int                 userSelection   = (fileChooser.showOpenDialog(null));
+        File                inputFile;
+        BufferedReader      bufReader;
+        ArrayList<String[]> fileRows        = new ArrayList<String[]>();                                                  
+        
+      
+        if( userSelection == JFileChooser.APPROVE_OPTION){
+            inputFile   = fileChooser.getSelectedFile();
+            
+            try{
+                bufReader = new BufferedReader(new FileReader(inputFile));
+                
+                String[] row;
+                while((row = bufReader.readLine().split(",")) != null ){
+                    fileRows.add(row);
+                }
+                bufReader.close();
+                
+                peopleList.get
+                
+            } catch (FileNotFoundException ex) {
+                Exceptions.printStackTrace(ex);
+            } catch (IOException ex) {
+                Exceptions.printStackTrace(ex);
+            }
+                
+            
+        }
         
     }//GEN-LAST:event_importPeopleLstActionPerformed
 
@@ -1568,7 +1607,8 @@ public final class FacetedSearchTopComponent extends TopComponent implements Gra
         };
         task.run();
     }
-    
+    //TODO-Glorimar: este metodo es importante
+    sdkmfes
     private void performQueryAndUpdateUIInThread(boolean showNeighborhoodOnly)
     {
         //Prepare this window's UI for query processing
