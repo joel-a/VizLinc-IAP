@@ -19,6 +19,7 @@ import java.beans.PropertyChangeListener;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
+import javax.swing.JFrame;
 import org.gephi.graph.api.Graph;
 import org.gephi.graph.api.GraphController;
 import org.gephi.graph.api.GraphFactory;
@@ -131,6 +132,7 @@ public final class GraphToolsTopComponent extends TopComponent implements GraphO
         jCheckBoxClosenessShowByColor = new javax.swing.JCheckBox();
         dijkstraRadBtn = new javax.swing.JRadioButton();
         bfsRadBtn = new javax.swing.JRadioButton();
+        iapToolsBtn = new javax.swing.JButton();
 
         org.openide.awt.Mnemonics.setLocalizedText(jCheckBoxShowEdges, org.openide.util.NbBundle.getMessage(GraphToolsTopComponent.class, "GraphToolsTopComponent.jCheckBoxShowEdges.text")); // NOI18N
         jCheckBoxShowEdges.addActionListener(new java.awt.event.ActionListener() {
@@ -279,6 +281,13 @@ public final class GraphToolsTopComponent extends TopComponent implements GraphO
             }
         });
 
+        org.openide.awt.Mnemonics.setLocalizedText(iapToolsBtn, org.openide.util.NbBundle.getMessage(GraphToolsTopComponent.class, "GraphToolsTopComponent.iapToolsBtn.text")); // NOI18N
+        iapToolsBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                iapToolsBtnActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -289,8 +298,13 @@ public final class GraphToolsTopComponent extends TopComponent implements GraphO
                         .addGap(8, 8, 8)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jCheckBoxShowEdges)
-                            .addComponent(jCheckBoxShowAllLabels))
-                        .addGap(18, 18, 18)
+                            .addComponent(jCheckBoxShowAllLabels)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jLabelGraphStatus)))
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jButtonResetSizes, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jButtonResetColors))
@@ -310,9 +324,7 @@ public final class GraphToolsTopComponent extends TopComponent implements GraphO
                                 .addGap(1, 1, 1)
                                 .addComponent(jCheckBoxCentralityShowByColor))
                             .addComponent(jButtonCentrality, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                    .addGroup(layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(jLabelGraphStatus)))
+                    .addComponent(iapToolsBtn))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
@@ -386,7 +398,9 @@ public final class GraphToolsTopComponent extends TopComponent implements GraphO
                     .addComponent(jButtonCloseness))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabelGraphStatus)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jLabelGraphStatus)
+                        .addComponent(iapToolsBtn))
                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(dijkstraRadBtn)
                         .addComponent(bfsRadBtn)))
@@ -480,12 +494,25 @@ public final class GraphToolsTopComponent extends TopComponent implements GraphO
         // TODO add your handling code here:
     }//GEN-LAST:event_dijkstraRadBtnActionPerformed
 
+    private void iapToolsBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_iapToolsBtnActionPerformed
+        JFrame frame = new JFrame("IAP Tools");
+        IapToolComponent aipToolComp = new IapToolComponent();
+        
+        frame.add(aipToolComp);
+        aipToolComp.setVisible(true);
+        frame.setSize(300, 300);
+        frame.setVisible(true);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        
+    }//GEN-LAST:event_iapToolsBtnActionPerformed
+
    
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JRadioButton bfsRadBtn;
     private javax.swing.ButtonGroup buttonGroup1;
     private javax.swing.JButton clusterLayoutBtn;
     private javax.swing.JRadioButton dijkstraRadBtn;
+    private javax.swing.JButton iapToolsBtn;
     private javax.swing.JButton jButtonCentrality;
     private javax.swing.JButton jButtonCloseness;
     private javax.swing.JButton jButtonCluster;
