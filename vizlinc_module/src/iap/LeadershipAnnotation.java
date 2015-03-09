@@ -14,6 +14,7 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -37,6 +38,7 @@ public class LeadershipAnnotation {
      * @throws IOException 
      */
     public LeadershipAnnotation(File inFile, File outFile, String[] keyWords, VizLincLongTask progress) throws IOException{
+        
         if(inFile == null || outFile == null){
             throw new IllegalArgumentException("File null");
         }
@@ -49,16 +51,16 @@ public class LeadershipAnnotation {
         leadershipKeyWords   = keyWords;  
         leadershipAnnotation = new ArrayList();
         
-        this.progress.getProgressTicket().start();
+        progress.getProgressTicket().start();
         readDataOnFile();
         setLeadershipAnnotations();
         writeResultsOnFile();
-        this.progress.getProgressTicket().finish();
+        progress.getProgressTicket().finish();
         
     }
     
     private void readDataOnFile() throws IOException{
-        progress.getProgressTicket().setDisplayName("Reading File...");
+        //progress.getProgressTicket().setDisplayName("Reading File...");
         BufferedReader reader = new BufferedReader(new FileReader(inputFile));
         String line;
         while((line = reader.readLine()) != null){
@@ -68,10 +70,10 @@ public class LeadershipAnnotation {
     }
     
     private void setLeadershipAnnotations(){
-        progress.getProgressTicket().setDisplayName("Making Annotations...");
-        progress.getProgressTicket().switchToDeterminate(leadershipAnnotation.size());
+       // progress.getProgressTicket().setDisplayName("Making Annotations...");
+        //progress.getProgressTicket().switchToDeterminate(leadershipAnnotation.size());
         int progressCount = 0;
-        
+        JOptionPane.showMessageDialog(null, leadershipAnnotation.size());
         for(int i = 0; i < leadershipAnnotation.size(); i++){
             boolean dataSetted  = false;
             String  dataLine    = leadershipAnnotation.get(i);
@@ -87,13 +89,13 @@ public class LeadershipAnnotation {
             if(!dataSetted){
                 leadershipAnnotation.set(i, dataLine + separator + NO_LEADER_KEY);
             }
-            progress.getProgressTicket().progress(++progressCount);
+            //progress.getProgressTicket().progress(++progressCount);
         }
     }
     
     private void writeResultsOnFile() throws IOException{
-        progress.getProgressTicket().switchToIndeterminate();
-        progress.getProgressTicket().setDisplayName("Writing results...");
+        //progress.getProgressTicket().switchToIndeterminate();
+        //progress.getProgressTicket().setDisplayName("Writing results...");
         BufferedWriter writer = new BufferedWriter(new FileWriter(outputFile));
         for(String dataLine : leadershipAnnotation){
             writer.write(dataLine);

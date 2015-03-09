@@ -266,10 +266,14 @@ public class IapToolComponent extends javax.swing.JPanel implements java.beans.C
        }
        
        leadKeyWordsList = leadershipKeyWords.getText().split(",");
+       JOptionPane.showMessageDialog(jButton1, leadKeyWordsList);
         final VizLincLongTask task = new VizLincLongTask("Executing automatic annotation..."){
             @Override
             public void execute()
             {
+                ProgressTicket pt = this.getProgressTicket();
+                Progress.setDisplayName(pt, "Executing leadership annotation...");
+                
                 try {
                     leadershipAnnotation = new LeadershipAnnotation(leadAnnotInputFile , leadAnnotOutputFile, leadKeyWordsList, this);
                 } catch (IOException ex) {
@@ -277,6 +281,8 @@ public class IapToolComponent extends javax.swing.JPanel implements java.beans.C
                 }
             }
         };
+        task.run();
+        
         
        
     }//GEN-LAST:event_jButton3ActionPerformed
