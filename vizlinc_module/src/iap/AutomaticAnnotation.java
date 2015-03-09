@@ -94,8 +94,8 @@ public class AutomaticAnnotation {
      */
     public void setAnnotationWithWikiMedia(){
         ArrayList<String>       queryTitles     = getNamesOnFileForWikiMedia("|", inputFile, namesByBlockOf);
-        
-        progress.getProgressTicket().start(totalPersonsInFile*2);
+        progress.getProgressTicket().setDisplayName("Annotatimg...");
+        progress.getProgressTicket().switchToDeterminate(totalPersonsInFile);
         
         for(String names : queryTitles){
             try{
@@ -155,7 +155,7 @@ public class AutomaticAnnotation {
         ArrayList<String>   result  = new ArrayList();
         int count    = 0;          //to keep record of how many names were saved on one string.
         
-        progress.getProgressTicket().setDisplayName("Obtaining names in file");
+        progress.getProgressTicket().setDisplayName("Obtaining names in file...");
         progress.getProgressTicket().start();
         try {
             BufferedReader reader = new BufferedReader(new FileReader(inputFile));
@@ -179,7 +179,6 @@ public class AutomaticAnnotation {
             }
             
             reader.close();
-            progress.getProgressTicket().finish("Names obtained");
             
             
         } catch (FileNotFoundException ex) {
@@ -241,7 +240,9 @@ public class AutomaticAnnotation {
     
     private void writeResultToFile() throws IOException{
         BufferedWriter writer = new BufferedWriter(new FileWriter(outputFile));
-        
+        progress.getProgressTicket().setDisplayName("Writing...");
+        progress.getProgressTicket().switchToDeterminate(annotationMap.size());
+        progressCounter = 0;
         for(String name : annotationMap.keySet()){
             progress.getProgressTicket().progress(++progressCounter);
             writer.write(name + "," + annotationMap.get(name));
@@ -250,7 +251,7 @@ public class AutomaticAnnotation {
         
         writer.close();
         
-        JOptionPane.showMessageDialog(null, "Annotation result saved in " + outputFile.getName(), "Results Saved", JOptionPane.INFORMATION_MESSAGE);
+        JOptionPane.showMessageDialog(null, "Annotation result saved in " + outputFile.getName() + "  " + progressCounter, "Results Saved", JOptionPane.INFORMATION_MESSAGE);
     }
     public HashMap<String, String> getAnnotations(){
         return annotationMap;
