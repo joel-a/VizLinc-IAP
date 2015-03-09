@@ -11,6 +11,7 @@ import java.nio.file.DirectoryStream;
 import java.nio.file.Path;
 import java.util.List;
 import javax.swing.JFileChooser;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 /**
  *
@@ -18,6 +19,7 @@ import javax.swing.JFileChooser;
  */
 public class Utils {
     
+
     public static File selectAnInputFile(){
         JFileChooser    fileChooser         = new JFileChooser();
         File            resultFile;
@@ -31,9 +33,51 @@ public class Utils {
         return null;
     }
     
+    /**
+     * 
+     * @param extension
+     * @return 
+     */
+    public static File selectAnInputFile(FileNameExtensionFilter extension){
+        JFileChooser    fileChooser         = new JFileChooser();
+        File            resultFile;
+        fileChooser.setFileFilter(extension);
+        fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+        int userSelectionOption = fileChooser.showOpenDialog(null); //TODO-Glorimar : use the vizlinc main component
+        
+        if(userSelectionOption == JFileChooser.APPROVE_OPTION){
+            return fileChooser.getSelectedFile();
+        }
+        
+        return null;
+    }
+    
     public static File selectAnOutputFile() throws IOException{
         JFileChooser    fileChooser         = new JFileChooser();
         File            resultFile;
+        fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+        int userSelectionOption = fileChooser.showSaveDialog(null); //TODO-Glorimar : use the vizlinc main component
+        
+        if(userSelectionOption == JFileChooser.APPROVE_OPTION){
+            if(!fileChooser.getSelectedFile().exists()){
+                fileChooser.getSelectedFile().createNewFile();
+            }
+            return fileChooser.getSelectedFile();
+        }
+        
+        return null;
+    }
+    /**
+     * 
+     * @param extension
+     * @return
+     * @throws IOException 
+     */
+    public static File selectAnOutputFile(FileNameExtensionFilter extension) throws IOException{
+        JFileChooser    fileChooser         = new JFileChooser();
+        File            resultFile;
+        
+        fileChooser.setFileFilter(extension);
         fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
         int userSelectionOption = fileChooser.showSaveDialog(null); //TODO-Glorimar : use the vizlinc main component
         
@@ -69,5 +113,4 @@ public class Utils {
         }
         return false;
     }
-    
 }
