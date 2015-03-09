@@ -7,6 +7,8 @@ package edu.mit.ll.vizlinc.components;
 
 import edu.mit.ll.vizlinc.concurrency.VizLincLongTask;
 import iap.AutomaticAnnotation;
+import java.io.File;
+import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import org.gephi.utils.progress.Progress;
 import org.gephi.utils.progress.ProgressTicket;
@@ -19,12 +21,18 @@ import org.openide.util.Exceptions;
 public class IapToolComponent extends javax.swing.JPanel implements java.beans.Customizer {
     
     private Object bean;
+    
+    static private File inputFile;
+    static private File outputFile;
+    static private AutomaticAnnotation.DataBaseWiki dataBaseType;
 
     /**
      * Creates new customizer IapToolComponent
      */
     public IapToolComponent() {
         initComponents();
+        
+        
     }
     
     public void setObject(Object bean) {
@@ -40,6 +48,7 @@ public class IapToolComponent extends javax.swing.JPanel implements java.beans.C
     private void initComponents() {
 
         jProgressBar2 = new javax.swing.JProgressBar();
+        jPanel1 = new javax.swing.JPanel();
         autoAnnotationBtn = new javax.swing.JButton();
         jProgressBar1 = new javax.swing.JProgressBar();
 
@@ -55,17 +64,40 @@ public class IapToolComponent extends javax.swing.JPanel implements java.beans.C
         add(jProgressBar1, java.awt.BorderLayout.PAGE_END);
     }// </editor-fold>//GEN-END:initComponents
 
+    public static void setInputFile(File input){
+        inputFile = input;
+    }
+    public static void setOutputFile(File input){
+        outputFile = input;
+    }
+    public static void setDataBaseToUse(AutomaticAnnotation.DataBaseWiki input){
+        dataBaseType = input;
+    }
+    
+    
     private void autoAnnotationBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_autoAnnotationBtnActionPerformed
-         final VizLincLongTask task = new VizLincLongTask("Executing automatic annotation..."){
+         
+         
+        AutomaticAnnotationOptionsComponent options = new AutomaticAnnotationOptionsComponent(null, true); 
+        options.setVisible(true);
+        
+        if(inputFile == null || outputFile == null || dataBaseType == null){
+            return;
+        }
+        
+        JOptionPane.showMessageDialog(null, inputFile + "  " + outputFile + "  " + dataBaseType);
+         
+        final VizLincLongTask task = new VizLincLongTask("Executing automatic annotation..."){
             @Override
             public void execute()
             {
                 ProgressTicket pt = this.getProgressTicket();
                 Progress.setDisplayName(pt, "Executing automatic annotation...");
+                
                
-               
+                
                 try {
-                    iap.AutomaticAnnotation automaticAnnotation = new AutomaticAnnotation(iap.Utils.selectAnInputFile(), this);
+                    iap.AutomaticAnnotation automaticAnnotation = new AutomaticAnnotation(inputFile, outputFile, this, dataBaseType);
                 } catch (Exception ex) {
                     JOptionPane.showMessageDialog(null, ex, "File Error", JOptionPane.ERROR_MESSAGE);
                 }
@@ -78,6 +110,7 @@ public class IapToolComponent extends javax.swing.JPanel implements java.beans.C
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton autoAnnotationBtn;
+    private javax.swing.JPanel jPanel1;
     private javax.swing.JProgressBar jProgressBar1;
     private javax.swing.JProgressBar jProgressBar2;
     // End of variables declaration//GEN-END:variables

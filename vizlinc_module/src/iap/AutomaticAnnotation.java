@@ -19,6 +19,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Scanner;
@@ -49,10 +50,14 @@ public class AutomaticAnnotation {
     final String wmRvprop            = "rvprop=content"; //wmProp parameter
     final String wmFormat            = "format=json";    
     final String wmOccupation        = "Infobox";
-    final int    namesByBlockOf      = 100;              //make page query by ammount of namesByBlockOf at the same time
+    final int    namesByBlockOf      = 50;              //make page query by ammount of namesByBlockOf at the same time
     
     //fields for wikidata
     final String wikiDataEntity     = "http://www.wikidata.org/wiki/Special:EntityData/";
+    final String wikiDataByNameUrl  = "http://www.wikidata.org/wiki/Special:ItemByTitle/enwiki/";
+    final String wikiDataTitleKeyWord = "wgTitle\":\"";
+    HashMap<String, String> wmTitlesID;
+    
     
     //fieds for annotation
     HashMap<String, String> annotationMap;
@@ -69,18 +74,22 @@ public class AutomaticAnnotation {
      * @param inputFile - a csv file with just one column for the names of the person
      * @throws Exception 
      */
-    public AutomaticAnnotation(File inputFile, VizLincLongTask progress) throws Exception{
+    public AutomaticAnnotation(File inputFile, File outputFile, VizLincLongTask progress, DataBaseWiki wikiToConnect) throws Exception{
         annotationMap   = new HashMap();
         this.progress = progress;
         
-        if(!iap.Utils.checkFileExtension("csv", (this.inputFile = inputFile))){
+        if(!iap.Utils.checkFileExtension("csv", (this.inputFile = inputFile)) && !iap.Utils.checkFileExtension("txt", (this.inputFile = inputFile))){
             throw new Exception("Illegal input file extension. The file have to be a csv file");
         }
-        if((outputFile = iap.Utils.selectAnOutputFile()) == null){
+        if((this.outputFile = outputFile) == null){
             throw new Exception("An output file have to be selected");
         }
         
-        setAnnotationWithWikiMedia();
+        if(wikiToConnect == DataBaseWiki.WIKI_DATA){
+            setAnnotationWithWikiData();
+        }else{
+            setAnnotationWithWikiMedia();
+        }
         writeResultToFile();
         progressCounter = 0;
         progress.getProgressTicket().finish();
@@ -93,6 +102,10 @@ public class AutomaticAnnotation {
      * If the person is in the database and do not have any ambiguity the role is set to the Infobox value.
      */
     public void setAnnotationWithWikiMedia(){
+        totalPersonsInFile = 0;
+        progressCounter = 0;
+        annotationMap.clear();
+        
         ArrayList<String>       queryTitles     = getNamesOnFileForWikiMedia("|", inputFile, namesByBlockOf);
         progress.getProgressTicket().setDisplayName("Annotatimg...");
         progress.getProgressTicket().switchToDeterminate(totalPersonsInFile);
@@ -103,8 +116,10 @@ public class AutomaticAnnotation {
                 JsonReader jReader = Json.createReader(url.openStream());
                 JsonObject pages = jReader.readObject().getJsonObject("query").getJsonObject("pages");
                 for(String pageId : pages.keySet()){
+                    
                     progress.getProgressTicket().progress(++progressCounter);
                     JsonObject personInfo = pages.getJsonObject(pageId);
+                    
                     String name = personInfo.getString("title");
                     
                     if(personInfo.keySet().contains("missing")){        //the person is not in the wikimedia database
@@ -121,6 +136,7 @@ public class AutomaticAnnotation {
                                     line = sc.nextLine();
                                     if (line.contains(wmOccupation.toLowerCase())){
                                         annotationMap.put(name, line.substring(line.indexOf(wmOccupation.toLowerCase()) + wmOccupation.length()));
+                                         
                                         break;
                                     }
                                 }
@@ -144,7 +160,45 @@ public class AutomaticAnnotation {
         
         
     }
-     /**
+    
+    
+    public void setAnnotationWithWikiData(){
+        totalPersonsInFile = 0;
+        progressCounter = 0;
+        annotationMap.clear();
+        
+        ArrayList<String>       queryNames     = getNamesOnFileForWikiData("|", inputFile);
+        try {
+            wmTitlesID = getWikiDataTitles(queryNames);
+            progressCounter = 0;
+            progress.getProgressTicket().setDisplayName("Making Annotations");
+            progress.getProgressTicket().switchToDeterminate(totalPersonsInFile);
+            for(String name : wmTitlesID.keySet()){
+                if(wmTitlesID.get(name).startsWith("Q")){
+                   url = new URL(wikiDataEntity + wmTitlesID.get(name));
+                    JsonObject temp = Json.createReader(url.openStream()).readObject().getJsonObject("entities").getJsonObject(wmTitlesID.get(name));
+                    JsonObject description = temp.getJsonObject("descriptions");
+                    System.out.println(name + "   " + wmTitlesID.get(name) + "  " + temp.keySet());
+                    if(description != null){  //some description in wikidata are empty
+                        String role = description.getJsonObject("en").getJsonString("value").toString();
+                        annotationMap.put(name, role);
+                    }else{
+                        annotationMap.put(name, "no description");
+                    }
+                }else{
+                    annotationMap.put(name, "null");
+                }
+                progress.getProgressTicket().progress(++progressCounter);
+                
+            }
+            
+        } catch (IOException ex) {
+            Logger.getLogger(AutomaticAnnotation.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+    }
+    
+    /**
      * Reads the input file, normalizes the names to make wikimedia queries, and save them in blocks of namesByBlockOf in an ArrayList
      * @param delimiter
      * @param inputFile
@@ -178,6 +232,7 @@ public class AutomaticAnnotation {
                 result.add(names.substring(1));
             }
             
+            
             reader.close();
             
             
@@ -189,6 +244,41 @@ public class AutomaticAnnotation {
         return result;
     }
     
+    /**
+     * Read the names in the input file and add the to an array list already normalized for wikidata queries. 
+     * @param delimiter
+     * @param inputFile
+     * @return 
+     */
+    public  ArrayList<String> getNamesOnFileForWikiData(String delimiter, File inputFile){
+        ArrayList<String>   result  = new ArrayList();
+        int count    = 0;          //to keep record of how many names were saved on one string.
+        
+        this.progress.getProgressTicket().setDisplayName("Getting Names");
+        progress.getProgressTicket().start();
+        totalPersonsInFile = 0;
+        try {
+            BufferedReader reader = new BufferedReader(new FileReader(inputFile));
+            String names = "";
+            String tempName;
+            
+            while((tempName = reader.readLine()) != null){
+                totalPersonsInFile++;
+                result.add(wikiDataTitleNormalize(tempName, " "));
+                totalPersonsInFile++;
+              
+            }
+            
+            reader.close();
+            
+            
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(AutomaticAnnotation.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(AutomaticAnnotation.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return result;
+    }
     
     /**
      * Prepare a string s to be a page title for a wikimedia query. In wikimedia the spaces and the underscores 
@@ -213,10 +303,9 @@ public class AutomaticAnnotation {
         return result;
     }
     
-    /**
-     * Prepare a string s to be a page title for a wikidata query. In wikidata the underscores 
-     * have to be replaced by a space and the first character for each word have to be capitalized. 
-     * @param s
+     /**
+     * Prepare a string s to be a page title for a wikidata query. In wikidata the first character for each word have to be capitalized. 
+     * @param s - string to be normalized 
      * @param separator - the character that separates the words in the string s (e.g " ", "," or "_".
      * @return 
      */
@@ -224,10 +313,14 @@ public class AutomaticAnnotation {
         if(s == null){
             throw new IllegalArgumentException();
         }
+        String result = "";
         String[] temp = s.split(separator);
-        String result = temp[0].substring(0, 1).toUpperCase() + temp[0].substring(1).toLowerCase();
-        result += " " + temp[1].substring(0, 1).toUpperCase() + temp[1].substring(1).toLowerCase();
-        return result;
+        
+        for(String str : temp){
+            result += "_" + str.substring(0, 1).toUpperCase() + str.substring(1).toLowerCase();
+        }
+        
+        return result.substring(1);
     }
     
     private URL setWMURL(String names) throws MalformedURLException{
@@ -251,9 +344,45 @@ public class AutomaticAnnotation {
         
         writer.close();
         
-        JOptionPane.showMessageDialog(null, "Annotation result saved in " + outputFile.getName() + "  " + progressCounter, "Results Saved", JOptionPane.INFORMATION_MESSAGE);
+        JOptionPane.showMessageDialog(null, "Annotation result saved in " + outputFile.getName() + "  " + progressCounter + "  "  + annotationMap.size(), "Results Saved", JOptionPane.INFORMATION_MESSAGE);
+    }
+    
+    /**
+     * This method connect to wikidata and looks for the title id for each person mentioned in the ArrayList given as parameter.
+     * @param names - ArrayList with the names of people (already normalized for wikidata) to which the method is going to look for the wikidata title id.
+     * @return
+     * @throws MalformedURLException
+     * @throws IOException 
+     */
+    private HashMap<String, String> getWikiDataTitles(ArrayList<String> names) throws MalformedURLException, IOException{
+        HashMap<String, String> result = new HashMap();
+        URL tempUrl;
+        int titleKeyWordLength = wikiDataTitleKeyWord.length();
+        progress.getProgressTicket().setDisplayName("Getting WikiData Titles ID...");
+        for(String name : names){
+            tempUrl = new URL(wikiDataByNameUrl + name);
+            URLConnection conecction = tempUrl.openConnection();
+            BufferedReader reader = new BufferedReader(new InputStreamReader(conecction.getInputStream()));
+            String str;
+            while((str = reader.readLine()) != null){
+                if(str.contains(wikiDataTitleKeyWord)){
+                    int indexOfWgTitle = str.indexOf(wikiDataTitleKeyWord);
+                    String title = str.substring(indexOfWgTitle + titleKeyWordLength, str.indexOf("\"", indexOfWgTitle + titleKeyWordLength));
+                    result.put(name, title);
+                
+                }
+            }
+            reader.close();
+        }
+        
+        return result;
     }
     public HashMap<String, String> getAnnotations(){
         return annotationMap;
+    }
+    
+    public enum DataBaseWiki{
+        WIKI_DATA,
+        WIKI_MEDIA;
     }
 }
