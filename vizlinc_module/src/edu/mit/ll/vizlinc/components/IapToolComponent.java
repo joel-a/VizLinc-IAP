@@ -27,9 +27,9 @@ public class IapToolComponent extends javax.swing.JPanel implements java.beans.C
     private Object bean;
     
     //AutomaticAnnotationField
-    static private File inputFile;
-    static private File outputFile;
-    static private AutomaticAnnotation.DataBaseWiki dataBaseType;
+    private File inputFile;
+    private File outputFile;
+    private AutomaticAnnotation.DataBaseWiki dataBaseType;
     
     //Leadership Annotation Field
     iap.LeadershipAnnotation leadershipAnnotation;
@@ -60,10 +60,21 @@ public class IapToolComponent extends javax.swing.JPanel implements java.beans.C
 
         jProgressBar2 = new javax.swing.JProgressBar();
         jPanel1 = new javax.swing.JPanel();
-        autoAnnotationBtn = new javax.swing.JButton();
         jProgressBar1 = new javax.swing.JProgressBar();
         jTabbedPane1 = new javax.swing.JTabbedPane();
         jPanel3 = new javax.swing.JPanel();
+        jButton7 = new javax.swing.JButton();
+        inputFileTxtField = new javax.swing.JTextField();
+        wikiDataRadBtn = new javax.swing.JRadioButton();
+        jButton8 = new javax.swing.JButton();
+        jLabel9 = new javax.swing.JLabel();
+        jLabel10 = new javax.swing.JLabel();
+        outputFileTxtField = new javax.swing.JTextField();
+        bothwikiBrn = new javax.swing.JRadioButton();
+        wikiMediaRadBtn = new javax.swing.JRadioButton();
+        jLabel11 = new javax.swing.JLabel();
+        jLabel12 = new javax.swing.JLabel();
+        jButton9 = new javax.swing.JButton();
         jPanel2 = new javax.swing.JPanel();
         jPanel4 = new javax.swing.JPanel();
         jPanel5 = new javax.swing.JPanel();
@@ -79,15 +90,127 @@ public class IapToolComponent extends javax.swing.JPanel implements java.beans.C
         leadershipKeyWords = new javax.swing.JTextField();
 
         setLayout(new java.awt.BorderLayout());
+        add(jProgressBar1, java.awt.BorderLayout.PAGE_END);
 
-        autoAnnotationBtn.setText("Automatic Annotation");
-        autoAnnotationBtn.addActionListener(new java.awt.event.ActionListener() {
+        jButton7.setText(org.openide.util.NbBundle.getMessage(IapToolComponent.class, "AutomaticAnnotationOptionsComponent.jButton1.text")); // NOI18N
+        jButton7.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                autoAnnotationBtnActionPerformed(evt);
+                jButton7ActionPerformed(evt);
             }
         });
-        add(autoAnnotationBtn, java.awt.BorderLayout.PAGE_START);
-        add(jProgressBar1, java.awt.BorderLayout.PAGE_END);
+
+        inputFileTxtField.setEditable(false);
+        inputFileTxtField.setText(org.openide.util.NbBundle.getMessage(IapToolComponent.class, "AutomaticAnnotationOptionsComponent.inputFileTxtField.text")); // NOI18N
+
+        wikiDataRadBtn.setText(org.openide.util.NbBundle.getMessage(IapToolComponent.class, "AutomaticAnnotationOptionsComponent.wikiDataRadBtn.text")); // NOI18N
+        wikiDataRadBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                wikiDataRadBtnActionPerformed(evt);
+            }
+        });
+
+        jButton8.setText(org.openide.util.NbBundle.getMessage(IapToolComponent.class, "AutomaticAnnotationOptionsComponent.jButton2.text")); // NOI18N
+        jButton8.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton8ActionPerformed(evt);
+            }
+        });
+
+        jLabel9.setText(org.openide.util.NbBundle.getMessage(IapToolComponent.class, "AutomaticAnnotationOptionsComponent.jLabel2.text")); // NOI18N
+
+        jLabel10.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
+        jLabel10.setText(org.openide.util.NbBundle.getMessage(IapToolComponent.class, "AutomaticAnnotationOptionsComponent.jLabel1.text")); // NOI18N
+
+        outputFileTxtField.setEditable(false);
+        outputFileTxtField.setText(org.openide.util.NbBundle.getMessage(IapToolComponent.class, "AutomaticAnnotationOptionsComponent.outputFileTxtField.text")); // NOI18N
+
+        bothwikiBrn.setText(org.openide.util.NbBundle.getMessage(IapToolComponent.class, "AutomaticAnnotationOptionsComponent.bothwikiBrn.text")); // NOI18N
+
+        wikiMediaRadBtn.setText(org.openide.util.NbBundle.getMessage(IapToolComponent.class, "AutomaticAnnotationOptionsComponent.wikiMediaRadBtn.text")); // NOI18N
+
+        jLabel11.setText(org.openide.util.NbBundle.getMessage(IapToolComponent.class, "AutomaticAnnotationOptionsComponent.jLabel3.text")); // NOI18N
+
+        jLabel12.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        jLabel12.setText(org.openide.util.NbBundle.getMessage(IapToolComponent.class, "AutomaticAnnotationOptionsComponent.jLabel4.text")); // NOI18N
+
+        jButton9.setText(org.openide.util.NbBundle.getMessage(IapToolComponent.class, "AutomaticAnnotationOptionsComponent.jButton3.text")); // NOI18N
+        jButton9.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton9ActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
+        jPanel3.setLayout(jPanel3Layout);
+        jPanel3Layout.setHorizontalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jLabel10)
+                    .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(jLabel11)
+                        .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addGap(10, 10, 10)
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel3Layout.createSequentialGroup()
+                                .addComponent(wikiDataRadBtn)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 159, Short.MAX_VALUE)
+                                .addComponent(jButton9)
+                                .addGap(116, 116, 116))
+                            .addGroup(jPanel3Layout.createSequentialGroup()
+                                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(wikiMediaRadBtn)
+                                    .addComponent(bothwikiBrn))
+                                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(inputFileTxtField, javax.swing.GroupLayout.DEFAULT_SIZE, 325, Short.MAX_VALUE)
+                            .addComponent(outputFileTxtField))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel3Layout.createSequentialGroup()
+                                .addGap(3, 3, 3)
+                                .addComponent(jButton7))
+                            .addGroup(jPanel3Layout.createSequentialGroup()
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jButton8)))
+                        .addContainerGap())))
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addGap(168, 168, 168)
+                .addComponent(jLabel12)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        jPanel3Layout.setVerticalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel12)
+                .addGap(18, 18, 18)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(inputFileTxtField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jButton7)
+                    .addComponent(jLabel10))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(outputFileTxtField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jButton8))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel11)
+                    .addComponent(wikiMediaRadBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(wikiDataRadBtn)
+                    .addComponent(jButton9))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(bothwikiBrn)
+                .addContainerGap(57, Short.MAX_VALUE))
+        );
 
         jTabbedPane1.addTab("AutomatAnnot", jPanel3);
 
@@ -142,7 +265,7 @@ public class IapToolComponent extends javax.swing.JPanel implements java.beans.C
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel2)
-                    .addComponent(jLabel3))
+                    .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(leadershipKeyWords, javax.swing.GroupLayout.PREFERRED_SIZE, 322, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -161,7 +284,7 @@ public class IapToolComponent extends javax.swing.JPanel implements java.beans.C
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jButton1)
                             .addComponent(jButton2))))
-                .addContainerGap(13, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -179,7 +302,7 @@ public class IapToolComponent extends javax.swing.JPanel implements java.beans.C
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(outputFileTxtFieldLeadAnnot, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel3)
+                    .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jButton2))
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel2Layout.createSequentialGroup()
@@ -188,7 +311,7 @@ public class IapToolComponent extends javax.swing.JPanel implements java.beans.C
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addGap(8, 8, 8)
                         .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 26, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 62, Short.MAX_VALUE)
                 .addComponent(jButton3)
                 .addContainerGap())
         );
@@ -198,48 +321,9 @@ public class IapToolComponent extends javax.swing.JPanel implements java.beans.C
         add(jTabbedPane1, java.awt.BorderLayout.CENTER);
     }// </editor-fold>//GEN-END:initComponents
 
-    public static void setInputFile(File input){
-        inputFile = input;
-    }
-    public static void setOutputFile(File input){
-        outputFile = input;
-    }
-    public static void setDataBaseToUse(AutomaticAnnotation.DataBaseWiki input){
-        dataBaseType = input;
-    }
     
     
-    private void autoAnnotationBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_autoAnnotationBtnActionPerformed
-         
-         
-        AutomaticAnnotationOptionsComponent options = new AutomaticAnnotationOptionsComponent(null, true); 
-        options.setVisible(true);
-        
-        if(inputFile == null || outputFile == null || dataBaseType == null){
-            return;
-        }
-        
-        this.setEnabled(false);
-        final VizLincLongTask task = new VizLincLongTask("Executing automatic annotation..."){
-            @Override
-            public void execute()
-            {
-                ProgressTicket pt = this.getProgressTicket();
-                Progress.setDisplayName(pt, "Executing automatic annotation...");
-                
-               
-                
-                try {
-                    iap.AutomaticAnnotation automaticAnnotation = new AutomaticAnnotation(inputFile, outputFile, this, dataBaseType);
-                } catch (Exception ex) {
-                    JOptionPane.showMessageDialog(null, ex, "File Error", JOptionPane.ERROR_MESSAGE);
-                }
-            }
-         };
-         task.run();
-         this.setEnabled(true);
-    }//GEN-LAST:event_autoAnnotationBtnActionPerformed
-
+    
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         leadAnnotInputFile = iap.Utils.selectAnInputFile(new FileNameExtensionFilter("Comma Separated Value", "csv"));
         inputFileTxtFieldLeadshipAnnot.setText(leadAnnotInputFile.getPath());
@@ -287,17 +371,82 @@ public class IapToolComponent extends javax.swing.JPanel implements java.beans.C
        
     }//GEN-LAST:event_jButton3ActionPerformed
 
+    private void jButton7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton7ActionPerformed
+
+        inputFile = iap.Utils.selectAnInputFile();
+    }//GEN-LAST:event_jButton7ActionPerformed
+
+    private void wikiDataRadBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_wikiDataRadBtnActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_wikiDataRadBtnActionPerformed
+
+    private void jButton8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton8ActionPerformed
+        try {
+            outputFile =  iap.Utils.selectAnOutputFile();
+
+        } catch (IOException ex) {
+            Exceptions.printStackTrace(ex);
+        }
+    }//GEN-LAST:event_jButton8ActionPerformed
+
+    private void jButton9ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton9ActionPerformed
+        
+        
+        if(wikiDataRadBtn.isSelected()){
+            dataBaseType = AutomaticAnnotation.DataBaseWiki.WIKIDATA;
+        }else if(wikiMediaRadBtn.isSelected()){
+            dataBaseType = AutomaticAnnotation.DataBaseWiki.MEDIAWIKI;
+        }else if(bothwikiBrn.isSelected()){
+            dataBaseType = AutomaticAnnotation.DataBaseWiki.WIKIDATA_MEDIAWIKI;
+        }
+        
+        if(inputFile == null || outputFile == null || dataBaseType == null){
+            return;
+        }
+
+        this.setEnabled(false);
+        final VizLincLongTask task = new VizLincLongTask("Executing automatic annotation..."){
+            @Override
+            public void execute()
+            {
+                ProgressTicket pt = this.getProgressTicket();
+                Progress.setDisplayName(pt, "Executing automatic annotation...");
+
+                try {
+                    iap.AutomaticAnnotation automaticAnnotation = new AutomaticAnnotation(this);
+                    automaticAnnotation.setInputFile(inputFile);
+                    automaticAnnotation.setOutputFile(outputFile);
+                    automaticAnnotation.setWikiToUse(dataBaseType);
+                    automaticAnnotation.execute();
+                } catch (Exception ex) {
+                    JOptionPane.showMessageDialog(null, ex, "File Error", JOptionPane.ERROR_MESSAGE);
+                }
+            }
+        };
+        task.run();
+        this.setEnabled(true);
+
+    }//GEN-LAST:event_jButton9ActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton autoAnnotationBtn;
+    private javax.swing.JRadioButton bothwikiBrn;
+    private javax.swing.JTextField inputFileTxtField;
     private javax.swing.JTextField inputFileTxtFieldLeadshipAnnot;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
+    private javax.swing.JButton jButton7;
+    private javax.swing.JButton jButton8;
+    private javax.swing.JButton jButton9;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel10;
+    private javax.swing.JLabel jLabel11;
+    private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
@@ -307,6 +456,9 @@ public class IapToolComponent extends javax.swing.JPanel implements java.beans.C
     private javax.swing.JProgressBar jProgressBar2;
     private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JTextField leadershipKeyWords;
+    private javax.swing.JTextField outputFileTxtField;
     private javax.swing.JTextField outputFileTxtFieldLeadAnnot;
+    private javax.swing.JRadioButton wikiDataRadBtn;
+    private javax.swing.JRadioButton wikiMediaRadBtn;
     // End of variables declaration//GEN-END:variables
 }
