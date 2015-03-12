@@ -90,7 +90,6 @@ public class AutomaticAnnotation {
         }else{
             setAnnotationWithWikiMedia();
         }
-        JOptionPane.showMessageDialog(null, "Escribiendo");
         writeResultToFile();
         progressCounter = 0;
         progress.getProgressTicket().finish();
@@ -169,41 +168,22 @@ public class AutomaticAnnotation {
         annotationMap.clear();
         
         ArrayList<String>       queryNames     = getNamesOnFileForWikiData("|", inputFile);
-        JOptionPane.showMessageDialog(null, "Nombres obtenidos");
         try {
-            BufferedWriter writer = new BufferedWriter(new FileWriter(outputFile));
             wmTitlesID = getWikiDataTitles(queryNames);
             progressCounter = 0;
             progress.getProgressTicket().setDisplayName("Making Annotations");
             progress.getProgressTicket().switchToDeterminate(totalPersonsInFile);
             for(String name : wmTitlesID.keySet()){
                 if(wmTitlesID.get(name).startsWith("Q")){
-                    url = new URL(wikiDataEntity + wmTitlesID.get(name));
+                   url = new URL(wikiDataEntity + wmTitlesID.get(name));
                     JsonObject temp = Json.createReader(url.openStream()).readObject().getJsonObject("entities").getJsonObject(wmTitlesID.get(name));
-                    
-                    writer.write( name + "  " + temp);
-                    writer.newLine();
-                    writer.flush();
-                    
-                    
-                    if(temp.keySet().contains("descriptions") && temp.getJsonObject("descriptions") != null){  //some description in wikidata are empty
-                        JsonObject description = temp.getJsonObject("descriptions");
-                        if(description.getJsonObject("en") != null){
-                            String role = description.getJsonObject("en").getJsonString("value").toString();
-                            annotationMap.put(name, role);
-                        }else{
-                            annotationMap.put(name, "no description");
-                        }
-                        
-                        
-                        
-                    
-                        writer.write(description.toString());
-                        writer.newLine();
-                        writer.flush();
+                    JsonObject description = temp.getJsonObject("descriptions");
+                    System.out.println(name + "   " + wmTitlesID.get(name) + "  " + temp.keySet());
+                    if(description != null){  //some description in wikidata are empty
+                        String role = description.getJsonObject("en").getJsonString("value").toString();
+                        annotationMap.put(name, role);
                     }else{
                         annotationMap.put(name, "no description");
-                        
                     }
                 }else{
                     annotationMap.put(name, "null");
@@ -211,11 +191,10 @@ public class AutomaticAnnotation {
                 progress.getProgressTicket().progress(++progressCounter);
                 
             }
-            writer.close();
+            
         } catch (IOException ex) {
             Logger.getLogger(AutomaticAnnotation.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
         
     }
     
