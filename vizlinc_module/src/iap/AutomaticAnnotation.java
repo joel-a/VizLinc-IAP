@@ -22,6 +22,7 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -33,8 +34,9 @@ import javax.json.JsonString;
 import javax.json.JsonValue;
 import javax.swing.JOptionPane;
 import javax.swing.JProgressBar;
-import org.gephi.utils.progress.Progress;
-import org.openide.util.Exceptions;
+import org.json.JSONObject;
+//import org.gephi.utils.progress.Progress;
+//import org.openide.util.Exceptions;
 /**
  *
  * @author Glory
@@ -44,36 +46,52 @@ public class AutomaticAnnotation {
     //fields for wikimedia 
     final String wmEndpoint          = "http://en.wikipedia.org/w/api.php?";     //connect to the english database
     final String wmAction            = "action=query";   //wikimedia action
-    final String wmSpecifyPageBy     = "titles=";
-    final String wmSpace             = "%20";            //wikimedia space normalized
+    final String wmSpecifyPageBy     = "pageids=";
+    final String WM_SPACE             = "%20";            //wikimedia space normalized
     final String wmProp              = "prop=revisions"; //wikimedia property, for more properties http://www.mediawiki.org/wiki/API:Properties     
     final String wmRvprop            = "rvprop=content"; //wmProp parameter
     final String wmFormat            = "format=json";    
     final String wmOccupation        = "Infobox";
     final int    namesByBlockOf      = 50;              //make page query by ammount of namesByBlockOf at the same time
-    
+    final String WIKI_BASIC_INFO_URL = "http://en.wikipedia.org/w/api.php?action=query&redirects&prop=pageprops&continue=&format=json&titles=";
+   
     //fields for wikidata
     final String wikiDataEntity     = "http://www.wikidata.org/wiki/Special:EntityData/";
-    final String wikiDataByNameUrl  = "http://www.wikidata.org/wiki/Special:ItemByTitle/enwiki/";
+    final String WIKIDATA_URL        = "https://www.wikidata.org/w/api.php?continue=&format=json&action=query&redirects&prop=revisions&rvprop=content&titles=";
     final String wikiDataTitleKeyWord = "wgTitle\":\"";
-    HashMap<String, String> wmTitlesID;
     
     
     //fieds for annotation
+    ArrayList<String>       namesOnFile;
     HashMap<String, String> annotationMap;
-    URL                     url;
+    HashMap<String, String> wikiNameMap;            //HashMap<wikiname, file name>. 
+    HashMap<String, String> pageIdsMap;             //Hash Map<Person name, Page Id for MediaWiki>
+    HashMap<String, String> titlesMap;              //HasMap<Person name, wikidata title>
     File                    inputFile;
     File                    outputFile;
     int                     totalPersonsInFile = 0;
     int                     progressCounter = 0; 
     VizLincLongTask         progress;
+    DataBaseWiki            wiki2Use;
+    ArrayList<String>       missingPersons;
     
+    
+    /**
+     * 
+     * @param progress 
+     */
+    public AutomaticAnnotation(VizLincLongTask progress){
+        this.progress = progress;
+        
+        
+    }
     
     /**
      * 
      * @param inputFile - a csv file with just one column for the names of the person
      * @throws Exception 
      */
+    /*
     public AutomaticAnnotation(File inputFile, File outputFile, VizLincLongTask progress, DataBaseWiki wikiToConnect) throws Exception{
         annotationMap   = new HashMap();
         this.progress = progress;
@@ -93,8 +111,8 @@ public class AutomaticAnnotation {
         JOptionPane.showMessageDialog(null, "Escribiendo");
         writeResultToFile();
         progressCounter = 0;
-        progress.getProgressTicket().finish();
-    }
+        //progress.getProgressTicket().finish();
+    }*/
     
     
     /**
@@ -102,29 +120,28 @@ public class AutomaticAnnotation {
      * it sets the role to "null". If the name of the person refers to more than one person, the role for this person is set to "more than one option." 
      * If the person is in the database and do not have any ambiguity the role is set to the Infobox value.
      */
-    public void setAnnotationWithWikiMedia(){
+    
+    private ArrayList<String> setAnnotationWithWikiMedia(List<String> names){
         totalPersonsInFile = 0;
         progressCounter = 0;
-        annotationMap.clear();
         
-        ArrayList<String>       queryTitles     = getNamesOnFileForWikiMedia("|", inputFile, namesByBlockOf);
-        progress.getProgressTicket().setDisplayName("Annotatimg...");
-        progress.getProgressTicket().switchToDeterminate(totalPersonsInFile);
+        ArrayList<String> missingPersons = new ArrayList();
+        //progress.getProgressTicket().setDisplayName("Annotatimg...");
+        //progress.getProgressTicket().switchToDeterminate(totalPersonsInFile);
         
-        for(String names : queryTitles){
+        for(String name : names){
             try{
-                url = setWMURL(names);
+                URL url = setWMURL(pageIdsMap.get(name));
                 JsonReader jReader = Json.createReader(url.openStream());
                 JsonObject pages = jReader.readObject().getJsonObject("query").getJsonObject("pages");
                 for(String pageId : pages.keySet()){
                     
-                    progress.getProgressTicket().progress(++progressCounter);
+                    //progress.getProgressTicket().progress(++progressCounter);
                     JsonObject personInfo = pages.getJsonObject(pageId);
                     
-                    String name = personInfo.getString("title");
-                    
                     if(personInfo.keySet().contains("missing")){        //the person is not in the wikimedia database
-                        annotationMap.put(name, "null");
+                        annotationMap.put(wikiNameMap.get(name), "null");
+                        missingPersons.add(name);
                     }else{
                          JsonArray revisionsValue = personInfo.getJsonArray("revisions");
                         for(int i = 0; i < revisionsValue.size(); i++){
@@ -136,14 +153,14 @@ public class AutomaticAnnotation {
                                 while(sc.hasNextLine()){
                                     line = sc.nextLine();
                                     if (line.contains(wmOccupation.toLowerCase())){
-                                        annotationMap.put(name, line.substring(line.indexOf(wmOccupation.toLowerCase()) + wmOccupation.length()));
+                                        annotationMap.put(wikiNameMap.get(name), line.substring(line.indexOf(wmOccupation.toLowerCase()) + wmOccupation.length()));
                                          
                                         break;
                                     }
                                 }
                                 
                             }else{                                                      //ambiguity 
-                                annotationMap.put(name, "more than one option");
+                                annotationMap.put(wikiNameMap.get(name), "more than one option");
                             }
                         }
                     }
@@ -155,151 +172,119 @@ public class AutomaticAnnotation {
             } catch (MalformedURLException ex) {
                 Logger.getLogger(AutomaticAnnotation.class.getName()).log(Level.SEVERE, null, ex);
             } catch (IOException ex) {
-                 Exceptions.printStackTrace(ex);
+                 //Exceptions.printStackTrace(ex);
              }
         }
-        
+        return missingPersons;
         
     }
     
-    
-    public void setAnnotationWithWikiData(){
+    private ArrayList<String> setAnnotationWithWikiMedia(){
         totalPersonsInFile = 0;
         progressCounter = 0;
-        annotationMap.clear();
         
-        ArrayList<String>       queryNames     = getNamesOnFileForWikiData("|", inputFile);
-        JOptionPane.showMessageDialog(null, "Nombres obtenidos");
-        try {
-            BufferedWriter writer = new BufferedWriter(new FileWriter(outputFile));
-            wmTitlesID = getWikiDataTitles(queryNames);
-            progressCounter = 0;
-            progress.getProgressTicket().setDisplayName("Making Annotations");
-            progress.getProgressTicket().switchToDeterminate(totalPersonsInFile);
-            for(String name : wmTitlesID.keySet()){
-                if(wmTitlesID.get(name).startsWith("Q")){
-                    url = new URL(wikiDataEntity + wmTitlesID.get(name));
-                    JsonObject temp = Json.createReader(url.openStream()).readObject().getJsonObject("entities").getJsonObject(wmTitlesID.get(name));
+        ArrayList<String> missingPersons = new ArrayList();
+        //progress.getProgressTicket().setDisplayName("Annotatimg...");
+        //progress.getProgressTicket().switchToDeterminate(totalPersonsInFile);
+        
+        for(String name : wikiNameMap.keySet()){
+            try{
+                URL url = setWMURL(pageIdsMap.get(name));
+                JsonReader jReader = Json.createReader(url.openStream());
+                JsonObject pages = jReader.readObject().getJsonObject("query").getJsonObject("pages");
+                for(String pageId : pages.keySet()){
                     
-                    writer.write( name + "  " + temp);
-                    writer.newLine();
-                    writer.flush();
+                    //progress.getProgressTicket().progress(++progressCounter);
+                    JsonObject personInfo = pages.getJsonObject(pageId);
                     
-                    
-                    if(temp.keySet().contains("descriptions") && temp.getJsonObject("descriptions") != null){  //some description in wikidata are empty
-                        JsonObject description = temp.getJsonObject("descriptions");
-                        if(description.getJsonObject("en") != null){
-                            String role = description.getJsonObject("en").getJsonString("value").toString();
-                            annotationMap.put(name, role);
-                        }else{
-                            annotationMap.put(name, "no description");
-                        }
-                        
-                        
-                        
-                    
-                        writer.write(description.toString());
-                        writer.newLine();
-                        writer.flush();
+                    if(personInfo.keySet().contains("missing")){        //the person is not in the wikimedia database
+                        annotationMap.put(wikiNameMap.get(name), "null");
+                        missingPersons.add(name);
                     }else{
-                        annotationMap.put(name, "no description");
-                        
+                         JsonArray revisionsValue = personInfo.getJsonArray("revisions");
+                        for(int i = 0; i < revisionsValue.size(); i++){
+                            String content = revisionsValue.getJsonObject(i).getJsonString("*").getString().toLowerCase();
+                            if(content.contains(wmOccupation.toLowerCase())){
+                                Scanner sc = new Scanner(content);
+                                String line; 
+                                
+                                while(sc.hasNextLine()){
+                                    line = sc.nextLine();
+                                    if (line.contains(wmOccupation.toLowerCase())){
+                                        annotationMap.put(wikiNameMap.get(name), line.substring(line.indexOf(wmOccupation.toLowerCase()) + wmOccupation.length()));
+                                         
+                                        break;
+                                    }
+                                }
+                                
+                            }else{                                                      //ambiguity 
+                                annotationMap.put(wikiNameMap.get(name), "more than one option");
+                            }
+                        }
+                    }
+                    
+                }
+                
+                
+                
+            } catch (MalformedURLException ex) {
+                Logger.getLogger(AutomaticAnnotation.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (IOException ex) {
+                 //Exceptions.printStackTrace(ex);
+             }
+        }
+        return missingPersons;
+        
+    }
+    private ArrayList<String> setAnnotationWithWikiData() throws MalformedURLException, IOException{
+        progressCounter = 0;
+        ArrayList<String> missingPersons = new ArrayList();
+        ArrayList<String>       queryNames     = new ArrayList();
+        
+        for(String name : titlesMap.keySet()){
+            if(titlesMap.get(name).startsWith("Q")){
+                URL url = new URL(wikiDataEntity + titlesMap.get(name));
+                JsonObject jsonData = Json.createReader(url.openStream()).readObject().getJsonObject("entities").getJsonObject(titlesMap.get(name));
+                if(jsonData.keySet().contains("descriptions") && jsonData.getJsonObject("descriptions") != null){  //some description in wikidata are empty
+                    JsonObject description = jsonData.getJsonObject("descriptions");
+                    if(description.getJsonObject("en") != null){                        //description in english
+                    String role = description.getJsonObject("en").getJsonString("value").toString();
+                    annotationMap.put(wikiNameMap.get(name), role);
+                    
+                    }else{
+                        missingPersons.add(name);
                     }
                 }else{
-                    annotationMap.put(name, "null");
+                    missingPersons.add(name);
                 }
-                progress.getProgressTicket().progress(++progressCounter);
-                
+            }else{
+                missingPersons.add(name);
             }
-            writer.close();
-        } catch (IOException ex) {
-            Logger.getLogger(AutomaticAnnotation.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        
-        
+       } 
+        return missingPersons;
     }
     
     /**
      * Reads the input file, normalizes the names to make wikimedia queries, and save them in blocks of namesByBlockOf in an ArrayList
-     * @param delimiter
      * @param inputFile
-     * @param namesByBlockOf
      * @return 
      */
-    public  ArrayList<String> getNamesOnFileForWikiMedia(String delimiter, File inputFile, int namesByBlockOf){
-        ArrayList<String>   result  = new ArrayList();
-        int count    = 0;          //to keep record of how many names were saved on one string.
+    private  ArrayList<String> getNamesOnFile(File inputFile) throws FileNotFoundException, IOException{
+        totalPersonsInFile = 0;                                 //reset ammount of persons
         
-        progress.getProgressTicket().setDisplayName("Obtaining names in file...");
-        progress.getProgressTicket().start();
-        try {
-            BufferedReader reader = new BufferedReader(new FileReader(inputFile));
-            String names = "";
-            String tempName;
+        ArrayList       names   = new ArrayList<String>();
+        BufferedReader  reader  = new BufferedReader(new FileReader(inputFile));
             
-            while((tempName = reader.readLine()) != null){
-                totalPersonsInFile++;
-                if(++count%namesByBlockOf != 0){
-                    names += delimiter + wikimediaTitleNormalize(tempName);
-                }else{
-                    result.add(names.substring(1));         //remove the first "|" 
-                    names = delimiter + wikimediaTitleNormalize(tempName);
-                }  
-            }
-            
-            
-            //add las namnes not added. The names are not added if the ammount of names in the string not equal 20
-            if(count%namesByBlockOf != 0){
-                result.add(names.substring(1));
-            }
-            
-            
-            reader.close();
-            
-            
-        } catch (FileNotFoundException ex) {
-            Logger.getLogger(AutomaticAnnotation.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IOException ex) {
-            Logger.getLogger(AutomaticAnnotation.class.getName()).log(Level.SEVERE, null, ex);
+        String name;
+        while((name = reader.readLine()) != null){
+            totalPersonsInFile++;
+            names.add(normalizeNamesForMediaWiki(name));       
         }
-        return result;
+        
+        return names;
     }
     
-    /**
-     * Read the names in the input file and add the to an array list already normalized for wikidata queries. 
-     * @param delimiter
-     * @param inputFile
-     * @return 
-     */
-    public  ArrayList<String> getNamesOnFileForWikiData(String delimiter, File inputFile){
-        ArrayList<String>   result  = new ArrayList();
-        int count    = 0;          //to keep record of how many names were saved on one string.
-        
-        this.progress.getProgressTicket().setDisplayName("Getting Names");
-        progress.getProgressTicket().start();
-        totalPersonsInFile = 0;
-        try {
-            BufferedReader reader = new BufferedReader(new FileReader(inputFile));
-            String names = "";
-            String tempName;
-            
-            while((tempName = reader.readLine()) != null){
-                totalPersonsInFile++;
-                result.add(wikiDataTitleNormalize(tempName, " "));
-                totalPersonsInFile++;
-              
-            }
-            
-            reader.close();
-            
-            
-        } catch (FileNotFoundException ex) {
-            Logger.getLogger(AutomaticAnnotation.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IOException ex) {
-            Logger.getLogger(AutomaticAnnotation.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return result;
-    }
+    
     
     /**
      * Prepare a string s to be a page title for a wikimedia query. In wikimedia the spaces and the underscores 
@@ -307,7 +292,7 @@ public class AutomaticAnnotation {
      * @param s
      * @return 
      */
-    public static String wikimediaTitleNormalize(String s){
+    private static String normalizeNamesForMediaWiki(String s){
         if(s == null){
             throw new IllegalArgumentException();
         }
@@ -324,25 +309,7 @@ public class AutomaticAnnotation {
         return result;
     }
     
-     /**
-     * Prepare a string s to be a page title for a wikidata query. In wikidata the first character for each word have to be capitalized. 
-     * @param s - string to be normalized 
-     * @param separator - the character that separates the words in the string s (e.g " ", "," or "_".
-     * @return 
-     */
-    public static String wikiDataTitleNormalize(String s, String separator){
-        if(s == null){
-            throw new IllegalArgumentException();
-        }
-        String result = "";
-        String[] temp = s.split(separator);
-        
-        for(String str : temp){
-            result += "_" + str.substring(0, 1).toUpperCase() + str.substring(1).toLowerCase();
-        }
-        
-        return result.substring(1);
-    }
+     
     
     private URL setWMURL(String names) throws MalformedURLException{
         if(names == null){
@@ -354,56 +321,111 @@ public class AutomaticAnnotation {
     
     private void writeResultToFile() throws IOException{
         BufferedWriter writer = new BufferedWriter(new FileWriter(outputFile));
-        progress.getProgressTicket().setDisplayName("Writing...");
-        progress.getProgressTicket().switchToDeterminate(annotationMap.size());
+        //progress.getProgressTicket().setDisplayName("Writing...");
+        //progress.getProgressTicket().switchToDeterminate(annotationMap.size());
         progressCounter = 0;
         for(String name : annotationMap.keySet()){
-            progress.getProgressTicket().progress(++progressCounter);
+            //progress.getProgressTicket().progress(++progressCounter);
             writer.write(name + "," + annotationMap.get(name));
             writer.newLine();
+            writer.flush();
         }
         
         writer.close();
         
-        JOptionPane.showMessageDialog(null, "Annotation result saved in " + outputFile.getName() + "  " + progressCounter + "  "  + annotationMap.size(), "Results Saved", JOptionPane.INFORMATION_MESSAGE);
+        JOptionPane.showMessageDialog(null, "Annotation result saved in " + outputFile.getName() , "Results Saved", JOptionPane.INFORMATION_MESSAGE);
     }
     
     /**
-     * This method connect to wikidata and looks for the title id for each person mentioned in the ArrayList given as parameter.
+     * This method connect to wikipedia and look for the pageID for wikipedia and the title 
+     * for wikidata for each person in the given list.
      * @param names - ArrayList with the names of people (already normalized for wikidata) to which the method is going to look for the wikidata title id.
-     * @return
      * @throws MalformedURLException
      * @throws IOException 
      */
-    private HashMap<String, String> getWikiDataTitles(ArrayList<String> names) throws MalformedURLException, IOException{
-        HashMap<String, String> result = new HashMap();
+    public void setWikiIds(List<String> names) throws MalformedURLException, IOException{
+        wikiNameMap = new HashMap();
+        pageIdsMap  = new HashMap();
+        titlesMap   = new HashMap();
+        annotationMap = new HashMap();
         URL tempUrl;
-        int titleKeyWordLength = wikiDataTitleKeyWord.length();
-        progress.getProgressTicket().setDisplayName("Getting WikiData Titles ID...");
-        for(String name : names){
-            tempUrl = new URL(wikiDataByNameUrl + name);
-            URLConnection conecction = tempUrl.openConnection();
-            BufferedReader reader = new BufferedReader(new InputStreamReader(conecction.getInputStream()));
-            String str;
-            while((str = reader.readLine()) != null){
-                if(str.contains(wikiDataTitleKeyWord)){
-                    int indexOfWgTitle = str.indexOf(wikiDataTitleKeyWord);
-                    String title = str.substring(indexOfWgTitle + titleKeyWordLength, str.indexOf("\"", indexOfWgTitle + titleKeyWordLength));
-                    result.put(name, title);
-                
+        for (String name : names){
+            tempUrl = new URL(WIKI_BASIC_INFO_URL + name);
+            JsonObject jsonData = Json.createReader(tempUrl.openStream()).readObject().getJsonObject("query").getJsonObject("pages");
+            for(String pageKey : jsonData.keySet()){
+                if(pageKey.startsWith("-")){
+                    annotationMap.put(name.replace("%20", " "), "not found");
+                    continue;
                 }
+                String wikiName = jsonData.getJsonObject(pageKey).getJsonString("title").toString().replace("\"", "");
+                String pageId = jsonData.getJsonObject(pageKey).getJsonNumber("pageid").toString();
+                String title = jsonData.getJsonObject(pageKey).getJsonObject("pageprops").getJsonString("wikibase_item").toString().replace("\"", "");
+                pageIdsMap.put(wikiName, pageId);
+                titlesMap.put(wikiName, title);
+                wikiNameMap.put(wikiName, name.replace("%20", " "));
             }
-            reader.close();
         }
-        
-        return result;
     }
+    
+    
     public HashMap<String, String> getAnnotations(){
         return annotationMap;
     }
     
+    public void setWikiToUse(DataBaseWiki wiki2Use){
+        this.wiki2Use = wiki2Use;
+    }
+    
+    public void setInputFile(File input){
+        if(input == null){
+            throw new IllegalArgumentException("Input file is null");
+        }
+        this.inputFile = input;
+        
+    }
+    
+    public void setOutputFile(File outputFile){
+        if(outputFile == null){
+            throw new IllegalArgumentException("Input file is null");
+        }
+        this.outputFile = outputFile;
+    }
+    
+    
+    public void execute() throws Exception{
+        progress.getProgressTicket().start();
+        progress.getProgressTicket().setDisplayName("Obtaining names in file...");
+        if(inputFile == null || outputFile == null){
+            throw new Exception("Input or output file have not be set.");
+        }
+        namesOnFile = getNamesOnFile(inputFile);
+        progress.getProgressTicket().setDisplayName("Getting wiki ids...");
+        setWikiIds(namesOnFile);
+        if(wiki2Use == DataBaseWiki.WIKIDATA){
+            progress.getProgressTicket().setDisplayName("Annotating data with WikiData...");
+            missingPersons = setAnnotationWithWikiData();
+            for(String name : missingPersons){
+                annotationMap.put(wikiNameMap.get(name), "null");
+            }
+        }else if(wiki2Use == DataBaseWiki.MEDIAWIKI){
+            progress.getProgressTicket().setDisplayName("Annotating data with MediaWiki...");
+            missingPersons = setAnnotationWithWikiMedia();
+        }else{
+            progress.getProgressTicket().setDisplayName("Annotating data with WikiData...");
+            missingPersons = setAnnotationWithWikiData();
+            if(missingPersons.size() > 0){
+                progress.getProgressTicket().setDisplayName("Annotating data with MediaWiki...");
+                missingPersons = setAnnotationWithWikiMedia(missingPersons);
+            }
+        }
+        progress.getProgressTicket().setDisplayName("Writting results...");
+        writeResultToFile();
+        progress.getProgressTicket().finish();
+       
+    }
     public enum DataBaseWiki{
-        WIKI_DATA,
-        WIKI_MEDIA;
+        WIKIDATA,
+        MEDIAWIKI,
+        WIKIDATA_MEDIAWIKI;
     }
 }

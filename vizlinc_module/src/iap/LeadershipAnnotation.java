@@ -64,7 +64,8 @@ public class LeadershipAnnotation {
         BufferedReader reader = new BufferedReader(new FileReader(inputFile));
         String line;
         while((line = reader.readLine()) != null){
-            leadershipAnnotation.add(line);
+            int firstCommaIndex = line.indexOf(",");
+            leadershipAnnotation.add(line.substring(0, line.indexOf(",", firstCommaIndex + 1)));
         }
         reader.close();
     }
