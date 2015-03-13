@@ -112,6 +112,7 @@ public class GraphManager implements VLQueryListener {
     public static final String NODE_INFO_CLUSTERS = "Clusters";
     public static final String NODE_INFO_PAGERANK = "PageRank";
     public static final String NODE_INFO_CENTRALITY = "Eigenvector Centrality";
+    public static final String NODE_INFO_CLOSENESS = "Closeness Centrality";
     public static final String NODE_INFO_NOTHING = "";
     // Change the name of the graph file to reflect that it has had a layout algorithm applied.
     public static final String GRAPH_FILE_EXTENSION = ".graphml";
@@ -1286,6 +1287,73 @@ public class GraphManager implements VLQueryListener {
         pageRankTask.run();
     }
 
+    /**
+     * Execute ClosenessCentrality
+     * @param showBySize
+     * @param showByColor 
+     */
+    public void closenessCentrality(final boolean showBySize, final boolean showByColor){
+        final VizLincLongTask closenessCentralityTask = new VizLincLongTask("Running CLoseness Centrality...") {
+            ClosenessCentrality closenessCenrality = new ClosenessCentrality();
+            boolean cancelled = false;
+            
+            //TODO-Glorimar 
+            @Override
+            public boolean cancel() {
+                cancelled = closenessCenrality.cancel();
+                return cancelled;
+            }
+            
+            @Override
+            public void execute() {
+                startComputation();
+                try {
+                    
+                    visibleGraph.readLock();
+
+                    // Centrality runs on the visible view.
+                    // centrality will take care of displaying progress.
+                    closenessCenrality.setProgressTicket(this.getProgressTicket());
+                    closenessCenrality.setDirected(false);
+                    closenessCenrality.execute(graphModel, attributeModel);
+                    if (cancelled) {
+                        return;
+                    }
+
+                    // Now visualize the centrality.
+                    RankingController rankingController = Lookup.getDefault().lookup(RankingController.class);
+                    
+                    AttributeColumn col = attributeModel.getNodeTable().getColumn(ClosenessCentrality.CLOSENESS);
+                    
+                    // Vary over the visible graph, not the whole graph.
+                    rankingController.setUseLocalScale(true);
+                    // S-shaped interpolator: exaggerate differences near extrema.
+                    rankingController.setInterpolator(new Interpolator.BezierInterpolator(1.0f, 0.0f, 0.0f, 1.0f));
+                    Ranking centralityRanking = rankingController.getModel().getRanking(Ranking.NODE_ELEMENT, col.getId());
+
+                    if (showBySize) {
+                        AbstractSizeTransformer sizeTransformer = (AbstractSizeTransformer) rankingController.getModel().getTransformer(Ranking.NODE_ELEMENT, Transformer.RENDERABLE_SIZE);
+                        sizeTransformer.setMinSize(4.0f);
+                        sizeTransformer.setMaxSize(20.0f);
+                        rankingController.transform(centralityRanking, sizeTransformer);
+                        graphToolsWin.setGraphNodeSizeInfo(NODE_INFO_CLOSENESS);
+                    }
+
+                    if (showByColor) {
+                        AbstractColorTransformer colorTransformer = (AbstractColorTransformer) rankingController.getModel().getTransformer(Ranking.NODE_ELEMENT, Transformer.RENDERABLE_COLOR);
+                        colorTransformer.setColors(new Color[]{new Color(0xFEF0D9), new Color(0xB30000)});
+                        rankingController.transform(centralityRanking, colorTransformer);
+                        graphToolsWin.setGraphNodeColorInfo(NODE_INFO_CLOSENESS);
+                    }
+
+                    visibleGraph.readUnlockAll();
+                } finally {
+                    stopComputation();    // Even if cancelled.
+                }
+            }
+        };
+        closenessCentralityTask.run();
+    }
     /**
      * Centrality, invoked from GraphToolsTopComponent.
      */

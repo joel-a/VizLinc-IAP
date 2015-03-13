@@ -5,6 +5,7 @@
  */
 package edu.mit.ll.vizlinc.graph;
 
+import static edu.mit.ll.vizlinc.graph.Closeness.CLOSENESS;
 import java.util.HashMap;
 import java.util.HashSet;
 import org.gephi.data.attributes.api.AttributeModel;
@@ -15,6 +16,7 @@ import org.gephi.statistics.spi.Statistics;
 import org.gephi.graph.api.*;
 import java.util.LinkedList;
 import java.util.Set;
+import javax.swing.JOptionPane;
 import org.gephi.algorithms.shortestpath.DijkstraShortestPathAlgorithm;
 import org.gephi.data.attributes.api.AttributeOrigin;
 import org.gephi.data.attributes.api.AttributeTable;
@@ -31,7 +33,7 @@ import org.gephi.utils.progress.ProgressTicket;
  */
 public class ClosenessCentrality implements Statistics, LongTask{
     
-    public static final String  CLOSENESS = "ClosenessCentrality";
+    public static final String  CLOSENESS = "closeness";
     private int                 N;                          //ammount of node in the visible graph
     private ProgressTicket      progress;
     private boolean             isCanceled;
@@ -62,7 +64,8 @@ public class ClosenessCentrality implements Statistics, LongTask{
     @Override
     public void execute(GraphModel graphModel, AttributeModel attributeModel) {
         
-        Graph graph = isDirected ? graphModel.getDirectedGraph() : graphModel.getUndirectedGraph();
+        Graph graph = graphModel.getGraphVisible();
+        
         this.N      = graph.getNodeCount();
         
         //block the graph while in use by this class
@@ -72,24 +75,25 @@ public class ClosenessCentrality implements Statistics, LongTask{
         initializeAttributeColunms(attributeModel);
         
         //Start the progress
-        if(progress != null){
-            this.progress.start(N);
-            this.progress.setDisplayName("Calculating " + CLOSENESS + "...");
-        }
+        Progress.start(progress, N);
         
         
         //calculate closeness
         int progressCount = 0;
         DijkstraShortestPathAlgorithm dijAlg;
         for(Node nSource : graph.getNodes()){
+            //increase progress
+            Progress.progress(progress, ++progressCount);
+            
+            progress.setDisplayName("Working with " + nSource + " of " + N);
             //calculate geodesic path
             dijAlg = new DijkstraShortestPathAlgorithm(graph, nSource);
             dijAlg.compute();
             
             //add all the geodesic distance: sumdij
-            HashMap<NodeData, Double> distances = dijAlg.getDistances();
+            HashMap<Node, Double> distances = dijAlg.getDistances();
             double sumDij = 0;
-            for(NodeData node : distances.keySet()){
+            for(Node node : distances.keySet()){
                 sumDij += distances.get(node);
             }
             
@@ -97,19 +101,17 @@ public class ClosenessCentrality implements Statistics, LongTask{
             double c = (N - 1)/sumDij;
             
             //add result to node attribute
-            nSource.getAttributes().setValue(CLOSENESS, c);
+            nSource.getAttributes().setValue(CLOSENESS, new Double(c));
+            JOptionPane.showMessageDialog(null, nSource.getAttributes().getValue(CLOSENESS) + "   " + sumDij);
             
-            //increase progress
-            if(this.progress != null){
-                this.progress.progress(++progressCount);
+            if(isCanceled){
+                return;
             }
         }
         
         //
         graph.readUnlock();
-        if(progress != null){
-            progress.finish();
-        }
+        Progress.finish(progress);
         
         
     }
@@ -121,6 +123,7 @@ public class ClosenessCentrality implements Statistics, LongTask{
 
     @Override
     public boolean cancel() {
+        this.isCanceled = true;
         return this.isCanceled;
     }
 
@@ -212,9 +215,9 @@ public class ClosenessCentrality implements Statistics, LongTask{
      * @param attributeModel 
      */
     private void initializeAttributeColunms(AttributeModel attributeModel) {
-        
-        if (attributeModel.getNodeTable().getColumn(CLOSENESS) == null) {
-            attributeModel.getNodeTable().addColumn(CLOSENESS, "Closeness Centrality", AttributeType.DOUBLE, AttributeOrigin.COMPUTED, new Double(0));
+        AttributeTable nodeTable = attributeModel.getNodeTable();
+        if (!nodeTable.hasColumn(CLOSENESS)) {
+            nodeTable.addColumn(CLOSENESS, "Closeness Centrality", AttributeType.DOUBLE, AttributeOrigin.COMPUTED, new Double(0));
         }
         
     }
