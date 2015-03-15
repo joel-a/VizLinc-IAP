@@ -5,19 +5,14 @@
  */
 package edu.mit.ll.vizlinc.graph;
 
-import static edu.mit.ll.vizlinc.graph.Closeness.CLOSENESS;
+
 import java.util.HashMap;
-import java.util.HashSet;
 import org.gephi.data.attributes.api.AttributeModel;
 import org.gephi.graph.api.GraphModel;
 import org.gephi.graph.api.Graph;
 import org.gephi.graph.api.Node;
 import org.gephi.statistics.spi.Statistics;
-import org.gephi.graph.api.*;
-import java.util.LinkedList;
-import java.util.Set;
-import javax.swing.JOptionPane;
-import org.gephi.algorithms.shortestpath.DijkstraShortestPathAlgorithm;
+import iap.DijkstraAlgorithm;
 import org.gephi.data.attributes.api.AttributeOrigin;
 import org.gephi.data.attributes.api.AttributeTable;
 import org.gephi.data.attributes.api.AttributeType;
@@ -33,7 +28,7 @@ import org.gephi.utils.progress.ProgressTicket;
  */
 public class ClosenessCentrality implements Statistics, LongTask{
     
-    public static final String  CLOSENESS = "closeness";
+    public static final String  CLOSENESS = "closeness_centrality";
     private int                 N;                          //ammount of node in the visible graph
     private ProgressTicket      progress;
     private boolean             isCanceled;
@@ -59,7 +54,7 @@ public class ClosenessCentrality implements Statistics, LongTask{
     }
     
    
-
+    
     
     @Override
     public void execute(GraphModel graphModel, AttributeModel attributeModel) {
@@ -75,34 +70,52 @@ public class ClosenessCentrality implements Statistics, LongTask{
         initializeAttributeColunms(attributeModel);
         
         //Start the progress
-        Progress.start(progress, N);
+        if(this.progress != null){
+            Progress.start(progress, N);
+        }
+        
         
         
         //calculate closeness
         int progressCount = 0;
-        DijkstraShortestPathAlgorithm dijAlg;
+        DijkstraAlgorithm dijAlg;
+        HashMap<Node, HashMap<Node, Double>> distancesCalculated = new HashMap();  //HashMap<sourceNode, distances>  distances = HashMap<toNode, value>
+        
         for(Node nSource : graph.getNodes()){
             //increase progress
-            Progress.progress(progress, ++progressCount);
+            if(progress != null){
+                Progress.progress(progress, ++progressCount);
+                progress.setDisplayName("Working with " + nSource + " of " + N);
+            }
             
-            progress.setDisplayName("Working with " + nSource + " of " + N);
             //calculate geodesic path
-            dijAlg = new DijkstraShortestPathAlgorithm(graph, nSource);
-            dijAlg.compute();
+            dijAlg = new DijkstraAlgorithm(graph, nSource);
+            dijAlg.compute(distancesCalculated);
+            distancesCalculated.put(nSource, dijAlg.getDistances());
             
             //add all the geodesic distance: sumdij
             HashMap<Node, Double> distances = dijAlg.getDistances();
-            double sumDij = 0;
+            double  sumDij      = 0;
+            int     reachables  = 0;
             for(Node node : distances.keySet()){
+                double distance = distances.get(node);
+                if(distance == Double.POSITIVE_INFINITY){           //Not reachable, we descaret the infinity
+                    continue;
+                }
+                ++reachables;
                 sumDij += distances.get(node);
             }
             
             //calculate closeness 
-            double c = (N - 1)/sumDij;
+            double c;
+            if(sumDij == 0){        //not connected
+                c = 0;
+            }else{
+                c = (N - 1)/sumDij;     //we should devided by the ammount of reachable nodes???
+            }
             
             //add result to node attribute
             nSource.getAttributes().setValue(CLOSENESS, new Double(c));
-            JOptionPane.showMessageDialog(null, nSource.getAttributes().getValue(CLOSENESS) + "   " + sumDij);
             
             if(isCanceled){
                 return;
@@ -111,11 +124,91 @@ public class ClosenessCentrality implements Statistics, LongTask{
         
         //
         graph.readUnlock();
-        Progress.finish(progress);
+        
+        if(progress != null){
+            Progress.finish(progress);
+        }
         
         
     }
 
+    /**
+     * Just for testing the time compsumption 
+     * @param graphModel
+     * @param attributeModel 
+     */
+    public void regularExecute(GraphModel graphModel, AttributeModel attributeModel) {
+        
+        Graph graph = graphModel.getGraphVisible();
+        
+        this.N      = graph.getNodeCount();
+        
+        //block the graph while in use by this class
+        graph.readLock();
+        
+        //add Closeness Centrality attribute to the nodes in the graph
+        initializeAttributeColunms(attributeModel);
+        
+        //Start the progress
+        if(this.progress != null){
+            Progress.start(progress, N);
+        }
+        
+        
+        
+        //calculate closeness
+        int progressCount = 0;
+        DijkstraAlgorithm dijAlg;
+        
+        for(Node nSource : graph.getNodes()){
+            //increase progress
+            if(progress != null){
+                Progress.progress(progress, ++progressCount);
+                progress.setDisplayName("Working with " + nSource + " of " + N);
+            }
+            
+            //calculate geodesic path
+            dijAlg = new DijkstraAlgorithm(graph, nSource);
+            dijAlg.compute();
+            
+            //add all the geodesic distance: sumdij
+            HashMap<Node, Double> distances = dijAlg.getDistances();
+            double  sumDij      = 0;
+            int     reachables  = 0;
+            for(Node node : distances.keySet()){
+                double distance = distances.get(node);
+                if(distance == Double.POSITIVE_INFINITY){           //Not reachable, we descaret the infinity
+                    continue;
+                }
+                ++reachables;
+                sumDij += distances.get(node);
+            }
+            
+            //calculate closeness 
+            double c;
+            if(sumDij == 0){        //not connected
+                c = 0;
+            }else{
+                c = (N - 1)/sumDij;     //we should devided by the ammount of reachable nodes???
+            }
+            
+            //add result to node attribute
+            nSource.getAttributes().setValue(CLOSENESS, new Double(c));
+            
+            if(isCanceled){
+                return;
+            }
+        }
+        
+        //
+        graph.readUnlock();
+        
+        if(progress != null){
+            Progress.finish(progress);
+        }
+        
+        
+    }
     @Override
     public String getReport() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
