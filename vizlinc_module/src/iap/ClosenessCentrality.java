@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package edu.mit.ll.vizlinc.graph;
+package iap;
 
 
 import java.util.HashMap;

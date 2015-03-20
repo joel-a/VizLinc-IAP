@@ -2,6 +2,7 @@
  */
 package edu.mit.ll.vizlinc.graph;
 
+import iap.ClosenessCentrality;
 import com.google.common.io.Files;
 import com.sun.org.apache.xml.internal.utils.DOMHelper;
 import edu.mit.ll.vizlinc.concurrency.VizLincLongTask;
@@ -92,6 +93,9 @@ import edu.mit.ll.vizlinc.model.DBManager;
 import org.gephi.graph.api.GraphFactory;
 import org.gephi.layout.plugin.random.Random;
 import org.gephi.layout.plugin.random.RandomLayout;
+import org.gephi.statistics.plugin.Degree;
+import org.gephi.statistics.plugin.GraphDistance;
+import org.gephi.statistics.plugin.WeightedDegree;
 import org.openide.modules.InstalledFileLocator;
 import org.openide.util.Exceptions;
 import org.openide.util.NbPreferences;
@@ -111,7 +115,10 @@ public class GraphManager implements VLQueryListener {
     public static final String SCOPE_MULTIPLE_HOPS = "Multiple hops from highlighted";
     public static final String NODE_INFO_CLUSTERS = "Clusters";
     public static final String NODE_INFO_PAGERANK = "PageRank";
+    public static final String NODE_INFO_DEGREE = "Degree";
     public static final String NODE_INFO_CENTRALITY = "Eigenvector Centrality";
+    public static final String NODE_INFO_NUM_NEIGHBOR = "Number of Neightbor";
+    public static final String NODE_INFO_BETWEENNESS = "Betweenness Centrality";
     public static final String NODE_INFO_CLOSENESS = "Closeness Centrality";
     public static final String NODE_INFO_NOTHING = "";
     // Change the name of the graph file to reflect that it has had a layout algorithm applied.
@@ -1288,6 +1295,68 @@ public class GraphManager implements VLQueryListener {
     }
 
     /**
+     * Degree, invoked from GraphToolsTopComponent.
+     */
+     public void degree(final boolean showBySize, final boolean showByColor) {
+        final VizLincLongTask pageRankTask = new VizLincLongTask("Running PageRank") {
+            org.gephi.statistics.plugin.WeightedDegree weightedDegree = new WeightedDegree();
+            boolean cancelled = false;
+
+            @Override
+            public boolean cancel() {
+                cancelled = weightedDegree.cancel();
+                return cancelled;
+            }
+
+            @Override
+            public void execute() {
+                startComputation();
+                try {
+                    visibleGraph.readLock();
+
+                    // Run PageRank, which works on the visible view.
+                    // pageRank will take care of progress display.
+                    weightedDegree.setProgressTicket(this.getProgressTicket());
+                    weightedDegree.execute(graphModel, attributeModel);
+                    if (cancelled) {
+                        return;
+                    }
+
+                    // Now visualize the rank.
+                    RankingController rankingController = Lookup.getDefault().lookup(RankingController.class);
+                    // Vary over the visible graph, not the whole graph.
+                    rankingController.setUseLocalScale(true);
+                    // S-shaped interpolator: exaggerate differences near extrema.
+                    rankingController.setInterpolator(new Interpolator.BezierInterpolator(1.0f, 0.0f, 0.0f, 1.0f));
+                    Ranking pageRankRanking = rankingController.getModel().getRanking(Ranking.NODE_ELEMENT, WeightedDegree.WDEGREE);
+
+                    if (showBySize) {
+                        AbstractSizeTransformer sizeTransformer = (AbstractSizeTransformer) rankingController.getModel().getTransformer(Ranking.NODE_ELEMENT, Transformer.RENDERABLE_SIZE);
+                        sizeTransformer.setMinSize(4.0f);
+                        sizeTransformer.setMaxSize(20.0f);
+                        rankingController.transform(pageRankRanking, sizeTransformer);
+                        graphToolsWin.setGraphNodeSizeInfo(NODE_INFO_DEGREE);
+
+                    }
+
+                    if (showByColor) {
+                        AbstractColorTransformer colorTransformer = (AbstractColorTransformer) rankingController.getModel().getTransformer(Ranking.NODE_ELEMENT, Transformer.RENDERABLE_COLOR);
+                        colorTransformer.setColors(new Color[]{new Color(0xFEF0D9), new Color(0xB30000)});
+                        rankingController.transform(pageRankRanking, colorTransformer);
+                        graphToolsWin.setGraphNodeColorInfo(NODE_INFO_DEGREE);
+
+                    }
+
+                    visibleGraph.readUnlockAll();
+                } finally {
+                    stopComputation();    // Even if cancelled.
+                }
+            }
+        };
+
+        pageRankTask.run();
+    }
+    /**
      * Execute ClosenessCentrality
      * @param showBySize
      * @param showByColor 
@@ -1415,10 +1484,137 @@ public class GraphManager implements VLQueryListener {
         centralityTask.run();
     }
     
+    /**
+     * Number of Neighbor, invoked from GraphToolsTopComponent.
+     * @param showBySize
+     * @param showByColor 
+     */
+    public void numberOfNeighbors(final boolean showBySize, final boolean showByColor) {
+        final VizLincLongTask centralityTask = new VizLincLongTask("Running Number of Neightbors") {
+            org.gephi.statistics.plugin.Degree degreeCentrality = new Degree();
+            boolean cancelled = false;
+
+            @Override
+            public boolean cancel() {
+                cancelled = degreeCentrality.cancel();
+                return cancelled;
+            }
+
+            @Override
+            public void execute() {
+                startComputation();
+                try {
+                    visibleGraph.readLock();
+
+                    // Centrality runs on the visible view.
+                    // centrality will take care of displaying progress.
+                    degreeCentrality.setProgressTicket(this.getProgressTicket());
+                    degreeCentrality.execute(graphModel, attributeModel);
+                    if (cancelled) {
+                        return;
+                    }
+
+                    // Now visualize the centrality.
+                    RankingController rankingController = Lookup.getDefault().lookup(RankingController.class);
+                    // Vary over the visible graph, not the whole graph.
+                    rankingController.setUseLocalScale(true);
+                    // S-shaped interpolator: exaggerate differences near extrema.
+                    rankingController.setInterpolator(new Interpolator.BezierInterpolator(1.0f, 0.0f, 0.0f, 1.0f));
+                    Ranking centralityRanking = rankingController.getModel().getRanking(Ranking.NODE_ELEMENT, Degree.DEGREE);
+
+                    if (showBySize) {
+                        AbstractSizeTransformer sizeTransformer = (AbstractSizeTransformer) rankingController.getModel().getTransformer(Ranking.NODE_ELEMENT, Transformer.RENDERABLE_SIZE);
+                        sizeTransformer.setMinSize(4.0f);
+                        sizeTransformer.setMaxSize(20.0f);
+                        rankingController.transform(centralityRanking, sizeTransformer);
+                        graphToolsWin.setGraphNodeSizeInfo(NODE_INFO_NUM_NEIGHBOR);
+                    }
+
+                    if (showByColor) {
+                        AbstractColorTransformer colorTransformer = (AbstractColorTransformer) rankingController.getModel().getTransformer(Ranking.NODE_ELEMENT, Transformer.RENDERABLE_COLOR);
+                        colorTransformer.setColors(new Color[]{new Color(0xFEF0D9), new Color(0xB30000)});
+                        rankingController.transform(centralityRanking, colorTransformer);
+                        graphToolsWin.setGraphNodeColorInfo(NODE_INFO_NUM_NEIGHBOR);
+                    }
+
+                    visibleGraph.readUnlockAll();
+                } finally {
+                    stopComputation();    // Even if cancelled.
+                }
+            }
+        };
+        centralityTask.run();
+    }
+    /**
+     * Betweenness, invoked from GraphToolsTopComponent.
+     * @param showBySize
+     * @param showByColor 
+     */
+    public void betweennessAndCloseness(final boolean showBySize, final boolean showByColor) {
+        final VizLincLongTask centralityTask = new VizLincLongTask("Running Betweenness") {
+            org.gephi.statistics.plugin.GraphDistance  graphDistance = new GraphDistance();
+            
+            boolean cancelled = false;
+
+            @Override
+            public boolean cancel() {
+                cancelled = graphDistance.cancel();
+                return cancelled;
+            }
+
+            @Override
+            public void execute() {
+                startComputation();
+                graphDistance.setNormalized(true);
+                try {
+                    visibleGraph.readLock();
+
+                    // Centrality runs on the visible view.
+                    // centrality will take care of displaying progress.
+                    graphDistance.setProgressTicket(this.getProgressTicket());
+                    graphDistance.setDirected(false);
+                    graphDistance.execute(graphModel, attributeModel);
+                    if (cancelled) {
+                        return;
+                    }
+
+                    // Now visualize the centrality.
+                    RankingController rankingController = Lookup.getDefault().lookup(RankingController.class);
+                    // Vary over the visible graph, not the whole graph.
+                    rankingController.setUseLocalScale(true);
+                    // S-shaped interpolator: exaggerate differences near extrema.
+                    rankingController.setInterpolator(new Interpolator.BezierInterpolator(1.0f, 0.0f, 0.0f, 1.0f));
+                    Ranking betweennessRanking  = rankingController.getModel().getRanking(Ranking.NODE_ELEMENT, GraphDistance.BETWEENNESS);
+                   
+                    
+                    if (showBySize) {
+                        AbstractSizeTransformer sizeTransformer = (AbstractSizeTransformer) rankingController.getModel().getTransformer(Ranking.NODE_ELEMENT, Transformer.RENDERABLE_SIZE);
+                        sizeTransformer.setMinSize(4.0f);
+                        sizeTransformer.setMaxSize(20.0f);
+                        rankingController.transform(betweennessRanking, sizeTransformer);
+                        graphToolsWin.setGraphNodeSizeInfo(NODE_INFO_BETWEENNESS);
+                    }
+
+                    if (showByColor) {
+                        AbstractColorTransformer colorTransformer = (AbstractColorTransformer) rankingController.getModel().getTransformer(Ranking.NODE_ELEMENT, Transformer.RENDERABLE_COLOR);
+                        colorTransformer.setColors(new Color[]{new Color(0xFEF0D9), new Color(0xB30000)});
+                        rankingController.transform(betweennessRanking, colorTransformer);
+                        graphToolsWin.setGraphNodeColorInfo(NODE_INFO_BETWEENNESS);
+                    }
+
+                    visibleGraph.readUnlockAll();
+                } finally {
+                    stopComputation();    // Even if cancelled.
+                }
+            }
+        };
+        centralityTask.run();
+    }
+    
       /**
      * Closeness Centrality, invoked from GraphToolsTopComponent.
      */
-   
+   /*
     public void closeness(final boolean showBySize, final Closeness.GeodesicAlgorithm geodAlg) {
         final VizLincLongTask centralityTask = new VizLincLongTask("Running Closeness Centrality") {
             Closeness centrality = new Closeness();
@@ -1473,7 +1669,7 @@ public class GraphManager implements VLQueryListener {
             }
         };
         centralityTask.run();
-    }
+    }*/
 
     /**
      * limit display to n hops. Invoked from GraphToolsTopComponent.

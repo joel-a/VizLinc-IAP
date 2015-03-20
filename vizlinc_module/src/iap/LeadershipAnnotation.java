@@ -24,9 +24,11 @@ public class LeadershipAnnotation {
     final char      separator       = ',';  
     final String    LEADERSHIP_KEY  = "1";
     final String    NO_LEADER_KEY   = "0";
+    final String    EXCLUDE_KEY     = "2";
     File        inputFile;
     File        outputFile;
     ArrayList<String>   leadershipAnnotation;
+    String[]            excludeKeyWords;
     String[]            leadershipKeyWords;            //list of words that identify a person as a leader
     VizLincLongTask progress;
     
@@ -37,7 +39,7 @@ public class LeadershipAnnotation {
      * @param keyWords
      * @throws IOException 
      */
-    public LeadershipAnnotation(File inFile, File outFile, String[] keyWords, VizLincLongTask progress) throws IOException{
+    public LeadershipAnnotation(File inFile, File outFile, String[] keyWords, String[] exclude, VizLincLongTask progress) throws IOException{
         
         if(inFile == null || outFile == null){
             throw new IllegalArgumentException("File null");
@@ -50,11 +52,12 @@ public class LeadershipAnnotation {
         outputFile           = outFile;
         leadershipKeyWords   = keyWords;  
         leadershipAnnotation = new ArrayList();
-        
+        excludeKeyWords      = exclude;
         progress.getProgressTicket().start();
         readDataOnFile();
         setLeadershipAnnotations();
         writeResultsOnFile();
+        JOptionPane.showMessageDialog(null, "Finish");
         progress.getProgressTicket().finish();
         
     }
@@ -65,7 +68,12 @@ public class LeadershipAnnotation {
         String line;
         while((line = reader.readLine()) != null){
             int firstCommaIndex = line.indexOf(",");
-            leadershipAnnotation.add(line.substring(0, line.indexOf(",", firstCommaIndex + 1)));
+            if(line.indexOf(",", firstCommaIndex + 1) > 0){
+                leadershipAnnotation.add(line.substring(0, line.indexOf(",", firstCommaIndex + 1)));
+            }else{
+                leadershipAnnotation.add(line);
+            }
+            
         }
         reader.close();
     }
@@ -74,18 +82,26 @@ public class LeadershipAnnotation {
        // progress.getProgressTicket().setDisplayName("Making Annotations...");
         //progress.getProgressTicket().switchToDeterminate(leadershipAnnotation.size());
         int progressCount = 0;
-        JOptionPane.showMessageDialog(null, leadershipAnnotation.size());
         for(int i = 0; i < leadershipAnnotation.size(); i++){
             boolean dataSetted  = false;
             String  dataLine    = leadershipAnnotation.get(i);
-            
-            for(String keyWord : leadershipKeyWords){
-                if(dataLine.contains(keyWord)){
-                    leadershipAnnotation.set(i, dataLine + separator + LEADERSHIP_KEY);
+            for(String excludeKey : excludeKeyWords){
+                if(dataLine.contains(excludeKey)){
+                    leadershipAnnotation.set(i, dataLine + separator + NO_LEADER_KEY);
                     dataSetted = true;
                     break;
                 }
             }
+            if(!dataSetted){
+                for(String keyWord : leadershipKeyWords){
+                    if(dataLine.contains(keyWord)){
+                        leadershipAnnotation.set(i, dataLine + separator + LEADERSHIP_KEY);
+                        dataSetted = true;
+                        break;
+                    }
+                }
+            }
+            
             
             if(!dataSetted){
                 leadershipAnnotation.set(i, dataLine + separator + NO_LEADER_KEY);

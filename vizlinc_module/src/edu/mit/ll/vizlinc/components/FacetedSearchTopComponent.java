@@ -756,6 +756,7 @@ public final class FacetedSearchTopComponent extends TopComponent implements Gra
                 BufferedWriter  bw      = new BufferedWriter(new FileWriter(file, true));
                 file.createNewFile();
                 
+                
                 for(int i = 0; i < peopleList.getModel().getSize(); i++){
                     String strTemp  = peopleList.getModel().getElementAt(i).toString();
                     String result   = strTemp.substring(0, strTemp.indexOf("("));
@@ -801,6 +802,7 @@ public final class FacetedSearchTopComponent extends TopComponent implements Gra
             
             try{
                 bufReader = new BufferedReader(new FileReader(inputFile));
+                
                 
                 String[]    row;
                 String      temp;

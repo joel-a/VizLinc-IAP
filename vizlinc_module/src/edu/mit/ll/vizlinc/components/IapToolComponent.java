@@ -6,17 +6,41 @@
 package edu.mit.ll.vizlinc.components;
 
 import edu.mit.ll.vizlinc.concurrency.VizLincLongTask;
+import edu.mit.ll.vizlinc.graph.Closeness;
+import edu.mit.ll.vizlinc.model.Person;
+import edu.mit.ll.vizlinc.model.PersonValue;
+import edu.mit.ll.vizlinc.utils.DBUtils;
 import iap.AutomaticAnnotation;
 import iap.LeadershipAnnotation;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileNameExtensionFilter;
+import org.gephi.data.attributes.api.AttributeColumn;
+import org.gephi.graph.api.Graph;
+import org.gephi.graph.api.GraphController;
+import org.gephi.graph.api.Node;
+import org.gephi.ranking.api.Ranking;
+import org.gephi.ranking.api.RankingController;
+import org.gephi.ranking.api.RankingModel;
+import org.gephi.statistics.plugin.Degree;
+import org.gephi.statistics.plugin.EigenvectorCentrality;
+import org.gephi.statistics.plugin.GraphDistance;
+import org.gephi.statistics.plugin.PageRank;
+import org.gephi.statistics.plugin.WeightedDegree;
 import org.gephi.utils.progress.Progress;
 import org.gephi.utils.progress.ProgressTicket;
+import org.jboss.netty.handler.timeout.IdleState;
 import org.openide.util.Exceptions;
+import org.openide.util.Lookup;
 
 /**
  *
@@ -36,6 +60,11 @@ public class IapToolComponent extends javax.swing.JPanel implements java.beans.C
     File leadAnnotInputFile;
     File leadAnnotOutputFile;
     String[] leadKeyWordsList;
+    String[] excludeKeyWordsList;
+    
+    //RankingSaving Field
+    File rankingSavingOutputFile;
+    File rankingSavingInputFile;
 
     /**
      * Creates new customizer IapToolComponent
@@ -82,12 +111,29 @@ public class IapToolComponent extends javax.swing.JPanel implements java.beans.C
         jLabel2 = new javax.swing.JLabel();
         outputFileTxtFieldLeadAnnot = new javax.swing.JTextField();
         jButton1 = new javax.swing.JButton();
-        jLabel3 = new javax.swing.JLabel();
         jButton2 = new javax.swing.JButton();
         inputFileTxtFieldLeadshipAnnot = new javax.swing.JTextField();
         jButton3 = new javax.swing.JButton();
         jLabel4 = new javax.swing.JLabel();
         leadershipKeyWords = new javax.swing.JTextField();
+        jLabel5 = new javax.swing.JLabel();
+        leadershipExcludeKeyWords = new javax.swing.JTextField();
+        jLabel3 = new javax.swing.JLabel();
+        jPanel6 = new javax.swing.JPanel();
+        jLabel7 = new javax.swing.JLabel();
+        rankingSavingOutputFileTxtField = new javax.swing.JTextField();
+        rankingSavingSearchBtn = new javax.swing.JButton();
+        rankingSavingNumNeightbosCheckBox = new javax.swing.JCheckBox();
+        rankingSavingClosenessChackBox = new javax.swing.JCheckBox();
+        rankingSavingEigenvectorCentCheckBox = new javax.swing.JCheckBox();
+        rankingSavingPageRankChackBox = new javax.swing.JCheckBox();
+        rankingSavingDegreeCheckBox = new javax.swing.JCheckBox();
+        rankingSavingSaveBtn = new javax.swing.JButton();
+        jLabel8 = new javax.swing.JLabel();
+        rankingSavingInputFileTxtField = new javax.swing.JTextField();
+        rankingSavingSearchBtn1 = new javax.swing.JButton();
+        jLabel6 = new javax.swing.JLabel();
+        rankingSavingBetweenessCheckBox = new javax.swing.JCheckBox();
 
         setLayout(new java.awt.BorderLayout());
         add(jProgressBar1, java.awt.BorderLayout.PAGE_END);
@@ -158,7 +204,7 @@ public class IapToolComponent extends javax.swing.JPanel implements java.beans.C
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel3Layout.createSequentialGroup()
                                 .addComponent(wikiDataRadBtn)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 159, Short.MAX_VALUE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 216, Short.MAX_VALUE)
                                 .addComponent(jButton9)
                                 .addGap(116, 116, 116))
                             .addGroup(jPanel3Layout.createSequentialGroup()
@@ -175,9 +221,7 @@ public class IapToolComponent extends javax.swing.JPanel implements java.beans.C
                             .addGroup(jPanel3Layout.createSequentialGroup()
                                 .addGap(3, 3, 3)
                                 .addComponent(jButton7))
-                            .addGroup(jPanel3Layout.createSequentialGroup()
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jButton8)))
+                            .addComponent(jButton8))
                         .addContainerGap())))
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addGap(168, 168, 168)
@@ -230,8 +274,6 @@ public class IapToolComponent extends javax.swing.JPanel implements java.beans.C
             }
         });
 
-        jLabel3.setText(org.openide.util.NbBundle.getMessage(IapToolComponent.class, "AutomaticAnnotationOptionsComponent.jLabel2.text")); // NOI18N
-
         jButton2.setText(org.openide.util.NbBundle.getMessage(IapToolComponent.class, "AutomaticAnnotationOptionsComponent.jButton2.text")); // NOI18N
         jButton2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -253,6 +295,12 @@ public class IapToolComponent extends javax.swing.JPanel implements java.beans.C
 
         leadershipKeyWords.setText(org.openide.util.NbBundle.getMessage(IapToolComponent.class, "AutomaticAnnotationOptionsComponent.outputFileTxtField.text")); // NOI18N
 
+        jLabel5.setText("Output File (csv)");
+
+        leadershipExcludeKeyWords.setText(org.openide.util.NbBundle.getMessage(IapToolComponent.class, "AutomaticAnnotationOptionsComponent.outputFileTxtField.text")); // NOI18N
+
+        jLabel3.setText("Exclude Key Words:");
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
@@ -262,12 +310,16 @@ public class IapToolComponent extends javax.swing.JPanel implements java.beans.C
                 .addComponent(jButton3)
                 .addGap(229, 229, 229))
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel2)
-                    .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel2))
+                        .addComponent(jLabel5, javax.swing.GroupLayout.Alignment.TRAILING))
+                    .addComponent(jLabel3, javax.swing.GroupLayout.Alignment.TRAILING))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(leadershipExcludeKeyWords, javax.swing.GroupLayout.PREFERRED_SIZE, 322, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(leadershipKeyWords, javax.swing.GroupLayout.PREFERRED_SIZE, 322, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addGap(80, 80, 80)
@@ -284,7 +336,7 @@ public class IapToolComponent extends javax.swing.JPanel implements java.beans.C
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jButton1)
                             .addComponent(jButton2))))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(72, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -302,8 +354,8 @@ public class IapToolComponent extends javax.swing.JPanel implements java.beans.C
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(outputFileTxtFieldLeadAnnot, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton2))
+                    .addComponent(jButton2)
+                    .addComponent(jLabel5))
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addGap(18, 18, 18)
@@ -311,24 +363,170 @@ public class IapToolComponent extends javax.swing.JPanel implements java.beans.C
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addGap(8, 8, 8)
                         .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 62, Short.MAX_VALUE)
+                .addGap(21, 21, 21)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(leadershipExcludeKeyWords, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel3))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 44, Short.MAX_VALUE)
                 .addComponent(jButton3)
-                .addContainerGap())
+                .addGap(18, 18, 18))
         );
 
         jTabbedPane1.addTab("LeadershipAnnot", jPanel2);
 
+        jLabel7.setText("Output File (csv)");
+
+        rankingSavingOutputFileTxtField.setEditable(false);
+        rankingSavingOutputFileTxtField.setText(org.openide.util.NbBundle.getMessage(IapToolComponent.class, "AutomaticAnnotationOptionsComponent.outputFileTxtField.text")); // NOI18N
+
+        rankingSavingSearchBtn.setText("Search");
+        rankingSavingSearchBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                rankingSavingSearchBtnActionPerformed(evt);
+            }
+        });
+
+        rankingSavingNumNeightbosCheckBox.setText("#Neighbors");
+
+        rankingSavingClosenessChackBox.setText("Closeness Centrality");
+
+        rankingSavingEigenvectorCentCheckBox.setText("Eigenvector Centrality");
+
+        rankingSavingPageRankChackBox.setText("PageRank");
+
+        rankingSavingDegreeCheckBox.setText("Degree");
+
+        rankingSavingSaveBtn.setText("Save");
+        rankingSavingSaveBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                rankingSavingSaveBtnActionPerformed(evt);
+            }
+        });
+
+        jLabel8.setText("Input File (csv)");
+
+        rankingSavingInputFileTxtField.setEditable(false);
+        rankingSavingInputFileTxtField.setText(org.openide.util.NbBundle.getMessage(IapToolComponent.class, "AutomaticAnnotationOptionsComponent.outputFileTxtField.text")); // NOI18N
+        rankingSavingInputFileTxtField.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                rankingSavingInputFileTxtFieldActionPerformed(evt);
+            }
+        });
+
+        rankingSavingSearchBtn1.setText("Search");
+        rankingSavingSearchBtn1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                rankingSavingSearchBtn1ActionPerformed(evt);
+            }
+        });
+
+        jLabel6.setText("Ranks to Save:");
+
+        rankingSavingBetweenessCheckBox.setText("Betweeness");
+
+        javax.swing.GroupLayout jPanel6Layout = new javax.swing.GroupLayout(jPanel6);
+        jPanel6.setLayout(jPanel6Layout);
+        jPanel6Layout.setHorizontalGroup(
+            jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel6Layout.createSequentialGroup()
+                .addGap(22, 22, 22)
+                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jLabel7)
+                    .addComponent(jLabel8)
+                    .addComponent(jLabel6))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(rankingSavingDegreeCheckBox)
+                    .addComponent(rankingSavingPageRankChackBox)
+                    .addComponent(rankingSavingEigenvectorCentCheckBox)
+                    .addComponent(rankingSavingClosenessChackBox)
+                    .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                        .addGroup(jPanel6Layout.createSequentialGroup()
+                            .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(rankingSavingNumNeightbosCheckBox)
+                                .addComponent(rankingSavingBetweenessCheckBox))
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(rankingSavingSaveBtn))
+                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel6Layout.createSequentialGroup()
+                            .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(rankingSavingOutputFileTxtField, javax.swing.GroupLayout.PREFERRED_SIZE, 321, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(rankingSavingInputFileTxtField, javax.swing.GroupLayout.PREFERRED_SIZE, 321, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(rankingSavingSearchBtn1)
+                                .addComponent(rankingSavingSearchBtn)))))
+                .addContainerGap(93, Short.MAX_VALUE))
+        );
+        jPanel6Layout.setVerticalGroup(
+            jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel6Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(rankingSavingInputFileTxtField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel8)
+                    .addComponent(rankingSavingSearchBtn1))
+                .addGap(3, 3, 3)
+                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(rankingSavingOutputFileTxtField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel7)
+                    .addComponent(rankingSavingSearchBtn))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(rankingSavingClosenessChackBox)
+                    .addComponent(jLabel6))
+                .addGap(4, 4, 4)
+                .addComponent(rankingSavingEigenvectorCentCheckBox)
+                .addGap(1, 1, 1)
+                .addComponent(rankingSavingPageRankChackBox)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(rankingSavingDegreeCheckBox)
+                .addGap(1, 1, 1)
+                .addComponent(rankingSavingNumNeightbosCheckBox)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(rankingSavingBetweenessCheckBox)
+                    .addComponent(rankingSavingSaveBtn))
+                .addContainerGap(54, Short.MAX_VALUE))
+        );
+
+        jTabbedPane1.addTab("RankingSaving", jPanel6);
+
         add(jTabbedPane1, java.awt.BorderLayout.CENTER);
     }// </editor-fold>//GEN-END:initComponents
 
-    
-    
-    
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        leadAnnotInputFile = iap.Utils.selectAnInputFile(new FileNameExtensionFilter("Comma Separated Value", "csv"));
-        inputFileTxtFieldLeadshipAnnot.setText(leadAnnotInputFile.getPath());
-       
-    }//GEN-LAST:event_jButton1ActionPerformed
+    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+        if(leadAnnotOutputFile == null || leadAnnotInputFile == null){
+            JOptionPane.showMessageDialog(jButton1, "Both files have to be given.");
+            return;
+        }
+        if( leadershipKeyWords.getText().isEmpty()){
+            JOptionPane.showConfirmDialog(jButton1, "At least one leadership key word have to be given.");
+            return;
+        }
+
+        if(leadershipExcludeKeyWords.getText().isEmpty()){
+            excludeKeyWordsList = new String[0];
+        }else{
+            excludeKeyWordsList = leadershipExcludeKeyWords.getText().split(",");
+        }
+        leadKeyWordsList = leadershipKeyWords.getText().split(",");
+        JOptionPane.showMessageDialog(jButton1, leadKeyWordsList);
+        final VizLincLongTask task = new VizLincLongTask("Executing automatic annotation..."){
+            @Override
+            public void execute()
+            {
+                ProgressTicket pt = this.getProgressTicket();
+                Progress.setDisplayName(pt, "Executing leadership annotation...");
+
+                try {
+                    leadershipAnnotation = new LeadershipAnnotation(leadAnnotInputFile , leadAnnotOutputFile, leadKeyWordsList, excludeKeyWordsList, this);
+                } catch (IOException ex) {
+                    JOptionPane.showMessageDialog(jButton1, ex);
+                }
+            }
+        };
+        task.run();
+    }//GEN-LAST:event_jButton3ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         try {
@@ -339,59 +537,13 @@ public class IapToolComponent extends javax.swing.JPanel implements java.beans.C
         }
     }//GEN-LAST:event_jButton2ActionPerformed
 
-    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-       if(leadAnnotOutputFile == null || leadAnnotInputFile == null){
-           JOptionPane.showMessageDialog(jButton1, "Both files have to be given.");
-           return;
-       }
-       if( leadershipKeyWords.getText().isEmpty()){
-           JOptionPane.showConfirmDialog(jButton1, "At least one leadership key word have to be given.");
-           return;
-       }
-       
-       leadKeyWordsList = leadershipKeyWords.getText().split(",");
-       JOptionPane.showMessageDialog(jButton1, leadKeyWordsList);
-        final VizLincLongTask task = new VizLincLongTask("Executing automatic annotation..."){
-            @Override
-            public void execute()
-            {
-                ProgressTicket pt = this.getProgressTicket();
-                Progress.setDisplayName(pt, "Executing leadership annotation...");
-                
-                try {
-                    leadershipAnnotation = new LeadershipAnnotation(leadAnnotInputFile , leadAnnotOutputFile, leadKeyWordsList, this);
-                } catch (IOException ex) {
-                    JOptionPane.showMessageDialog(jButton1, ex);
-                }
-            }
-        };
-        task.run();
-        
-        
-       
-    }//GEN-LAST:event_jButton3ActionPerformed
-
-    private void jButton7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton7ActionPerformed
-
-        inputFile = iap.Utils.selectAnInputFile();
-    }//GEN-LAST:event_jButton7ActionPerformed
-
-    private void wikiDataRadBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_wikiDataRadBtnActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_wikiDataRadBtnActionPerformed
-
-    private void jButton8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton8ActionPerformed
-        try {
-            outputFile =  iap.Utils.selectAnOutputFile();
-
-        } catch (IOException ex) {
-            Exceptions.printStackTrace(ex);
-        }
-    }//GEN-LAST:event_jButton8ActionPerformed
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        leadAnnotInputFile = iap.Utils.selectAnInputFile(new FileNameExtensionFilter("Comma Separated Value", "csv"));
+        inputFileTxtFieldLeadshipAnnot.setText(leadAnnotInputFile.getPath());
+    }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton9ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton9ActionPerformed
-        
-        
+
         if(wikiDataRadBtn.isSelected()){
             dataBaseType = AutomaticAnnotation.DataBaseWiki.WIKIDATA;
         }else if(wikiMediaRadBtn.isSelected()){
@@ -399,7 +551,7 @@ public class IapToolComponent extends javax.swing.JPanel implements java.beans.C
         }else if(bothwikiBrn.isSelected()){
             dataBaseType = AutomaticAnnotation.DataBaseWiki.WIKIDATA_MEDIAWIKI;
         }
-        
+
         if(inputFile == null || outputFile == null || dataBaseType == null){
             return;
         }
@@ -425,9 +577,211 @@ public class IapToolComponent extends javax.swing.JPanel implements java.beans.C
         };
         task.run();
         this.setEnabled(true);
-
     }//GEN-LAST:event_jButton9ActionPerformed
 
+    private void jButton8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton8ActionPerformed
+        try {
+            outputFile =  iap.Utils.selectAnOutputFile();
+
+        } catch (IOException ex) {
+            Exceptions.printStackTrace(ex);
+        }
+    }//GEN-LAST:event_jButton8ActionPerformed
+
+    private void wikiDataRadBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_wikiDataRadBtnActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_wikiDataRadBtnActionPerformed
+
+    private void jButton7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton7ActionPerformed
+
+        inputFile = iap.Utils.selectAnInputFile();
+    }//GEN-LAST:event_jButton7ActionPerformed
+
+    private void rankingSavingSearchBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rankingSavingSearchBtnActionPerformed
+        try {
+            rankingSavingOutputFile = iap.Utils.selectAnOutputFile(new FileNameExtensionFilter("csv", "CSV"));
+            if(rankingSavingOutputFile != null){
+                rankingSavingOutputFileTxtField.setText(rankingSavingOutputFile.getPath());
+            }
+            
+        } catch (IOException ex) {
+            Exceptions.printStackTrace(ex);
+        }
+    }//GEN-LAST:event_rankingSavingSearchBtnActionPerformed
+
+    private void rankingSavingSaveBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rankingSavingSaveBtnActionPerformed
+        if(rankingSavingOutputFile == null){
+            JOptionPane.showMessageDialog(null, "An output file have to be selected");
+            return;
+        }
+        
+        Graph graph = Lookup.getDefault().lookup(GraphController.class).getModel().getGraphVisible();
+        
+        ArrayList<Ranking> ranks = new ArrayList();
+        setRanksToSave(ranks);
+        
+        if(ranks.size() > 0){
+            try {
+                BufferedWriter writer = new BufferedWriter(new FileWriter(rankingSavingOutputFile));
+           
+                //writhe name of the matrics
+                writer.write("label");
+                for(Ranking rank : ranks){
+                    writer.write("," + rank.getDisplayName());
+                }
+                writer.newLine();
+
+                if(rankingSavingInputFile == null){
+                    for(Node node : graph.getNodes()){
+                        writer.write(node.getNodeData().getLabel());                //write name of the person
+                        for(Ranking rank : ranks){          
+                            writer.write("," + rank.getValue(node).toString());
+                        }
+                        writer.newLine();
+                        writer.flush();
+                    }
+                }else{
+                    HashMap<String, Node> labelToNodeMap = getNodeLabelsMap();
+                    BufferedReader reader = new BufferedReader(new FileReader(rankingSavingInputFile));
+                    String line;
+                    while((line = reader.readLine()) != null){                                                  //go trought the whole input file
+                        String nodeLabelInFile = line.split(",")[0].trim().toUpperCase();                       //extract node lable from the input file
+                        if(labelToNodeMap.containsKey(nodeLabelInFile)){                                        //save the result only if the input node exist in the graph
+                            String line2Write = nodeLabelInFile;
+                            for(Ranking rank :ranks){
+                                line2Write += "," + rank.getValue(labelToNodeMap.get(nodeLabelInFile));
+                            }
+                            writer.write(line2Write);
+                            writer.newLine();
+                            writer.flush();
+                        }
+                    }
+                }
+                writer.close();
+            } catch (IOException ex) {
+                Exceptions.printStackTrace(ex);
+            }
+        }
+        
+        
+        JOptionPane.showMessageDialog(null, "Finish");
+        /*
+        if(ranks.size() > 0){
+            try {
+                
+                
+                if(rankingSavingInputFile != null){
+                    BufferedReader reader = new BufferedReader(new FileReader(rankingSavingInputFile));
+                    String line;
+                    while((line = reader.readLine()) != null){
+                        String nodeLabel = line.split(",")[0].trim();
+                        JOptionPane.showMessageDialog(null, nodeLabelMap.get(nodeLabel));
+                        String temp = node.getNodeData().getLabel();
+                        JOptionPane.showMessageDialog(null, temp);
+                        for(Ranking rank :ranks){
+                            temp += "," + rank.getValue(node);
+                        }
+                        writer.write(temp);
+                        writer.newLine();
+                        writer.flush();
+                    
+                    }
+                
+                }else{
+                    for(Node node : graph.getNodes()){
+                    String temp = node.getNodeData().getLabel();
+                    for(Ranking rank :ranks){
+                        temp += "," + node.getAttributes().getValue(rank.getName());
+                    }
+                    writer.write(temp);
+                    writer.newLine();
+                    writer.flush();
+                    
+                    }
+                }
+                
+                
+              
+                writer.close();
+            } catch (IOException ex) {
+                Exceptions.printStackTrace(ex);
+            }
+        }*/
+        
+        
+        
+    }//GEN-LAST:event_rankingSavingSaveBtnActionPerformed
+
+    /**
+     * Return a HasMap with the node Labels as key and the value is the node itself 
+     * @return 
+     */
+    private HashMap<String, Node> getNodeLabelsMap(){
+        Graph graph = Lookup.getDefault().lookup(GraphController.class).getModel().getGraphVisible();
+        
+        HashMap<String, Node> labelMap = new HashMap();
+        
+        for(Node node : graph.getNodes()){
+            labelMap.put(node.getNodeData().getLabel(), node);
+        }
+        
+        return labelMap;
+    }
+    private void setRanksToSave(ArrayList<Ranking> ranks){
+        RankingController rankingController = Lookup.getDefault().lookup(RankingController.class);
+        RankingModel rankModel = rankingController.getModel();
+        
+        if(rankingSavingClosenessChackBox.isSelected()){
+            if(rankModel.getRanking(Ranking.NODE_ELEMENT, GraphDistance.CLOSENESS) != null)
+                ranks.add(rankModel.getRanking(Ranking.NODE_ELEMENT, GraphDistance.CLOSENESS));
+            else
+                JOptionPane.showMessageDialog(null, rankingSavingClosenessChackBox.getText() + " have not beeing calculated. Ignored");
+        }
+        if(rankingSavingEigenvectorCentCheckBox.isSelected()){
+            if(rankModel.getRanking(Ranking.NODE_ELEMENT, EigenvectorCentrality.EIGENVECTOR) != null)
+                ranks.add(rankModel.getRanking(Ranking.NODE_ELEMENT,  EigenvectorCentrality.EIGENVECTOR));
+            else
+                JOptionPane.showMessageDialog(null, rankingSavingEigenvectorCentCheckBox.getText() + " have not beeing calculated. Ignored");
+        }
+        if(rankingSavingPageRankChackBox.isSelected()){
+            if(rankModel.getRanking(Ranking.NODE_ELEMENT, PageRank.PAGERANK) != null)
+                ranks.add(rankModel.getRanking(Ranking.NODE_ELEMENT,  PageRank.PAGERANK));
+            else
+                JOptionPane.showMessageDialog(null, rankingSavingPageRankChackBox.getText() + " have not beeing calculated. Ignored");
+        }
+        if(rankingSavingDegreeCheckBox.isSelected()){
+            if(rankModel.getRanking(Ranking.NODE_ELEMENT, WeightedDegree.WDEGREE) != null)
+                ranks.add(rankModel.getRanking(Ranking.NODE_ELEMENT,  WeightedDegree.WDEGREE));
+            else
+                JOptionPane.showMessageDialog(null, rankingSavingDegreeCheckBox.getText() + " have not beeing calculated. Ignored");
+        }
+        if(rankingSavingNumNeightbosCheckBox.isSelected()){
+            if(rankModel.getRanking(Ranking.NODE_ELEMENT, Degree.DEGREE) != null)
+                ranks.add(rankModel.getRanking(Ranking.NODE_ELEMENT,  Degree.DEGREE));
+            else
+                JOptionPane.showMessageDialog(null, rankingSavingNumNeightbosCheckBox.getText() + " have not beeing calculated. Ignored");
+        }
+        if(rankingSavingBetweenessCheckBox.isSelected()){
+            if(rankModel.getRanking(Ranking.NODE_ELEMENT, GraphDistance.BETWEENNESS) != null)
+                ranks.add(rankModel.getRanking(Ranking.NODE_ELEMENT,  GraphDistance.BETWEENNESS));
+            else
+                JOptionPane.showMessageDialog(null, rankingSavingBetweenessCheckBox.getText() + " have not beeing calculated. Ignored");
+        }
+    }
+    private void rankingSavingSearchBtn1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rankingSavingSearchBtn1ActionPerformed
+        rankingSavingInputFile = iap.Utils.selectAnInputFile();
+        if(rankingSavingInputFile != null){
+            rankingSavingInputFileTxtField.setText(rankingSavingInputFile.getPath());
+        }
+    }//GEN-LAST:event_rankingSavingSearchBtn1ActionPerformed
+
+    private void rankingSavingInputFileTxtFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rankingSavingInputFileTxtFieldActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_rankingSavingInputFileTxtFieldActionPerformed
+
+    
+    
+    
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JRadioButton bothwikiBrn;
@@ -446,18 +800,35 @@ public class IapToolComponent extends javax.swing.JPanel implements java.beans.C
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanel5;
+    private javax.swing.JPanel jPanel6;
     private javax.swing.JProgressBar jProgressBar1;
     private javax.swing.JProgressBar jProgressBar2;
     private javax.swing.JTabbedPane jTabbedPane1;
+    private javax.swing.JTextField leadershipExcludeKeyWords;
     private javax.swing.JTextField leadershipKeyWords;
     private javax.swing.JTextField outputFileTxtField;
     private javax.swing.JTextField outputFileTxtFieldLeadAnnot;
+    private javax.swing.JCheckBox rankingSavingBetweenessCheckBox;
+    private javax.swing.JCheckBox rankingSavingClosenessChackBox;
+    private javax.swing.JCheckBox rankingSavingDegreeCheckBox;
+    private javax.swing.JCheckBox rankingSavingEigenvectorCentCheckBox;
+    private javax.swing.JTextField rankingSavingInputFileTxtField;
+    private javax.swing.JCheckBox rankingSavingNumNeightbosCheckBox;
+    private javax.swing.JTextField rankingSavingOutputFileTxtField;
+    private javax.swing.JCheckBox rankingSavingPageRankChackBox;
+    private javax.swing.JButton rankingSavingSaveBtn;
+    private javax.swing.JButton rankingSavingSearchBtn;
+    private javax.swing.JButton rankingSavingSearchBtn1;
     private javax.swing.JRadioButton wikiDataRadBtn;
     private javax.swing.JRadioButton wikiMediaRadBtn;
     // End of variables declaration//GEN-END:variables
