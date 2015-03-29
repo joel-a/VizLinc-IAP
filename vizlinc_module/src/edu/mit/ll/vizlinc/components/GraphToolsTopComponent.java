@@ -449,11 +449,11 @@ public final class GraphToolsTopComponent extends TopComponent implements GraphO
                     .addComponent(bySizeClosenessCentralityCheckBox)
                     .addComponent(byColorClosenessCentralityCheckBox)
                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(numNeighborBySizeCheckBox)
+                        .addComponent(numNeighborbyColorCheckBox))
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(degreeBySizeCheckBox)
-                        .addComponent(degreeByColoCheckBox)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(numNeighborBySizeCheckBox)
-                            .addComponent(numNeighborbyColorCheckBox))))
+                        .addComponent(degreeByColoCheckBox)))
                 .addContainerGap(15, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents

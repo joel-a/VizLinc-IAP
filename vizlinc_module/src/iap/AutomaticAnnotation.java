@@ -349,22 +349,57 @@ public class AutomaticAnnotation {
         titlesMap   = new HashMap();
         annotationMap = new HashMap();
         URL tempUrl;
+        BufferedWriter writer = new BufferedWriter(new FileWriter(outputFile));
         for (String name : names){
             tempUrl = new URL(WIKI_BASIC_INFO_URL + name);
-            JsonObject jsonData = Json.createReader(tempUrl.openStream()).readObject().getJsonObject("query").getJsonObject("pages");
+            JsonObject jsonData = Json.createReader(tempUrl.openStream()).readObject().getJsonObject("query").getJsonObject("pages");   //jsonobject key batchcompleted / query
+            writer.write(name + "  " + jsonData.keySet() );
+            writer.newLine();
+            writer.flush();
             for(String pageKey : jsonData.keySet()){
+                
                 if(pageKey.startsWith("-")){
                     annotationMap.put(name.replace("%20", " "), "not found");
-                    continue;
+                    break;
                 }
-                String wikiName = jsonData.getJsonObject(pageKey).getJsonString("title").toString().replace("\"", "");
-                String pageId = jsonData.getJsonObject(pageKey).getJsonNumber("pageid").toString();
-                String title = jsonData.getJsonObject(pageKey).getJsonObject("pageprops").getJsonString("wikibase_item").toString().replace("\"", "");
+                
+                JsonObject  personDataJson  = jsonData.getJsonObject(pageKey);
+                writer.write(personDataJson.keySet().toString() );
+                writer.newLine();
+                writer.flush();
+                
+                if(personDataJson.containsKey("missing")){
+                    annotationMap.put(name.replace("%20", " "), "not found");
+                    break;
+                }
+                
+                if(!personDataJson.containsKey("pageprops") || personDataJson.getJsonObject("pageprops").containsKey("disambiguation")){
+                    annotationMap.put(name.replace("%20", " "), "more than one option");
+                    break;
+                }
+                
+                String      wikiName        = personDataJson.getJsonString("title").toString().replace("\"", "");
+                String      pageId          = personDataJson.getJsonNumber("pageid").toString();
+                String      title           = "null";
+                if(personDataJson.getJsonObject("pageprops").containsKey("wikibase_item")){
+                    title = personDataJson.getJsonObject("pageprops").getJsonString("wikibase_item").toString().replace("\"", "");
+                }
+                
+                writer.write(wikiName + "\t\t" + title + "\t\t" + pageId );
+                writer.newLine();writer.newLine();writer.newLine();
+                writer.flush();
+                
                 pageIdsMap.put(wikiName, pageId);
                 titlesMap.put(wikiName, title);
                 wikiNameMap.put(wikiName, name.replace("%20", " "));
+                
+                
+                
             }
+            
         }
+        writer.close();
+        
     }
     
     

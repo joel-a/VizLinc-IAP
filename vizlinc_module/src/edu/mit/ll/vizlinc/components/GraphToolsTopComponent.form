@@ -200,12 +200,12 @@
                   <Component id="bySizeClosenessCentralityCheckBox" min="-2" max="-2" attributes="0"/>
                   <Component id="byColorClosenessCentralityCheckBox" alignment="0" min="-2" max="-2" attributes="0"/>
                   <Group type="103" alignment="0" groupAlignment="3" attributes="0">
+                      <Component id="numNeighborBySizeCheckBox" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="numNeighborbyColorCheckBox" alignment="3" min="-2" max="-2" attributes="0"/>
+                  </Group>
+                  <Group type="103" groupAlignment="3" attributes="0">
                       <Component id="degreeBySizeCheckBox" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="degreeByColoCheckBox" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Group type="103" alignment="3" groupAlignment="3" attributes="0">
-                          <Component id="numNeighborBySizeCheckBox" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="numNeighborbyColorCheckBox" alignment="3" min="-2" max="-2" attributes="0"/>
-                      </Group>
                   </Group>
               </Group>
               <EmptySpace pref="15" max="32767" attributes="0"/>

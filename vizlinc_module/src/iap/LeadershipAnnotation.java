@@ -67,13 +67,7 @@ public class LeadershipAnnotation {
         BufferedReader reader = new BufferedReader(new FileReader(inputFile));
         String line;
         while((line = reader.readLine()) != null){
-            int firstCommaIndex = line.indexOf(",");
-            if(line.indexOf(",", firstCommaIndex + 1) > 0){
-                leadershipAnnotation.add(line.substring(0, line.indexOf(",", firstCommaIndex + 1)));
-            }else{
-                leadershipAnnotation.add(line);
-            }
-            
+            leadershipAnnotation.add(line);   
         }
         reader.close();
     }
@@ -107,17 +101,21 @@ public class LeadershipAnnotation {
                 leadershipAnnotation.set(i, dataLine + separator + NO_LEADER_KEY);
             }
             //progress.getProgressTicket().progress(++progressCount);
+            progressCount++;
         }
+        
     }
     
     private void writeResultsOnFile() throws IOException{
         //progress.getProgressTicket().switchToIndeterminate();
         //progress.getProgressTicket().setDisplayName("Writing results...");
         BufferedWriter writer = new BufferedWriter(new FileWriter(outputFile));
+        int count = 0;
         for(String dataLine : leadershipAnnotation){
             writer.write(dataLine);
             writer.newLine();
             writer.flush();
+            count++;
         }
         writer.close();
     }

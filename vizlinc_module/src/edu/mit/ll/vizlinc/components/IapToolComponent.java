@@ -134,6 +134,8 @@ public class IapToolComponent extends javax.swing.JPanel implements java.beans.C
         rankingSavingSearchBtn1 = new javax.swing.JButton();
         jLabel6 = new javax.swing.JLabel();
         rankingSavingBetweenessCheckBox = new javax.swing.JCheckBox();
+        jPanel7 = new javax.swing.JPanel();
+        jButton4 = new javax.swing.JButton();
 
         setLayout(new java.awt.BorderLayout());
         add(jProgressBar1, java.awt.BorderLayout.PAGE_END);
@@ -491,6 +493,32 @@ public class IapToolComponent extends javax.swing.JPanel implements java.beans.C
 
         jTabbedPane1.addTab("RankingSaving", jPanel6);
 
+        jButton4.setText("Get Num of Edges");
+        jButton4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton4ActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel7Layout = new javax.swing.GroupLayout(jPanel7);
+        jPanel7.setLayout(jPanel7Layout);
+        jPanel7Layout.setHorizontalGroup(
+            jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel7Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jButton4)
+                .addContainerGap(468, Short.MAX_VALUE))
+        );
+        jPanel7Layout.setVerticalGroup(
+            jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel7Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jButton4)
+                .addContainerGap(238, Short.MAX_VALUE))
+        );
+
+        jTabbedPane1.addTab("Mic", jPanel7);
+
         add(jTabbedPane1, java.awt.BorderLayout.CENTER);
     }// </editor-fold>//GEN-END:initComponents
 
@@ -647,7 +675,8 @@ public class IapToolComponent extends javax.swing.JPanel implements java.beans.C
                     while((line = reader.readLine()) != null){                                                  //go trought the whole input file
                         String nodeLabelInFile = line.split(",")[0].trim().toUpperCase();                       //extract node lable from the input file
                         if(labelToNodeMap.containsKey(nodeLabelInFile)){                                        //save the result only if the input node exist in the graph
-                            String line2Write = nodeLabelInFile;
+                           
+                            String line2Write = line;
                             for(Ranking rank :ranks){
                                 line2Write += "," + rank.getValue(labelToNodeMap.get(nodeLabelInFile));
                             }
@@ -779,6 +808,11 @@ public class IapToolComponent extends javax.swing.JPanel implements java.beans.C
         // TODO add your handling code here:
     }//GEN-LAST:event_rankingSavingInputFileTxtFieldActionPerformed
 
+    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
+        Graph graph = Lookup.getDefault().lookup(GraphController.class).getModel().getGraphVisible();
+        JOptionPane.showMessageDialog(null, graph.getEdgeCount());
+    }//GEN-LAST:event_jButton4ActionPerformed
+
     
     
     
@@ -790,6 +824,7 @@ public class IapToolComponent extends javax.swing.JPanel implements java.beans.C
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
+    private javax.swing.JButton jButton4;
     private javax.swing.JButton jButton7;
     private javax.swing.JButton jButton8;
     private javax.swing.JButton jButton9;
@@ -811,6 +846,7 @@ public class IapToolComponent extends javax.swing.JPanel implements java.beans.C
     private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanel5;
     private javax.swing.JPanel jPanel6;
+    private javax.swing.JPanel jPanel7;
     private javax.swing.JProgressBar jProgressBar1;
     private javax.swing.JProgressBar jProgressBar2;
     private javax.swing.JTabbedPane jTabbedPane1;
