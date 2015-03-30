@@ -6,27 +6,25 @@
 package edu.mit.ll.vizlinc.components;
 
 import edu.mit.ll.vizlinc.concurrency.VizLincLongTask;
-import edu.mit.ll.vizlinc.graph.Closeness;
-import edu.mit.ll.vizlinc.model.Person;
-import edu.mit.ll.vizlinc.model.PersonValue;
-import edu.mit.ll.vizlinc.utils.DBUtils;
 import iap.AutomaticAnnotation;
 import iap.LeadershipAnnotation;
+import iap.RemoveDuplicatesLinesInfile;
+import iap.RemoveIsolatedNodes;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileNameExtensionFilter;
-import org.gephi.data.attributes.api.AttributeColumn;
+import org.gephi.data.attributes.api.AttributeController;
+import org.gephi.data.attributes.api.AttributeModel;
 import org.gephi.graph.api.Graph;
 import org.gephi.graph.api.GraphController;
+import org.gephi.graph.api.GraphModel;
 import org.gephi.graph.api.Node;
 import org.gephi.ranking.api.Ranking;
 import org.gephi.ranking.api.RankingController;
@@ -38,7 +36,6 @@ import org.gephi.statistics.plugin.PageRank;
 import org.gephi.statistics.plugin.WeightedDegree;
 import org.gephi.utils.progress.Progress;
 import org.gephi.utils.progress.ProgressTicket;
-import org.jboss.netty.handler.timeout.IdleState;
 import org.openide.util.Exceptions;
 import org.openide.util.Lookup;
 
@@ -65,6 +62,15 @@ public class IapToolComponent extends javax.swing.JPanel implements java.beans.C
     //RankingSaving Field
     File rankingSavingOutputFile;
     File rankingSavingInputFile;
+    
+    //Remove Isolated Nodes Field
+    File rmvIsolatedNFile;
+    File rmvIsolatedNOutputfile;
+    
+    //Remove Duplicates field
+    File rmvDupFile1;
+    File rmvDupFile2;
+    File rmvDupOutputFile;
 
     /**
      * Creates new customizer IapToolComponent
@@ -136,6 +142,44 @@ public class IapToolComponent extends javax.swing.JPanel implements java.beans.C
         rankingSavingBetweenessCheckBox = new javax.swing.JCheckBox();
         jPanel7 = new javax.swing.JPanel();
         jButton4 = new javax.swing.JButton();
+        jButton5 = new javax.swing.JButton();
+        label1 = new java.awt.Label();
+        micResultTxtField = new javax.swing.JTextField();
+        label2 = new java.awt.Label();
+        jPanel8 = new javax.swing.JPanel();
+        label3 = new java.awt.Label();
+        label4 = new java.awt.Label();
+        rmvIsolatedNodeInputFieldTxtField = new javax.swing.JTextField();
+        rmvIsolatedNodesSearchBtn = new javax.swing.JButton();
+        rmvIsolatedNodeRemoveBtn = new javax.swing.JButton();
+        label5 = new java.awt.Label();
+        rmvIsolatedNodeOutputFieldTxtField = new javax.swing.JTextField();
+        rmvIsolatedNodesOutputFileSearchBtn = new javax.swing.JButton();
+        jPanel9 = new javax.swing.JPanel();
+        jLabel13 = new javax.swing.JLabel();
+        jLabel14 = new javax.swing.JLabel();
+        label6 = new java.awt.Label();
+        label7 = new java.awt.Label();
+        rmvDuplicateFile2Txtfield = new javax.swing.JTextField();
+        rmvDuplicateFile1Txtfield = new javax.swing.JTextField();
+        rmvDuplicatesF1Btn = new javax.swing.JButton();
+        rmvDuplicatesF2btn = new javax.swing.JButton();
+        label8 = new java.awt.Label();
+        jPanel10 = new javax.swing.JPanel();
+        jLabel15 = new javax.swing.JLabel();
+        jLabel16 = new javax.swing.JLabel();
+        label9 = new java.awt.Label();
+        label10 = new java.awt.Label();
+        rmvDuplicateFile2Txtfield1 = new javax.swing.JTextField();
+        rmvDuplicateFile1Txtfield1 = new javax.swing.JTextField();
+        rmvIsolatedNodesSearchBtn2 = new javax.swing.JButton();
+        rmvIsolatedNodesOutputFileSearchBtn2 = new javax.swing.JButton();
+        label11 = new java.awt.Label();
+        rmvDuplicateOutputFileTxtField = new javax.swing.JTextField();
+        rmvDuplicateOutputFSearchBtn = new javax.swing.JButton();
+        rmvDuplicateRemoveBtn = new javax.swing.JButton();
+        jLabel17 = new javax.swing.JLabel();
+        rmvDuplicateResultTxtField = new javax.swing.JTextField();
 
         setLayout(new java.awt.BorderLayout());
         add(jProgressBar1, java.awt.BorderLayout.PAGE_END);
@@ -206,7 +250,7 @@ public class IapToolComponent extends javax.swing.JPanel implements java.beans.C
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel3Layout.createSequentialGroup()
                                 .addComponent(wikiDataRadBtn)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 216, Short.MAX_VALUE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 228, Short.MAX_VALUE)
                                 .addComponent(jButton9)
                                 .addGap(116, 116, 116))
                             .addGroup(jPanel3Layout.createSequentialGroup()
@@ -255,7 +299,7 @@ public class IapToolComponent extends javax.swing.JPanel implements java.beans.C
                     .addComponent(jButton9))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(bothwikiBrn)
-                .addContainerGap(57, Short.MAX_VALUE))
+                .addContainerGap(60, Short.MAX_VALUE))
         );
 
         jTabbedPane1.addTab("AutomatAnnot", jPanel3);
@@ -338,7 +382,7 @@ public class IapToolComponent extends javax.swing.JPanel implements java.beans.C
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jButton1)
                             .addComponent(jButton2))))
-                .addContainerGap(72, Short.MAX_VALUE))
+                .addContainerGap(84, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -369,7 +413,7 @@ public class IapToolComponent extends javax.swing.JPanel implements java.beans.C
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(leadershipExcludeKeyWords, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel3))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 44, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 47, Short.MAX_VALUE)
                 .addComponent(jButton3)
                 .addGap(18, 18, 18))
         );
@@ -457,7 +501,7 @@ public class IapToolComponent extends javax.swing.JPanel implements java.beans.C
                             .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                 .addComponent(rankingSavingSearchBtn1)
                                 .addComponent(rankingSavingSearchBtn)))))
-                .addContainerGap(93, Short.MAX_VALUE))
+                .addContainerGap(105, Short.MAX_VALUE))
         );
         jPanel6Layout.setVerticalGroup(
             jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -488,39 +532,529 @@ public class IapToolComponent extends javax.swing.JPanel implements java.beans.C
                 .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(rankingSavingBetweenessCheckBox)
                     .addComponent(rankingSavingSaveBtn))
-                .addContainerGap(54, Short.MAX_VALUE))
+                .addContainerGap(57, Short.MAX_VALUE))
         );
 
         jTabbedPane1.addTab("RankingSaving", jPanel6);
 
-        jButton4.setText("Get Num of Edges");
+        jButton4.setText("Get Amnt of Edges");
         jButton4.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton4ActionPerformed(evt);
             }
         });
 
+        jButton5.setText("Amnt of isolated Nodes");
+        jButton5.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton5ActionPerformed(evt);
+            }
+        });
+
+        label1.setText("All the calculations are based on the visible graph");
+
+        micResultTxtField.setEditable(false);
+
+        label2.setText("Results:");
+
         javax.swing.GroupLayout jPanel7Layout = new javax.swing.GroupLayout(jPanel7);
         jPanel7.setLayout(jPanel7Layout);
         jPanel7Layout.setHorizontalGroup(
             jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel7Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jButton4)
-                .addContainerGap(468, Short.MAX_VALUE))
+                .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel7Layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jButton4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jButton5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                    .addGroup(jPanel7Layout.createSequentialGroup()
+                        .addGap(160, 160, 160)
+                        .addComponent(label1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel7Layout.createSequentialGroup()
+                .addGap(91, 91, 91)
+                .addComponent(label2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(micResultTxtField, javax.swing.GroupLayout.PREFERRED_SIZE, 344, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(114, 114, 114))
         );
         jPanel7Layout.setVerticalGroup(
             jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel7Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jButton4)
-                .addContainerGap(238, Short.MAX_VALUE))
+                .addGap(18, 18, 18)
+                .addComponent(jButton5)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 140, Short.MAX_VALUE)
+                .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(micResultTxtField, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(label2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(label1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
         );
 
         jTabbedPane1.addTab("Mic", jPanel7);
 
+        label3.setText("Input File (txt, csv):");
+
+        label4.setText("Remove Isolated Node from the input file");
+
+        rmvIsolatedNodeInputFieldTxtField.setEditable(false);
+
+        rmvIsolatedNodesSearchBtn.setText("Search");
+        rmvIsolatedNodesSearchBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                rmvIsolatedNodesSearchBtnActionPerformed(evt);
+            }
+        });
+
+        rmvIsolatedNodeRemoveBtn.setText("Remove");
+        rmvIsolatedNodeRemoveBtn.setEnabled(false);
+        rmvIsolatedNodeRemoveBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                rmvIsolatedNodeRemoveBtnActionPerformed(evt);
+            }
+        });
+
+        label5.setText("Output File (txt, csv):");
+
+        rmvIsolatedNodeOutputFieldTxtField.setEditable(false);
+
+        rmvIsolatedNodesOutputFileSearchBtn.setText("Search");
+        rmvIsolatedNodesOutputFileSearchBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                rmvIsolatedNodesOutputFileSearchBtnActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel8Layout = new javax.swing.GroupLayout(jPanel8);
+        jPanel8.setLayout(jPanel8Layout);
+        jPanel8Layout.setHorizontalGroup(
+            jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel8Layout.createSequentialGroup()
+                .addGap(0, 0, Short.MAX_VALUE)
+                .addComponent(rmvIsolatedNodeRemoveBtn)
+                .addGap(266, 266, 266))
+            .addGroup(jPanel8Layout.createSequentialGroup()
+                .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(jPanel8Layout.createSequentialGroup()
+                        .addComponent(label5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(rmvIsolatedNodeOutputFieldTxtField, javax.swing.GroupLayout.PREFERRED_SIZE, 341, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(rmvIsolatedNodesOutputFileSearchBtn))
+                    .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(jPanel8Layout.createSequentialGroup()
+                            .addGap(186, 186, 186)
+                            .addComponent(label4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGroup(jPanel8Layout.createSequentialGroup()
+                            .addGap(29, 29, 29)
+                            .addComponent(label3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(rmvIsolatedNodeInputFieldTxtField, javax.swing.GroupLayout.PREFERRED_SIZE, 341, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGap(18, 18, 18)
+                            .addComponent(rmvIsolatedNodesSearchBtn))))
+                .addContainerGap(43, Short.MAX_VALUE))
+        );
+        jPanel8Layout.setVerticalGroup(
+            jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel8Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(label4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(13, 13, 13)
+                .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(label3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(rmvIsolatedNodeInputFieldTxtField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(rmvIsolatedNodesSearchBtn)))
+                .addGap(18, 18, 18)
+                .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(label5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(rmvIsolatedNodeOutputFieldTxtField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(rmvIsolatedNodesOutputFileSearchBtn)))
+                .addGap(26, 26, 26)
+                .addComponent(rmvIsolatedNodeRemoveBtn)
+                .addContainerGap(119, Short.MAX_VALUE))
+        );
+
+        jTabbedPane1.addTab("RmvIsolatedNode", jPanel8);
+
+        jLabel14.setText("Description:");
+
+        label6.setText("Input File 1 (txt, csv):");
+
+        label7.setText("Output File (txt, csv):");
+
+        rmvDuplicateFile2Txtfield.setEditable(false);
+
+        rmvDuplicateFile1Txtfield.setEditable(false);
+
+        rmvDuplicatesF1Btn.setText("Search");
+        rmvDuplicatesF1Btn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                rmvDuplicatesF1BtnActionPerformed(evt);
+            }
+        });
+
+        rmvDuplicatesF2btn.setText("Search");
+        rmvDuplicatesF2btn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                rmvDuplicatesF2btnActionPerformed(evt);
+            }
+        });
+
+        label8.setText("Input File 2 (txt, csv):");
+
+        jLabel16.setText("Description:");
+
+        label9.setText("Input File 1 (txt, csv):");
+
+        label10.setText("Output File (txt, csv):");
+
+        rmvDuplicateFile2Txtfield1.setEditable(false);
+
+        rmvDuplicateFile1Txtfield1.setEditable(false);
+
+        rmvIsolatedNodesSearchBtn2.setText("Search");
+        rmvIsolatedNodesSearchBtn2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                rmvIsolatedNodesSearchBtn2ActionPerformed(evt);
+            }
+        });
+
+        rmvIsolatedNodesOutputFileSearchBtn2.setText("Search");
+        rmvIsolatedNodesOutputFileSearchBtn2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                rmvIsolatedNodesOutputFileSearchBtn2ActionPerformed(evt);
+            }
+        });
+
+        label11.setText("Input File 2 (txt, csv):");
+
+        rmvDuplicateOutputFileTxtField.setEditable(false);
+
+        rmvDuplicateOutputFSearchBtn.setText("Search");
+        rmvDuplicateOutputFSearchBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                rmvDuplicateOutputFSearchBtnActionPerformed(evt);
+            }
+        });
+
+        rmvDuplicateRemoveBtn.setText("Remove");
+        rmvDuplicateRemoveBtn.setEnabled(false);
+        rmvDuplicateRemoveBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                rmvDuplicateRemoveBtnActionPerformed(evt);
+            }
+        });
+
+        jLabel17.setText("Duplicate lines: ");
+
+        rmvDuplicateResultTxtField.setEnabled(false);
+
+        javax.swing.GroupLayout jPanel10Layout = new javax.swing.GroupLayout(jPanel10);
+        jPanel10.setLayout(jPanel10Layout);
+        jPanel10Layout.setHorizontalGroup(
+            jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel10Layout.createSequentialGroup()
+                .addGroup(jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel10Layout.createSequentialGroup()
+                        .addGap(230, 230, 230)
+                        .addComponent(jLabel15))
+                    .addGroup(jPanel10Layout.createSequentialGroup()
+                        .addGap(42, 42, 42)
+                        .addComponent(jLabel16))
+                    .addGroup(jPanel10Layout.createSequentialGroup()
+                        .addGap(28, 28, 28)
+                        .addGroup(jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addGroup(jPanel10Layout.createSequentialGroup()
+                                .addComponent(label10, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(rmvDuplicateOutputFileTxtField, javax.swing.GroupLayout.PREFERRED_SIZE, 341, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(rmvDuplicateOutputFSearchBtn))
+                            .addGroup(jPanel10Layout.createSequentialGroup()
+                                .addComponent(label11, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(rmvDuplicateFile2Txtfield1, javax.swing.GroupLayout.PREFERRED_SIZE, 341, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(rmvIsolatedNodesOutputFileSearchBtn2))
+                            .addGroup(jPanel10Layout.createSequentialGroup()
+                                .addComponent(label9, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(rmvDuplicateFile1Txtfield1, javax.swing.GroupLayout.PREFERRED_SIZE, 341, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(rmvIsolatedNodesSearchBtn2))))
+                    .addGroup(jPanel10Layout.createSequentialGroup()
+                        .addGap(267, 267, 267)
+                        .addComponent(rmvDuplicateRemoveBtn))
+                    .addGroup(jPanel10Layout.createSequentialGroup()
+                        .addGap(200, 200, 200)
+                        .addComponent(jLabel17)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(rmvDuplicateResultTxtField, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(34, Short.MAX_VALUE))
+        );
+        jPanel10Layout.setVerticalGroup(
+            jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel10Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel15)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(jPanel10Layout.createSequentialGroup()
+                        .addComponent(jLabel16)
+                        .addGap(18, 18, 18)
+                        .addGroup(jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(label9, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(rmvDuplicateFile1Txtfield1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(rmvIsolatedNodesSearchBtn2)))
+                        .addGap(18, 18, 18)
+                        .addGroup(jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(rmvDuplicateFile2Txtfield1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(rmvIsolatedNodesOutputFileSearchBtn2)))
+                    .addComponent(label11, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(20, 20, 20)
+                .addGroup(jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(label10, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(rmvDuplicateOutputFSearchBtn)
+                        .addComponent(rmvDuplicateOutputFileTxtField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 42, Short.MAX_VALUE)
+                .addGroup(jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel17)
+                    .addComponent(rmvDuplicateResultTxtField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(14, 14, 14)
+                .addComponent(rmvDuplicateRemoveBtn)
+                .addGap(20, 20, 20))
+        );
+
+        javax.swing.GroupLayout jPanel9Layout = new javax.swing.GroupLayout(jPanel9);
+        jPanel9.setLayout(jPanel9Layout);
+        jPanel9Layout.setHorizontalGroup(
+            jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel9Layout.createSequentialGroup()
+                .addGroup(jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel9Layout.createSequentialGroup()
+                        .addGap(230, 230, 230)
+                        .addComponent(jLabel13))
+                    .addGroup(jPanel9Layout.createSequentialGroup()
+                        .addGap(42, 42, 42)
+                        .addComponent(jLabel14))
+                    .addGroup(jPanel9Layout.createSequentialGroup()
+                        .addGap(28, 28, 28)
+                        .addGroup(jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addGroup(jPanel9Layout.createSequentialGroup()
+                                .addComponent(label8, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(rmvDuplicateFile2Txtfield, javax.swing.GroupLayout.PREFERRED_SIZE, 341, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(rmvDuplicatesF2btn))
+                            .addGroup(jPanel9Layout.createSequentialGroup()
+                                .addComponent(label6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(rmvDuplicateFile1Txtfield, javax.swing.GroupLayout.PREFERRED_SIZE, 341, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(rmvDuplicatesF1Btn))))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel9Layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(label7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(434, 434, 434)))
+                .addContainerGap(34, Short.MAX_VALUE))
+            .addGroup(jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(jPanel9Layout.createSequentialGroup()
+                    .addGap(0, 0, Short.MAX_VALUE)
+                    .addComponent(jPanel10, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGap(0, 0, Short.MAX_VALUE)))
+        );
+        jPanel9Layout.setVerticalGroup(
+            jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel9Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel13)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(jPanel9Layout.createSequentialGroup()
+                        .addComponent(jLabel14)
+                        .addGap(18, 18, 18)
+                        .addGroup(jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(label6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(rmvDuplicateFile1Txtfield, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(rmvDuplicatesF1Btn)))
+                        .addGap(18, 18, 18)
+                        .addGroup(jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(rmvDuplicateFile2Txtfield, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(rmvDuplicatesF2btn)))
+                    .addComponent(label8, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(20, 20, 20)
+                .addComponent(label7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(122, Short.MAX_VALUE))
+            .addGroup(jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(jPanel9Layout.createSequentialGroup()
+                    .addGap(0, 0, Short.MAX_VALUE)
+                    .addComponent(jPanel10, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGap(0, 0, Short.MAX_VALUE)))
+        );
+
+        jTabbedPane1.addTab("RmvDuplicates", jPanel9);
+
         add(jTabbedPane1, java.awt.BorderLayout.CENTER);
     }// </editor-fold>//GEN-END:initComponents
+
+    private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
+        GraphModel          graphM          = Lookup.getDefault().lookup(GraphController.class).getModel();
+        RankingController   rc              = Lookup.getDefault().lookup(RankingController.class);
+        RankingModel        rm              = rc.getModel();
+        Ranking             degreeRanking   = rm.getRanking(Ranking.NODE_ELEMENT, Ranking.DEGREE_RANKING);
+
+        //Sets degree rank, if it was not already set
+        if(degreeRanking == null){
+            AttributeModel  aM      = Lookup.getDefault().lookup(AttributeController.class).getModel();
+            Degree degree = new Degree();
+            degree.execute(graphM, aM);
+            degreeRanking   = rm.getRanking(Ranking.NODE_ELEMENT, Ranking.DEGREE_RANKING);
+        }
+
+        int count = 0;      //amount of isolated nodes.
+        for(Node n : graphM.getGraphVisible().getNodes()){
+            if( (int) degreeRanking.getValue(n) == 0){
+                count++;
+            }
+        }
+
+        micResultTxtField.setText("Amount of isolated nodes = " + count);
+    }//GEN-LAST:event_jButton5ActionPerformed
+
+    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
+        Graph graph = Lookup.getDefault().lookup(GraphController.class).getModel().getGraphVisible();
+        micResultTxtField.setText("Amount of edges in graph: " + graph.getEdgeCount());
+    }//GEN-LAST:event_jButton4ActionPerformed
+
+    private void rankingSavingSearchBtn1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rankingSavingSearchBtn1ActionPerformed
+        rankingSavingInputFile = iap.Utils.selectAnInputFile();
+        if(rankingSavingInputFile != null){
+            rankingSavingInputFileTxtField.setText(rankingSavingInputFile.getPath());
+        }
+    }//GEN-LAST:event_rankingSavingSearchBtn1ActionPerformed
+
+    private void rankingSavingInputFileTxtFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rankingSavingInputFileTxtFieldActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_rankingSavingInputFileTxtFieldActionPerformed
+
+    private void rankingSavingSaveBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rankingSavingSaveBtnActionPerformed
+        if(rankingSavingOutputFile == null){
+            JOptionPane.showMessageDialog(null, "An output file have to be selected");
+            return;
+        }
+
+        Graph graph = Lookup.getDefault().lookup(GraphController.class).getModel().getGraphVisible();
+
+        ArrayList<Ranking> ranks = new ArrayList();
+        setRanksToSave(ranks);
+
+        if(ranks.size() > 0){
+            try {
+                BufferedWriter writer = new BufferedWriter(new FileWriter(rankingSavingOutputFile));
+
+                //writhe name of the matrics
+                writer.write("label");
+                for(Ranking rank : ranks){
+                    writer.write("," + rank.getDisplayName());
+                }
+                writer.newLine();
+
+                if(rankingSavingInputFile == null){
+                    for(Node node : graph.getNodes()){
+                        writer.write(node.getNodeData().getLabel());                //write name of the person
+                        for(Ranking rank : ranks){
+                            writer.write("," + rank.getValue(node).toString());
+                        }
+                        writer.newLine();
+                        writer.flush();
+                    }
+                }else{
+                    HashMap<String, Node> labelToNodeMap = iap.Utils.getLabelToNodeMap();
+                    BufferedReader reader = new BufferedReader(new FileReader(rankingSavingInputFile));
+                    String line;
+                    while((line = reader.readLine()) != null){                                                  //go trought the whole input file
+                        String nodeLabelInFile = line.split(",")[0].trim().toUpperCase();                       //extract node lable from the input file
+                        if(labelToNodeMap.containsKey(nodeLabelInFile)){                                        //save the result only if the input node exist in the graph
+
+                            String line2Write = line;
+                            for(Ranking rank :ranks){
+                                line2Write += "," + rank.getValue(labelToNodeMap.get(nodeLabelInFile));
+                            }
+                            writer.write(line2Write);
+                            writer.newLine();
+                            writer.flush();
+                        }
+                    }
+                }
+                writer.close();
+            } catch (IOException ex) {
+                Exceptions.printStackTrace(ex);
+            }
+        }
+
+        JOptionPane.showMessageDialog(null, "Finish");
+        /*
+        if(ranks.size() > 0){
+            try {
+
+                if(rankingSavingInputFile != null){
+                    BufferedReader reader = new BufferedReader(new FileReader(rankingSavingInputFile));
+                    String line;
+                    while((line = reader.readLine()) != null){
+                        String nodeLabel = line.split(",")[0].trim();
+                        JOptionPane.showMessageDialog(null, nodeLabelMap.get(nodeLabel));
+                        String temp = node.getNodeData().getLabel();
+                        JOptionPane.showMessageDialog(null, temp);
+                        for(Ranking rank :ranks){
+                            temp += "," + rank.getValue(node);
+                        }
+                        writer.write(temp);
+                        writer.newLine();
+                        writer.flush();
+
+                    }
+
+                }else{
+                    for(Node node : graph.getNodes()){
+                        String temp = node.getNodeData().getLabel();
+                        for(Ranking rank :ranks){
+                            temp += "," + node.getAttributes().getValue(rank.getName());
+                        }
+                        writer.write(temp);
+                        writer.newLine();
+                        writer.flush();
+
+                    }
+                }
+
+                writer.close();
+            } catch (IOException ex) {
+                Exceptions.printStackTrace(ex);
+            }
+        }*/
+
+    }//GEN-LAST:event_rankingSavingSaveBtnActionPerformed
+
+    private void rankingSavingSearchBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rankingSavingSearchBtnActionPerformed
+        try {
+            rankingSavingOutputFile = iap.Utils.selectAnOutputFile(new FileNameExtensionFilter("csv", "CSV"));
+            if(rankingSavingOutputFile != null){
+                rankingSavingOutputFileTxtField.setText(rankingSavingOutputFile.getPath());
+            }
+
+        } catch (IOException ex) {
+            Exceptions.printStackTrace(ex);
+        }
+    }//GEN-LAST:event_rankingSavingSearchBtnActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
         if(leadAnnotOutputFile == null || leadAnnotInputFile == null){
@@ -625,137 +1159,94 @@ public class IapToolComponent extends javax.swing.JPanel implements java.beans.C
         inputFile = iap.Utils.selectAnInputFile();
     }//GEN-LAST:event_jButton7ActionPerformed
 
-    private void rankingSavingSearchBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rankingSavingSearchBtnActionPerformed
+    private void rmvIsolatedNodesSearchBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rmvIsolatedNodesSearchBtnActionPerformed
+        rmvIsolatedNFile = iap.Utils.selectAnInputFile();
+        if(rmvIsolatedNFile != null){
+            rmvIsolatedNodeRemoveBtn.setEnabled(true);
+            rmvIsolatedNodeInputFieldTxtField.setText(rmvIsolatedNFile.getPath());
+        }
+    }//GEN-LAST:event_rmvIsolatedNodesSearchBtnActionPerformed
+
+    private void rmvIsolatedNodeRemoveBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rmvIsolatedNodeRemoveBtnActionPerformed
+        iap.RemoveIsolatedNodes rmvIsolatedNodes = new RemoveIsolatedNodes();
         try {
-            rankingSavingOutputFile = iap.Utils.selectAnOutputFile(new FileNameExtensionFilter("csv", "CSV"));
-            if(rankingSavingOutputFile != null){
-                rankingSavingOutputFileTxtField.setText(rankingSavingOutputFile.getPath());
+            if(rmvIsolatedNOutputfile == null){
+                rmvIsolatedNodes.execute(rmvIsolatedNFile);
+            }else{
+                rmvIsolatedNodes.execute(rmvIsolatedNFile, rmvIsolatedNOutputfile);
             }
+            JOptionPane.showMessageDialog(null, "Finish");
             
+        } catch (IOException ex) {
+            JOptionPane.showMessageDialog(null, ex);
+        }
+    }//GEN-LAST:event_rmvIsolatedNodeRemoveBtnActionPerformed
+
+    private void rmvIsolatedNodesOutputFileSearchBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rmvIsolatedNodesOutputFileSearchBtnActionPerformed
+        try {
+            rmvIsolatedNOutputfile = iap.Utils.selectAnOutputFile();
+            if(rmvIsolatedNOutputfile != null){
+            rmvIsolatedNodeOutputFieldTxtField.setText(rmvIsolatedNOutputfile.getPath());
+        }
+        } catch (IOException ex) {
+            JOptionPane.showMessageDialog(null, ex);
+        }
+        
+    }//GEN-LAST:event_rmvIsolatedNodesOutputFileSearchBtnActionPerformed
+
+    private void rmvDuplicatesF1BtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rmvDuplicatesF1BtnActionPerformed
+        rmvDupFile1 = iap.Utils.selectAnInputFile();
+        
+        if(rmvDupFile1 != null ){
+            rmvDuplicateFile1Txtfield.setText(rmvDupFile1.getPath());
+            if(rmvDupFile2 != null && rmvDupOutputFile != null)
+                rmvDuplicateRemoveBtn.setEnabled(true);
+        }
+    }//GEN-LAST:event_rmvDuplicatesF1BtnActionPerformed
+
+    private void rmvDuplicatesF2btnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rmvDuplicatesF2btnActionPerformed
+        rmvDupFile2 = iap.Utils.selectAnInputFile();
+        if(rmvDupFile2 != null ){
+            rmvDuplicateFile2Txtfield.setText(rmvDupFile2.getPath());
+            if(rmvDupFile1 != null && rmvDupOutputFile != null)
+                rmvDuplicateRemoveBtn.setEnabled(true);
+        }
+    }//GEN-LAST:event_rmvDuplicatesF2btnActionPerformed
+
+    private void rmvIsolatedNodesSearchBtn2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rmvIsolatedNodesSearchBtn2ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_rmvIsolatedNodesSearchBtn2ActionPerformed
+
+    private void rmvIsolatedNodesOutputFileSearchBtn2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rmvIsolatedNodesOutputFileSearchBtn2ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_rmvIsolatedNodesOutputFileSearchBtn2ActionPerformed
+
+    private void rmvDuplicateOutputFSearchBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rmvDuplicateOutputFSearchBtnActionPerformed
+        try {
+            rmvDupOutputFile = iap.Utils.selectAnOutputFile();
+            if(rmvDupOutputFile != null ){
+                rmvDuplicateOutputFileTxtField.setText(rmvDupOutputFile.getPath());
+                if(rmvDupFile2 != null && rmvDupFile1 != null)
+                    rmvDuplicateRemoveBtn.setEnabled(true);
+            }
         } catch (IOException ex) {
             Exceptions.printStackTrace(ex);
         }
-    }//GEN-LAST:event_rankingSavingSearchBtnActionPerformed
+        
+        
+    }//GEN-LAST:event_rmvDuplicateOutputFSearchBtnActionPerformed
 
-    private void rankingSavingSaveBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rankingSavingSaveBtnActionPerformed
-        if(rankingSavingOutputFile == null){
-            JOptionPane.showMessageDialog(null, "An output file have to be selected");
-            return;
+    private void rmvDuplicateRemoveBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rmvDuplicateRemoveBtnActionPerformed
+        iap.RemoveDuplicatesLinesInfile duplicateRemover = new RemoveDuplicatesLinesInfile();
+        try {
+            duplicateRemover.execute(rmvDupFile1, rmvDupFile2, rmvDupOutputFile);
+            rmvDuplicateResultTxtField.setText(duplicateRemover.getAmountOfRemovedLines() + "");
+        } catch (IOException ex) {
+            JOptionPane.showMessageDialog(null, ex);
         }
-        
-        Graph graph = Lookup.getDefault().lookup(GraphController.class).getModel().getGraphVisible();
-        
-        ArrayList<Ranking> ranks = new ArrayList();
-        setRanksToSave(ranks);
-        
-        if(ranks.size() > 0){
-            try {
-                BufferedWriter writer = new BufferedWriter(new FileWriter(rankingSavingOutputFile));
-           
-                //writhe name of the matrics
-                writer.write("label");
-                for(Ranking rank : ranks){
-                    writer.write("," + rank.getDisplayName());
-                }
-                writer.newLine();
+    }//GEN-LAST:event_rmvDuplicateRemoveBtnActionPerformed
 
-                if(rankingSavingInputFile == null){
-                    for(Node node : graph.getNodes()){
-                        writer.write(node.getNodeData().getLabel());                //write name of the person
-                        for(Ranking rank : ranks){          
-                            writer.write("," + rank.getValue(node).toString());
-                        }
-                        writer.newLine();
-                        writer.flush();
-                    }
-                }else{
-                    HashMap<String, Node> labelToNodeMap = getNodeLabelsMap();
-                    BufferedReader reader = new BufferedReader(new FileReader(rankingSavingInputFile));
-                    String line;
-                    while((line = reader.readLine()) != null){                                                  //go trought the whole input file
-                        String nodeLabelInFile = line.split(",")[0].trim().toUpperCase();                       //extract node lable from the input file
-                        if(labelToNodeMap.containsKey(nodeLabelInFile)){                                        //save the result only if the input node exist in the graph
-                           
-                            String line2Write = line;
-                            for(Ranking rank :ranks){
-                                line2Write += "," + rank.getValue(labelToNodeMap.get(nodeLabelInFile));
-                            }
-                            writer.write(line2Write);
-                            writer.newLine();
-                            writer.flush();
-                        }
-                    }
-                }
-                writer.close();
-            } catch (IOException ex) {
-                Exceptions.printStackTrace(ex);
-            }
-        }
-        
-        
-        JOptionPane.showMessageDialog(null, "Finish");
-        /*
-        if(ranks.size() > 0){
-            try {
-                
-                
-                if(rankingSavingInputFile != null){
-                    BufferedReader reader = new BufferedReader(new FileReader(rankingSavingInputFile));
-                    String line;
-                    while((line = reader.readLine()) != null){
-                        String nodeLabel = line.split(",")[0].trim();
-                        JOptionPane.showMessageDialog(null, nodeLabelMap.get(nodeLabel));
-                        String temp = node.getNodeData().getLabel();
-                        JOptionPane.showMessageDialog(null, temp);
-                        for(Ranking rank :ranks){
-                            temp += "," + rank.getValue(node);
-                        }
-                        writer.write(temp);
-                        writer.newLine();
-                        writer.flush();
-                    
-                    }
-                
-                }else{
-                    for(Node node : graph.getNodes()){
-                    String temp = node.getNodeData().getLabel();
-                    for(Ranking rank :ranks){
-                        temp += "," + node.getAttributes().getValue(rank.getName());
-                    }
-                    writer.write(temp);
-                    writer.newLine();
-                    writer.flush();
-                    
-                    }
-                }
-                
-                
-              
-                writer.close();
-            } catch (IOException ex) {
-                Exceptions.printStackTrace(ex);
-            }
-        }*/
-        
-        
-        
-    }//GEN-LAST:event_rankingSavingSaveBtnActionPerformed
-
-    /**
-     * Return a HasMap with the node Labels as key and the value is the node itself 
-     * @return 
-     */
-    private HashMap<String, Node> getNodeLabelsMap(){
-        Graph graph = Lookup.getDefault().lookup(GraphController.class).getModel().getGraphVisible();
-        
-        HashMap<String, Node> labelMap = new HashMap();
-        
-        for(Node node : graph.getNodes()){
-            labelMap.put(node.getNodeData().getLabel(), node);
-        }
-        
-        return labelMap;
-    }
+    
     private void setRanksToSave(ArrayList<Ranking> ranks){
         RankingController rankingController = Lookup.getDefault().lookup(RankingController.class);
         RankingModel rankModel = rankingController.getModel();
@@ -796,27 +1287,7 @@ public class IapToolComponent extends javax.swing.JPanel implements java.beans.C
             else
                 JOptionPane.showMessageDialog(null, rankingSavingBetweenessCheckBox.getText() + " have not beeing calculated. Ignored");
         }
-    }
-    private void rankingSavingSearchBtn1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rankingSavingSearchBtn1ActionPerformed
-        rankingSavingInputFile = iap.Utils.selectAnInputFile();
-        if(rankingSavingInputFile != null){
-            rankingSavingInputFileTxtField.setText(rankingSavingInputFile.getPath());
-        }
-    }//GEN-LAST:event_rankingSavingSearchBtn1ActionPerformed
-
-    private void rankingSavingInputFileTxtFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rankingSavingInputFileTxtFieldActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_rankingSavingInputFileTxtFieldActionPerformed
-
-    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
-        Graph graph = Lookup.getDefault().lookup(GraphController.class).getModel().getGraphVisible();
-        JOptionPane.showMessageDialog(null, graph.getEdgeCount());
-    }//GEN-LAST:event_jButton4ActionPerformed
-
-    
-    
-    
-
+    } 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JRadioButton bothwikiBrn;
     private javax.swing.JTextField inputFileTxtField;
@@ -825,6 +1296,7 @@ public class IapToolComponent extends javax.swing.JPanel implements java.beans.C
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
+    private javax.swing.JButton jButton5;
     private javax.swing.JButton jButton7;
     private javax.swing.JButton jButton8;
     private javax.swing.JButton jButton9;
@@ -832,6 +1304,11 @@ public class IapToolComponent extends javax.swing.JPanel implements java.beans.C
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel12;
+    private javax.swing.JLabel jLabel13;
+    private javax.swing.JLabel jLabel14;
+    private javax.swing.JLabel jLabel15;
+    private javax.swing.JLabel jLabel16;
+    private javax.swing.JLabel jLabel17;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -841,17 +1318,32 @@ public class IapToolComponent extends javax.swing.JPanel implements java.beans.C
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel10;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanel5;
     private javax.swing.JPanel jPanel6;
     private javax.swing.JPanel jPanel7;
+    private javax.swing.JPanel jPanel8;
+    private javax.swing.JPanel jPanel9;
     private javax.swing.JProgressBar jProgressBar1;
     private javax.swing.JProgressBar jProgressBar2;
     private javax.swing.JTabbedPane jTabbedPane1;
+    private java.awt.Label label1;
+    private java.awt.Label label10;
+    private java.awt.Label label11;
+    private java.awt.Label label2;
+    private java.awt.Label label3;
+    private java.awt.Label label4;
+    private java.awt.Label label5;
+    private java.awt.Label label6;
+    private java.awt.Label label7;
+    private java.awt.Label label8;
+    private java.awt.Label label9;
     private javax.swing.JTextField leadershipExcludeKeyWords;
     private javax.swing.JTextField leadershipKeyWords;
+    private javax.swing.JTextField micResultTxtField;
     private javax.swing.JTextField outputFileTxtField;
     private javax.swing.JTextField outputFileTxtFieldLeadAnnot;
     private javax.swing.JCheckBox rankingSavingBetweenessCheckBox;
@@ -865,6 +1357,23 @@ public class IapToolComponent extends javax.swing.JPanel implements java.beans.C
     private javax.swing.JButton rankingSavingSaveBtn;
     private javax.swing.JButton rankingSavingSearchBtn;
     private javax.swing.JButton rankingSavingSearchBtn1;
+    private javax.swing.JTextField rmvDuplicateFile1Txtfield;
+    private javax.swing.JTextField rmvDuplicateFile1Txtfield1;
+    private javax.swing.JTextField rmvDuplicateFile2Txtfield;
+    private javax.swing.JTextField rmvDuplicateFile2Txtfield1;
+    private javax.swing.JButton rmvDuplicateOutputFSearchBtn;
+    private javax.swing.JTextField rmvDuplicateOutputFileTxtField;
+    private javax.swing.JButton rmvDuplicateRemoveBtn;
+    private javax.swing.JTextField rmvDuplicateResultTxtField;
+    private javax.swing.JButton rmvDuplicatesF1Btn;
+    private javax.swing.JButton rmvDuplicatesF2btn;
+    private javax.swing.JTextField rmvIsolatedNodeInputFieldTxtField;
+    private javax.swing.JTextField rmvIsolatedNodeOutputFieldTxtField;
+    private javax.swing.JButton rmvIsolatedNodeRemoveBtn;
+    private javax.swing.JButton rmvIsolatedNodesOutputFileSearchBtn;
+    private javax.swing.JButton rmvIsolatedNodesOutputFileSearchBtn2;
+    private javax.swing.JButton rmvIsolatedNodesSearchBtn;
+    private javax.swing.JButton rmvIsolatedNodesSearchBtn2;
     private javax.swing.JRadioButton wikiDataRadBtn;
     private javax.swing.JRadioButton wikiMediaRadBtn;
     // End of variables declaration//GEN-END:variables

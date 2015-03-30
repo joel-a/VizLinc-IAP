@@ -5,13 +5,23 @@
  */
 package iap;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.DirectoryStream;
 import java.nio.file.Path;
+import java.util.HashMap;
 import java.util.List;
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileNameExtensionFilter;
+import org.gephi.graph.api.Graph;
+import org.gephi.graph.api.GraphController;
+import org.gephi.graph.api.Node;
+import org.openide.util.Lookup;
 
 /**
  *
@@ -112,5 +122,52 @@ public class Utils {
             return true;
         }
         return false;
+    }
+    
+    /**
+     * Return a HasMap with the node Labels as key and the value is the node itself 
+     * @return 
+     */
+    public static HashMap<String, Node> getLabelToNodeMap(){
+        Graph graph = Lookup.getDefault().lookup(GraphController.class).getModel().getGraphVisible();
+        
+        HashMap<String, Node> labelMap = new HashMap();
+        
+        for(Node node : graph.getNodes()){
+            labelMap.put(node.getNodeData().getLabel(), node);
+        }
+        
+        return labelMap;
+    }
+    
+    public static void writeListToFile(List list, File inputFile) throws IOException{
+        if(list == null || inputFile == null){
+            throw new IllegalArgumentException("Input file or list can not be null");
+        }
+        BufferedWriter writer = new BufferedWriter(new FileWriter(inputFile));
+        
+        for(Object o : list){
+            writer.write(o.toString());
+            writer.newLine();
+            writer.flush();
+        }
+        
+        writer.close();
+    }
+    
+    public static HashMap<String, String> getLabelsToLineMap(File input) throws FileNotFoundException, IOException{
+        final String SEPARATOR = ",";
+        HashMap<String, String> result = new HashMap();
+        BufferedReader reader = new BufferedReader(new FileReader(input));
+        String line;
+        
+        while((line = reader.readLine()) != null){
+            int     commaIndx = line.contains(SEPARATOR) ? line.indexOf(SEPARATOR) : line.length();
+            String  nodeLabel = line.substring(0, commaIndx).trim().toUpperCase();
+            result.put(nodeLabel, line);
+        }
+        
+        reader.close();
+        return result;       
     }
 }

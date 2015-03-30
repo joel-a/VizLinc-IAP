@@ -523,7 +523,7 @@ public final class GraphToolsTopComponent extends TopComponent implements GraphO
         
         frame.add(aipToolComp);
         aipToolComp.setVisible(true);
-        frame.setSize(500, 350);
+        frame.setSize(650, 350);
         frame.setVisible(true);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         
