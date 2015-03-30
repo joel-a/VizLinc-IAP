@@ -146,6 +146,7 @@ public class IapToolComponent extends javax.swing.JPanel implements java.beans.C
         label1 = new java.awt.Label();
         micResultTxtField = new javax.swing.JTextField();
         label2 = new java.awt.Label();
+        rmvnodesNotInGrapgBtn = new javax.swing.JButton();
         jPanel8 = new javax.swing.JPanel();
         label3 = new java.awt.Label();
         label4 = new java.awt.Label();
@@ -557,27 +558,35 @@ public class IapToolComponent extends javax.swing.JPanel implements java.beans.C
 
         label2.setText("Results:");
 
+        rmvnodesNotInGrapgBtn.setText("Remove Nodes not in Graph");
+        rmvnodesNotInGrapgBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                rmvnodesNotInGrapgBtnActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel7Layout = new javax.swing.GroupLayout(jPanel7);
         jPanel7.setLayout(jPanel7Layout);
         jPanel7Layout.setHorizontalGroup(
             jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel7Layout.createSequentialGroup()
-                .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel7Layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jButton4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jButton5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                    .addGroup(jPanel7Layout.createSequentialGroup()
-                        .addGap(160, 160, 160)
-                        .addComponent(label1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel7Layout.createSequentialGroup()
                 .addGap(91, 91, 91)
                 .addComponent(label2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(micResultTxtField, javax.swing.GroupLayout.PREFERRED_SIZE, 344, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(114, 114, 114))
+            .addGroup(jPanel7Layout.createSequentialGroup()
+                .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel7Layout.createSequentialGroup()
+                        .addGap(160, 160, 160)
+                        .addComponent(label1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel7Layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addComponent(rmvnodesNotInGrapgBtn, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jButton4, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jButton5, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel7Layout.setVerticalGroup(
             jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -586,7 +595,9 @@ public class IapToolComponent extends javax.swing.JPanel implements java.beans.C
                 .addComponent(jButton4)
                 .addGap(18, 18, 18)
                 .addComponent(jButton5)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 140, Short.MAX_VALUE)
+                .addGap(18, 18, 18)
+                .addComponent(rmvnodesNotInGrapgBtn)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 99, Short.MAX_VALUE)
                 .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(micResultTxtField, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(label2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -680,7 +691,7 @@ public class IapToolComponent extends javax.swing.JPanel implements java.beans.C
                 .addContainerGap(119, Short.MAX_VALUE))
         );
 
-        jTabbedPane1.addTab("RmvIsolatedNode", jPanel8);
+        jTabbedPane1.addTab("RmvIsolatedNodes", jPanel8);
 
         jLabel14.setText("Description:");
 
@@ -1246,6 +1257,31 @@ public class IapToolComponent extends javax.swing.JPanel implements java.beans.C
         }
     }//GEN-LAST:event_rmvDuplicateRemoveBtnActionPerformed
 
+    private void rmvnodesNotInGrapgBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rmvnodesNotInGrapgBtnActionPerformed
+        File inputFile = iap.Utils.selectAnInputFile();
+        
+        if(inputFile != null){
+            try {
+                ArrayList<String>       result          = new ArrayList();
+                HashMap<String, Node>   labelToNodeMap  = iap.Utils.getLabelToNodeMap();
+                HashMap<String, String> labelToLine     = iap.Utils.getLabelsToLineMap(inputFile);
+                
+                for(String label : labelToLine.keySet()){
+                    if(labelToNodeMap.containsKey(label.toUpperCase())){
+                        result.add(labelToLine.get(label));
+                    }
+                }
+                
+                iap.Utils.writeListToFile(result, inputFile);
+                
+                JOptionPane.showMessageDialog(null, "Finish");
+            } catch (IOException ex) {
+                Exceptions.printStackTrace(ex);
+            }
+            
+        }
+    }//GEN-LAST:event_rmvnodesNotInGrapgBtnActionPerformed
+
     
     private void setRanksToSave(ArrayList<Ranking> ranks){
         RankingController rankingController = Lookup.getDefault().lookup(RankingController.class);
@@ -1374,6 +1410,7 @@ public class IapToolComponent extends javax.swing.JPanel implements java.beans.C
     private javax.swing.JButton rmvIsolatedNodesOutputFileSearchBtn2;
     private javax.swing.JButton rmvIsolatedNodesSearchBtn;
     private javax.swing.JButton rmvIsolatedNodesSearchBtn2;
+    private javax.swing.JButton rmvnodesNotInGrapgBtn;
     private javax.swing.JRadioButton wikiDataRadBtn;
     private javax.swing.JRadioButton wikiMediaRadBtn;
     // End of variables declaration//GEN-END:variables
