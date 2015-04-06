@@ -90,6 +90,7 @@ import edu.mit.ll.vizlinc.components.PropertiesTopComponent;
 import edu.mit.ll.vizlinc.components.VLQueryTopComponent;
 import edu.mit.ll.vizlinc.graph.layout.community.Cluster;
 import edu.mit.ll.vizlinc.model.DBManager;
+import iap.NeighborNeighborMetric;
 import org.gephi.graph.api.GraphFactory;
 import org.gephi.layout.plugin.random.Random;
 import org.gephi.layout.plugin.random.RandomLayout;
@@ -118,6 +119,7 @@ public class GraphManager implements VLQueryListener {
     public static final String NODE_INFO_DEGREE = "Degree";
     public static final String NODE_INFO_CENTRALITY = "Eigenvector Centrality";
     public static final String NODE_INFO_NUM_NEIGHBOR = "Number of Neightbor";
+    public static final String NODE_INFO_NEIGH_NEIGH = "Avrg of Neighbors of Neighbors";
     public static final String NODE_INFO_BETWEENNESS = "Betweenness Centrality";
     public static final String NODE_INFO_CLOSENESS = "Closeness Centrality";
     public static final String NODE_INFO_NOTHING = "";
@@ -1535,6 +1537,63 @@ public class GraphManager implements VLQueryListener {
                         colorTransformer.setColors(new Color[]{new Color(0xFEF0D9), new Color(0xB30000)});
                         rankingController.transform(centralityRanking, colorTransformer);
                         graphToolsWin.setGraphNodeColorInfo(NODE_INFO_NUM_NEIGHBOR);
+                    }
+
+                    visibleGraph.readUnlockAll();
+                } finally {
+                    stopComputation();    // Even if cancelled.
+                }
+            }
+        };
+        centralityTask.run();
+    }
+    
+    public void neighborsOfNeighborsAvrg(final boolean showBySize, final boolean showByColor) {
+        final VizLincLongTask centralityTask = new VizLincLongTask("Running Neightbors of Neighbors Centrality") {
+            iap.NeighborNeighborMetric neighNeighCentrality = new NeighborNeighborMetric();
+            boolean cancelled = false;
+
+            @Override
+            public boolean cancel() {
+                cancelled = neighNeighCentrality.cancel();
+                return cancelled;
+            }
+
+            @Override
+            public void execute() {
+                startComputation();
+                try {
+                    visibleGraph.readLock();
+
+                    // Centrality runs on the visible view.
+                    // centrality will take care of displaying progress.
+                    neighNeighCentrality.setProgressTicket(this.getProgressTicket());
+                    neighNeighCentrality.execute(graphModel, attributeModel);
+                    if (cancelled) {
+                        return;
+                    }
+
+                    // Now visualize the centrality.
+                    RankingController rankingController = Lookup.getDefault().lookup(RankingController.class);
+                    // Vary over the visible graph, not the whole graph.
+                    rankingController.setUseLocalScale(true);
+                    // S-shaped interpolator: exaggerate differences near extrema.
+                    rankingController.setInterpolator(new Interpolator.BezierInterpolator(1.0f, 0.0f, 0.0f, 1.0f));
+                    Ranking centralityRanking = rankingController.getModel().getRanking(Ranking.NODE_ELEMENT, NeighborNeighborMetric.NEIGHBOR_NEIGHBOR);
+
+                    if (showBySize) {
+                        AbstractSizeTransformer sizeTransformer = (AbstractSizeTransformer) rankingController.getModel().getTransformer(Ranking.NODE_ELEMENT, Transformer.RENDERABLE_SIZE);
+                        sizeTransformer.setMinSize(4.0f);
+                        sizeTransformer.setMaxSize(20.0f);
+                        rankingController.transform(centralityRanking, sizeTransformer);
+                        graphToolsWin.setGraphNodeSizeInfo(NODE_INFO_NEIGH_NEIGH);
+                    }
+
+                    if (showByColor) {
+                        AbstractColorTransformer colorTransformer = (AbstractColorTransformer) rankingController.getModel().getTransformer(Ranking.NODE_ELEMENT, Transformer.RENDERABLE_COLOR);
+                        colorTransformer.setColors(new Color[]{new Color(0xFEF0D9), new Color(0xB30000)});
+                        rankingController.transform(centralityRanking, colorTransformer);
+                        graphToolsWin.setGraphNodeColorInfo(NODE_INFO_NEIGH_NEIGH);
                     }
 
                     visibleGraph.readUnlockAll();

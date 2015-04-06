@@ -3,7 +3,7 @@
  */
 package edu.mit.ll.vizlinc.components;
 
-import edu.mit.ll.vizlinc.graph.Closeness;
+import iap.oldVersions.Closeness;
 import edu.mit.ll.vizlinc.graph.GraphManager;
 import edu.mit.ll.vizlinc.graph.layout.community.Cluster;
 import edu.mit.ll.vizlinc.model.DBManager;
@@ -140,6 +140,9 @@ public final class GraphToolsTopComponent extends TopComponent implements GraphO
         degreeByColoCheckBox = new javax.swing.JCheckBox();
         numNeighborbyColorCheckBox = new javax.swing.JCheckBox();
         numNeighborBySizeCheckBox = new javax.swing.JCheckBox();
+        neighNeighBtn = new javax.swing.JButton();
+        neighNeighbyColorCheckBox = new javax.swing.JCheckBox();
+        neighNeighBySizeCheckBox = new javax.swing.JCheckBox();
 
         org.openide.awt.Mnemonics.setLocalizedText(jCheckBoxShowEdges, org.openide.util.NbBundle.getMessage(GraphToolsTopComponent.class, "GraphToolsTopComponent.jCheckBoxShowEdges.text")); // NOI18N
         jCheckBoxShowEdges.addActionListener(new java.awt.event.ActionListener() {
@@ -309,6 +312,18 @@ public final class GraphToolsTopComponent extends TopComponent implements GraphO
         numNeighborBySizeCheckBox.setSelected(true);
         org.openide.awt.Mnemonics.setLocalizedText(numNeighborBySizeCheckBox, org.openide.util.NbBundle.getMessage(GraphToolsTopComponent.class, "GraphToolsTopComponent.numNeighborBySizeCheckBox.text")); // NOI18N
 
+        org.openide.awt.Mnemonics.setLocalizedText(neighNeighBtn, org.openide.util.NbBundle.getMessage(GraphToolsTopComponent.class, "GraphToolsTopComponent.neighNeighBtn.text")); // NOI18N
+        neighNeighBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                neighNeighBtnActionPerformed(evt);
+            }
+        });
+
+        org.openide.awt.Mnemonics.setLocalizedText(neighNeighbyColorCheckBox, org.openide.util.NbBundle.getMessage(GraphToolsTopComponent.class, "GraphToolsTopComponent.neighNeighbyColorCheckBox.text")); // NOI18N
+
+        neighNeighBySizeCheckBox.setSelected(true);
+        org.openide.awt.Mnemonics.setLocalizedText(neighNeighBySizeCheckBox, org.openide.util.NbBundle.getMessage(GraphToolsTopComponent.class, "GraphToolsTopComponent.neighNeighBySizeCheckBox.text")); // NOI18N
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -332,7 +347,7 @@ public final class GraphToolsTopComponent extends TopComponent implements GraphO
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jSpinnerResetSizesValue, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(iapToolsBtn))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 16, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 13, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                         .addGroup(layout.createSequentialGroup()
@@ -366,18 +381,13 @@ public final class GraphToolsTopComponent extends TopComponent implements GraphO
                         .addGap(27, 27, 27)))
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(numNeighborBySizeCheckBox)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(numNeighborbyColorCheckBox)
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(betweennessSizeCheckBox)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addComponent(betweennessColorCheckBox)
-                                .addGap(0, 8, Short.MAX_VALUE)))
+                                .addGap(0, 11, Short.MAX_VALUE)))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabelLogLambda)
@@ -394,7 +404,19 @@ public final class GraphToolsTopComponent extends TopComponent implements GraphO
                             .addComponent(jButtonShowAllInQuery))
                         .addGap(59, 59, 59))
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jButton3)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(numNeighborBySizeCheckBox)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(numNeighborbyColorCheckBox))
+                            .addComponent(jButton3))
+                        .addGap(18, 18, 18)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(neighNeighBySizeCheckBox)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(neighNeighbyColorCheckBox))
+                            .addComponent(neighNeighBtn))
                         .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
         );
         layout.setVerticalGroup(
@@ -436,24 +458,32 @@ public final class GraphToolsTopComponent extends TopComponent implements GraphO
                             .addComponent(betweennessSizeCheckBox)
                             .addComponent(betweennessColorCheckBox))))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(jLabelGraphStatus)
-                        .addComponent(iapToolsBtn))
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(closenessCentralityBtn)
-                        .addComponent(jButton2)
-                        .addComponent(jButton3)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(bySizeClosenessCentralityCheckBox)
-                    .addComponent(byColorClosenessCentralityCheckBox)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(numNeighborBySizeCheckBox)
-                        .addComponent(numNeighborbyColorCheckBox))
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(degreeBySizeCheckBox)
-                        .addComponent(degreeByColoCheckBox)))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(jLabelGraphStatus)
+                                .addComponent(iapToolsBtn))
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(closenessCentralityBtn)
+                                .addComponent(jButton2)
+                                .addComponent(jButton3)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(bySizeClosenessCentralityCheckBox)
+                            .addComponent(byColorClosenessCentralityCheckBox)
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(numNeighborBySizeCheckBox)
+                                .addComponent(numNeighborbyColorCheckBox))
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(degreeBySizeCheckBox)
+                                .addComponent(degreeByColoCheckBox))))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(neighNeighBtn)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(neighNeighBySizeCheckBox)
+                            .addComponent(neighNeighbyColorCheckBox))))
                 .addContainerGap(15, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
@@ -557,6 +587,12 @@ public final class GraphToolsTopComponent extends TopComponent implements GraphO
         GraphManager.getInstance().numberOfNeighbors(bySize, byColor);
     }//GEN-LAST:event_jButton3ActionPerformed
 
+    private void neighNeighBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_neighNeighBtnActionPerformed
+        final boolean bySize = numNeighborBySizeCheckBox.isSelected();
+        final boolean byColor = numNeighborbyColorCheckBox.isSelected();
+        GraphManager.getInstance().neighborsOfNeighborsAvrg(bySize, byColor);
+    }//GEN-LAST:event_neighNeighBtnActionPerformed
+
    
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JCheckBox betweennessColorCheckBox;
@@ -590,6 +626,9 @@ public final class GraphToolsTopComponent extends TopComponent implements GraphO
     private javax.swing.JLabel jLabelLogLambda;
     private javax.swing.JSpinner jSpinnerClusterLambda;
     private javax.swing.JSpinner jSpinnerResetSizesValue;
+    private javax.swing.JButton neighNeighBtn;
+    private javax.swing.JCheckBox neighNeighBySizeCheckBox;
+    private javax.swing.JCheckBox neighNeighbyColorCheckBox;
     private javax.swing.JCheckBox numNeighborBySizeCheckBox;
     private javax.swing.JCheckBox numNeighborbyColorCheckBox;
     // End of variables declaration//GEN-END:variables

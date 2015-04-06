@@ -20,7 +20,13 @@ import java.util.HashMap;
 public class RemoveDuplicatesLinesInfile {
     int amountOfremovedLines;
     
-    
+    /**
+     * Remove from file 1 all the lines that are in file 2
+     * @param inputFile1
+     * @param inputFile2
+     * @param outputFile
+     * @throws IOException 
+     */
     public void execute(File inputFile1, File inputFile2, File outputFile) throws IOException{
         if(inputFile1 == null || inputFile2 == null || outputFile == null)
             throw new IllegalArgumentException("Input files can not be null");

@@ -474,8 +474,6 @@
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Component id="rankingSavingDegreeCheckBox" min="-2" max="-2" attributes="0"/>
                           <Component id="rankingSavingPageRankChackBox" min="-2" max="-2" attributes="0"/>
-                          <Component id="rankingSavingEigenvectorCentCheckBox" min="-2" max="-2" attributes="0"/>
-                          <Component id="rankingSavingClosenessChackBox" min="-2" max="-2" attributes="0"/>
                           <Group type="103" alignment="0" groupAlignment="1" max="-2" attributes="0">
                               <Group type="102" attributes="0">
                                   <Group type="103" groupAlignment="0" attributes="0">
@@ -495,6 +493,17 @@
                                       <Component id="rankingSavingSearchBtn1" min="-2" max="-2" attributes="0"/>
                                       <Component id="rankingSavingSearchBtn" min="-2" max="-2" attributes="0"/>
                                   </Group>
+                              </Group>
+                          </Group>
+                          <Group type="102" attributes="0">
+                              <Group type="103" groupAlignment="0" attributes="0">
+                                  <Component id="rankingSavingEigenvectorCentCheckBox" alignment="0" min="-2" max="-2" attributes="0"/>
+                                  <Component id="rankingSavingClosenessChackBox" alignment="0" min="-2" max="-2" attributes="0"/>
+                              </Group>
+                              <EmptySpace min="-2" pref="41" max="-2" attributes="0"/>
+                              <Group type="103" groupAlignment="0" attributes="0">
+                                  <Component id="rankingSavingNeighAvrgCheckBox" alignment="0" min="-2" max="-2" attributes="0"/>
+                                  <Component id="rankingSavingNeighLogCheckBox" alignment="0" min="-2" max="-2" attributes="0"/>
                               </Group>
                           </Group>
                       </Group>
@@ -518,24 +527,33 @@
                           <Component id="rankingSavingSearchBtn" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="3" attributes="0">
-                          <Component id="rankingSavingClosenessChackBox" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="jLabel6" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Group type="102" attributes="0">
+                              <Group type="103" groupAlignment="3" attributes="0">
+                                  <Component id="rankingSavingClosenessChackBox" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="jLabel6" alignment="3" min="-2" max="-2" attributes="0"/>
+                              </Group>
+                              <EmptySpace min="-2" pref="4" max="-2" attributes="0"/>
+                              <Component id="rankingSavingEigenvectorCentCheckBox" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                          <Group type="102" attributes="0">
+                              <Component id="rankingSavingNeighAvrgCheckBox" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Component id="rankingSavingNeighLogCheckBox" min="-2" max="-2" attributes="0"/>
+                          </Group>
                       </Group>
-                      <EmptySpace min="-2" pref="4" max="-2" attributes="0"/>
-                      <Component id="rankingSavingEigenvectorCentCheckBox" min="-2" max="-2" attributes="0"/>
                       <EmptySpace min="-2" pref="1" max="-2" attributes="0"/>
                       <Component id="rankingSavingPageRankChackBox" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="rankingSavingDegreeCheckBox" min="-2" max="-2" attributes="0"/>
                       <EmptySpace min="-2" pref="1" max="-2" attributes="0"/>
                       <Component id="rankingSavingNumNeightbosCheckBox" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="3" attributes="0">
-                          <Component id="rankingSavingBetweenessCheckBox" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="rankingSavingSaveBtn" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Component id="rankingSavingSaveBtn" min="-2" max="-2" attributes="0"/>
+                          <Component id="rankingSavingBetweenessCheckBox" alignment="0" min="-2" max="-2" attributes="0"/>
                       </Group>
-                      <EmptySpace pref="57" max="32767" attributes="0"/>
+                      <EmptySpace pref="62" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -629,6 +647,16 @@
                 <Property name="text" type="java.lang.String" value="Betweeness"/>
               </Properties>
             </Component>
+            <Component class="javax.swing.JCheckBox" name="rankingSavingNeighLogCheckBox">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Neigh-Neigh Log"/>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JCheckBox" name="rankingSavingNeighAvrgCheckBox">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Neigh-Neigh Avrg"/>
+              </Properties>
+            </Component>
           </SubComponents>
         </Container>
         <Container class="javax.swing.JPanel" name="jPanel7">
@@ -659,6 +687,7 @@
                           <Group type="102" alignment="0" attributes="0">
                               <EmptySpace max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="1" max="-2" attributes="0">
+                                  <Component id="rmvIsolatedNodesBtn" alignment="0" max="32767" attributes="0"/>
                                   <Component id="rmvnodesNotInGrapgBtn" alignment="0" max="32767" attributes="0"/>
                                   <Component id="jButton4" alignment="0" max="32767" attributes="0"/>
                                   <Component id="jButton5" alignment="0" max="32767" attributes="0"/>
@@ -678,7 +707,9 @@
                       <Component id="jButton5" min="-2" max="-2" attributes="0"/>
                       <EmptySpace type="separate" max="-2" attributes="0"/>
                       <Component id="rmvnodesNotInGrapgBtn" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace pref="99" max="32767" attributes="0"/>
+                      <EmptySpace type="separate" max="-2" attributes="0"/>
+                      <Component id="rmvIsolatedNodesBtn" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace pref="58" max="32767" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Component id="micResultTxtField" alignment="1" min="-2" max="-2" attributes="0"/>
                           <Component id="label2" alignment="1" min="-2" max="-2" attributes="0"/>
@@ -728,6 +759,14 @@
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="rmvnodesNotInGrapgBtnActionPerformed"/>
+              </Events>
+            </Component>
+            <Component class="javax.swing.JButton" name="rmvIsolatedNodesBtn">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Remove Isolated Node"/>
+              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="rmvIsolatedNodesBtnActionPerformed"/>
               </Events>
             </Component>
           </SubComponents>

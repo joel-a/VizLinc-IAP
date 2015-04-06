@@ -8,6 +8,7 @@ package edu.mit.ll.vizlinc.components;
 import edu.mit.ll.vizlinc.concurrency.VizLincLongTask;
 import iap.AutomaticAnnotation;
 import iap.LeadershipAnnotation;
+import iap.NeighborNeighborMetric;
 import iap.RemoveDuplicatesLinesInfile;
 import iap.RemoveIsolatedNodes;
 import java.io.BufferedReader;
@@ -18,6 +19,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedList;
 import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import org.gephi.data.attributes.api.AttributeController;
@@ -140,6 +142,8 @@ public class IapToolComponent extends javax.swing.JPanel implements java.beans.C
         rankingSavingSearchBtn1 = new javax.swing.JButton();
         jLabel6 = new javax.swing.JLabel();
         rankingSavingBetweenessCheckBox = new javax.swing.JCheckBox();
+        rankingSavingNeighLogCheckBox = new javax.swing.JCheckBox();
+        rankingSavingNeighAvrgCheckBox = new javax.swing.JCheckBox();
         jPanel7 = new javax.swing.JPanel();
         jButton4 = new javax.swing.JButton();
         jButton5 = new javax.swing.JButton();
@@ -147,6 +151,7 @@ public class IapToolComponent extends javax.swing.JPanel implements java.beans.C
         micResultTxtField = new javax.swing.JTextField();
         label2 = new java.awt.Label();
         rmvnodesNotInGrapgBtn = new javax.swing.JButton();
+        rmvIsolatedNodesBtn = new javax.swing.JButton();
         jPanel8 = new javax.swing.JPanel();
         label3 = new java.awt.Label();
         label4 = new java.awt.Label();
@@ -471,6 +476,10 @@ public class IapToolComponent extends javax.swing.JPanel implements java.beans.C
 
         rankingSavingBetweenessCheckBox.setText("Betweeness");
 
+        rankingSavingNeighLogCheckBox.setText("Neigh-Neigh Log");
+
+        rankingSavingNeighAvrgCheckBox.setText("Neigh-Neigh Avrg");
+
         javax.swing.GroupLayout jPanel6Layout = new javax.swing.GroupLayout(jPanel6);
         jPanel6.setLayout(jPanel6Layout);
         jPanel6Layout.setHorizontalGroup(
@@ -485,8 +494,6 @@ public class IapToolComponent extends javax.swing.JPanel implements java.beans.C
                 .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(rankingSavingDegreeCheckBox)
                     .addComponent(rankingSavingPageRankChackBox)
-                    .addComponent(rankingSavingEigenvectorCentCheckBox)
-                    .addComponent(rankingSavingClosenessChackBox)
                     .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                         .addGroup(jPanel6Layout.createSequentialGroup()
                             .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -501,7 +508,15 @@ public class IapToolComponent extends javax.swing.JPanel implements java.beans.C
                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                             .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                 .addComponent(rankingSavingSearchBtn1)
-                                .addComponent(rankingSavingSearchBtn)))))
+                                .addComponent(rankingSavingSearchBtn))))
+                    .addGroup(jPanel6Layout.createSequentialGroup()
+                        .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(rankingSavingEigenvectorCentCheckBox)
+                            .addComponent(rankingSavingClosenessChackBox))
+                        .addGap(41, 41, 41)
+                        .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(rankingSavingNeighAvrgCheckBox)
+                            .addComponent(rankingSavingNeighLogCheckBox))))
                 .addContainerGap(105, Short.MAX_VALUE))
         );
         jPanel6Layout.setVerticalGroup(
@@ -518,22 +533,28 @@ public class IapToolComponent extends javax.swing.JPanel implements java.beans.C
                     .addComponent(jLabel7)
                     .addComponent(rankingSavingSearchBtn))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(rankingSavingClosenessChackBox)
-                    .addComponent(jLabel6))
-                .addGap(4, 4, 4)
-                .addComponent(rankingSavingEigenvectorCentCheckBox)
+                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel6Layout.createSequentialGroup()
+                        .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(rankingSavingClosenessChackBox)
+                            .addComponent(jLabel6))
+                        .addGap(4, 4, 4)
+                        .addComponent(rankingSavingEigenvectorCentCheckBox))
+                    .addGroup(jPanel6Layout.createSequentialGroup()
+                        .addComponent(rankingSavingNeighAvrgCheckBox)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(rankingSavingNeighLogCheckBox)))
                 .addGap(1, 1, 1)
                 .addComponent(rankingSavingPageRankChackBox)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(rankingSavingDegreeCheckBox)
                 .addGap(1, 1, 1)
                 .addComponent(rankingSavingNumNeightbosCheckBox)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(rankingSavingBetweenessCheckBox)
-                    .addComponent(rankingSavingSaveBtn))
-                .addContainerGap(57, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(rankingSavingSaveBtn)
+                    .addComponent(rankingSavingBetweenessCheckBox))
+                .addContainerGap(62, Short.MAX_VALUE))
         );
 
         jTabbedPane1.addTab("RankingSaving", jPanel6);
@@ -565,6 +586,13 @@ public class IapToolComponent extends javax.swing.JPanel implements java.beans.C
             }
         });
 
+        rmvIsolatedNodesBtn.setText("Remove Isolated Node");
+        rmvIsolatedNodesBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                rmvIsolatedNodesBtnActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel7Layout = new javax.swing.GroupLayout(jPanel7);
         jPanel7.setLayout(jPanel7Layout);
         jPanel7Layout.setHorizontalGroup(
@@ -583,6 +611,7 @@ public class IapToolComponent extends javax.swing.JPanel implements java.beans.C
                     .addGroup(jPanel7Layout.createSequentialGroup()
                         .addContainerGap()
                         .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addComponent(rmvIsolatedNodesBtn, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(rmvnodesNotInGrapgBtn, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(jButton4, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(jButton5, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
@@ -597,7 +626,9 @@ public class IapToolComponent extends javax.swing.JPanel implements java.beans.C
                 .addComponent(jButton5)
                 .addGap(18, 18, 18)
                 .addComponent(rmvnodesNotInGrapgBtn)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 99, Short.MAX_VALUE)
+                .addGap(18, 18, 18)
+                .addComponent(rmvIsolatedNodesBtn)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 58, Short.MAX_VALUE)
                 .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(micResultTxtField, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(label2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -1282,6 +1313,27 @@ public class IapToolComponent extends javax.swing.JPanel implements java.beans.C
         }
     }//GEN-LAST:event_rmvnodesNotInGrapgBtnActionPerformed
 
+    private void rmvIsolatedNodesBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rmvIsolatedNodesBtnActionPerformed
+        //Get the graph
+        Graph graph = Lookup.getDefault().lookup(GraphController.class).getModel().getGraph();
+        Ranking degreeRank = Lookup.getDefault().lookup(RankingController.class).getModel().getRanking(Ranking.NODE_ELEMENT, Ranking.DEGREE_RANKING);
+        LinkedList<Node> node2Rmv = new LinkedList();
+        //iterate trough all the nodes, if the degree is = 0 remove ir
+        int counter = 0;
+        for(Node n : graph.getNodes()){
+            int degree = (int)degreeRank.getValue(n);
+            if(degree == 0){
+                node2Rmv.add(n);
+                counter++;
+            }
+        }
+        
+        for(Node n : node2Rmv){
+            graph.removeNode(n);
+        }
+        micResultTxtField.setText("Removed nodes: " + counter);
+    }//GEN-LAST:event_rmvIsolatedNodesBtnActionPerformed
+
     
     private void setRanksToSave(ArrayList<Ranking> ranks){
         RankingController rankingController = Lookup.getDefault().lookup(RankingController.class);
@@ -1322,6 +1374,18 @@ public class IapToolComponent extends javax.swing.JPanel implements java.beans.C
                 ranks.add(rankModel.getRanking(Ranking.NODE_ELEMENT,  GraphDistance.BETWEENNESS));
             else
                 JOptionPane.showMessageDialog(null, rankingSavingBetweenessCheckBox.getText() + " have not beeing calculated. Ignored");
+        }
+        if(rankingSavingNeighAvrgCheckBox.isSelected()){
+            if(rankModel.getRanking(Ranking.NODE_ELEMENT, NeighborNeighborMetric.NEIGHBOR_NEIGHBOR) != null)
+                ranks.add(rankModel.getRanking(Ranking.NODE_ELEMENT,  NeighborNeighborMetric.NEIGHBOR_NEIGHBOR));
+            else
+                JOptionPane.showMessageDialog(null, rankingSavingNeighAvrgCheckBox.getText() + " have not beeing calculated. Ignored");
+        }
+        if(rankingSavingNeighLogCheckBox.isSelected()){
+            if(rankModel.getRanking(Ranking.NODE_ELEMENT, NeighborNeighborMetric.NEIGHBOR_NEIGHBOR_LOG) != null)
+                ranks.add(rankModel.getRanking(Ranking.NODE_ELEMENT,  NeighborNeighborMetric.NEIGHBOR_NEIGHBOR_LOG));
+            else
+                JOptionPane.showMessageDialog(null, rankingSavingNeighLogCheckBox.getText() + " have not beeing calculated. Ignored");
         }
     } 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -1387,6 +1451,8 @@ public class IapToolComponent extends javax.swing.JPanel implements java.beans.C
     private javax.swing.JCheckBox rankingSavingDegreeCheckBox;
     private javax.swing.JCheckBox rankingSavingEigenvectorCentCheckBox;
     private javax.swing.JTextField rankingSavingInputFileTxtField;
+    private javax.swing.JCheckBox rankingSavingNeighAvrgCheckBox;
+    private javax.swing.JCheckBox rankingSavingNeighLogCheckBox;
     private javax.swing.JCheckBox rankingSavingNumNeightbosCheckBox;
     private javax.swing.JTextField rankingSavingOutputFileTxtField;
     private javax.swing.JCheckBox rankingSavingPageRankChackBox;
@@ -1406,6 +1472,7 @@ public class IapToolComponent extends javax.swing.JPanel implements java.beans.C
     private javax.swing.JTextField rmvIsolatedNodeInputFieldTxtField;
     private javax.swing.JTextField rmvIsolatedNodeOutputFieldTxtField;
     private javax.swing.JButton rmvIsolatedNodeRemoveBtn;
+    private javax.swing.JButton rmvIsolatedNodesBtn;
     private javax.swing.JButton rmvIsolatedNodesOutputFileSearchBtn;
     private javax.swing.JButton rmvIsolatedNodesOutputFileSearchBtn2;
     private javax.swing.JButton rmvIsolatedNodesSearchBtn;
