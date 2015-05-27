@@ -30,7 +30,7 @@ import org.openide.util.Lookup;
  */
 public class MetricAvrgOfNeighbors implements LongTask, Statistics{
     
-    public static final String  NEIGHBORS_METRIC_AVRG = "Avrg of Metrics of Neighbors ";
+    public static final String  NEIGHBORS_METRIC_AVRG = "Metrics Avrg of Neighbors ";
     private boolean             isCanceled;
     private String              metric;
     private ProgressTicket      progress;
@@ -56,7 +56,7 @@ public class MetricAvrgOfNeighbors implements LongTask, Statistics{
             JOptionPane.showMessageDialog(null, "The metric has not been calculated. Run the metric first and try again later.");
         }
         
-        Graph visibleGraph = gm.getGraphVisible();
+        Graph visibleGraph  = gm.getGraphVisible();
         Ranking rank        = Lookup.getDefault().lookup(RankingController.class).getModel().getRanking(Ranking.NODE_ELEMENT, metric);
         Ranking degreeRank  = Lookup.getDefault().lookup(RankingController.class).getModel().getRanking(Ranking.NODE_ELEMENT, Ranking.DEGREE_RANKING);
         
@@ -74,7 +74,7 @@ public class MetricAvrgOfNeighbors implements LongTask, Statistics{
             double  metricTotal             = 0;
             
             for(Node neighborNode : visibleGraph.getNeighbors(sourceN)){    //Iterate trough all neighbors of the source Node
-                metricTotal += (double)rank.getValue(neighborNode);
+                metricTotal += Double.parseDouble(rank.getValue(neighborNode) + "");
             }
             
             double avrg = totalAdjacentNeighbors == 0 ? 0 : metricTotal / totalAdjacentNeighbors;        

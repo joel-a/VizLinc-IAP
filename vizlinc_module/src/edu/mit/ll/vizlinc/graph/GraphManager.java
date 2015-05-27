@@ -4,7 +4,6 @@ package edu.mit.ll.vizlinc.graph;
 
 import iap.ClosenessCentrality;
 import com.google.common.io.Files;
-import com.sun.org.apache.xml.internal.utils.DOMHelper;
 import edu.mit.ll.vizlinc.concurrency.VizLincLongTask;
 import edu.mit.ll.vizlinc.concurrency.VizLincLongTaskListener;
 import edu.mit.ll.vizlinc.model.GraphOperationListener;
@@ -90,10 +89,9 @@ import edu.mit.ll.vizlinc.components.PropertiesTopComponent;
 import edu.mit.ll.vizlinc.components.VLQueryTopComponent;
 import edu.mit.ll.vizlinc.graph.layout.community.Cluster;
 import edu.mit.ll.vizlinc.model.DBManager;
+import iap.MetricAvrgOfNeighbors;
 import iap.NeighborNeighborMetric;
 import org.gephi.graph.api.GraphFactory;
-import org.gephi.layout.plugin.random.Random;
-import org.gephi.layout.plugin.random.RandomLayout;
 import org.gephi.statistics.plugin.Degree;
 import org.gephi.statistics.plugin.GraphDistance;
 import org.gephi.statistics.plugin.WeightedDegree;
@@ -1424,6 +1422,48 @@ public class GraphManager implements VLQueryListener {
             }
         };
         closenessCentralityTask.run();
+    }
+     /**
+     * Centrality, invoked from GraphToolsTopComponent.
+     */
+    public void metricAvrgOfNeighbors(final List<Ranking> ranks) {
+        final VizLincLongTask neighborsMetricAvrgTask = new VizLincLongTask("Running Neighbor Metric Avrg") {
+            iap.MetricAvrgOfNeighbors metricAvrg = new MetricAvrgOfNeighbors();
+            boolean cancelled = false;
+
+            @Override
+            public boolean cancel() {
+                cancelled = metricAvrg.cancel();
+                return cancelled;
+            }
+
+            @Override
+            public void execute() {
+                startComputation();
+                try {
+                    visibleGraph.readLock();
+
+                    // Centrality runs on the visible view.
+                    // centrality will take care of displaying progress.
+                    metricAvrg.setProgressTicket(this.getProgressTicket());
+                    
+                    for(Ranking rank : ranks){
+                        metricAvrg.setMetric(rank.getName());
+                        metricAvrg.execute(graphModel, attributeModel);
+                    }
+                    
+                    if (cancelled) {
+                        return;
+                    }
+
+
+                    visibleGraph.readUnlockAll();
+                } finally {
+                    stopComputation();    // Even if cancelled.
+                }
+            }
+        };
+        neighborsMetricAvrgTask.run();
     }
     /**
      * Centrality, invoked from GraphToolsTopComponent.

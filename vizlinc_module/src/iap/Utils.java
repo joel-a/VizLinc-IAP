@@ -29,10 +29,12 @@ import org.openide.util.Lookup;
  */
 public class Utils {
     
-
+    /**
+     * 
+     * @return 
+     */
     public static File selectAnInputFile(){
         JFileChooser    fileChooser         = new JFileChooser();
-        File            resultFile;
         fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
         int userSelectionOption = fileChooser.showOpenDialog(null); //TODO-Glorimar : use the vizlinc main component
         
@@ -50,7 +52,6 @@ public class Utils {
      */
     public static File selectAnInputFile(FileNameExtensionFilter extension){
         JFileChooser    fileChooser         = new JFileChooser();
-        File            resultFile;
         fileChooser.setFileFilter(extension);
         fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
         int userSelectionOption = fileChooser.showOpenDialog(null); //TODO-Glorimar : use the vizlinc main component
