@@ -789,7 +789,8 @@ public final class FacetedSearchTopComponent extends TopComponent implements Gra
         int                 userSelection   = (fileChooser.showOpenDialog(null));
         File                inputFile;
         BufferedReader      bufReader;
-        HashMap             idHashPersonValue = getIdToPersonValueHashMap();
+        
+        
         queryOrList = new ArrayList<>();          //List with people in imported file
         
         //File import and file reading 
@@ -802,19 +803,28 @@ public final class FacetedSearchTopComponent extends TopComponent implements Gra
             
             try{
                 bufReader = new BufferedReader(new FileReader(inputFile));
-                
-                
                 String[]    row;
                 String      temp;
                 int         personId;
                 //add to queryOrList all the persons listed on the imported file
                 while((temp = bufReader.readLine()) != null ){
                     row = temp.split(",");
-                    personId = Integer.parseInt(row[0]);
-                    //only add the person if he or she exist on the DB
-                    if(idHashPersonValue.containsKey(personId)){
-                        queryOrList.add((FacetValue) idHashPersonValue.get(personId));
+                    if(isInteger(row[0])){
+                        HashMap             idHashPersonValue = getIdToPersonValueHashMap();
+                        personId = Integer.parseInt(row[0]);
+                        //only add the person if he or she exist on the DB
+                        if(idHashPersonValue.containsKey(personId)){
+                            queryOrList.add((FacetValue) idHashPersonValue.get(personId));
+                        }
+                    }else{
+                        HashMap             nameHashPersonValue = getPersonNameToPersonValueMap();
+                        String name = row[0];
+                        if(nameHashPersonValue.containsKey(name)){
+                            queryOrList.add((FacetValue) nameHashPersonValue.get(name));
+                        }
+                        
                     }
+                   
                     
                 }
                 bufReader.close();
@@ -834,6 +844,38 @@ public final class FacetedSearchTopComponent extends TopComponent implements Gra
         
     }//GEN-LAST:event_importPeopleLstActionPerformed
 
+    public static boolean isInteger(String s) {
+      boolean isValidInteger = false;
+      try
+      {
+         Integer.parseInt(s);
+ 
+         // s is a valid integer
+ 
+         isValidInteger = true;
+      }
+      catch (NumberFormatException ex)
+      {
+         // s is not an integer
+      }
+ 
+      return isValidInteger;
+   }
+
+    /**
+     * Return a hash map with the names of a person as the key and the id of that person as the value
+     * @return 
+     */
+    public HashMap<String, PersonValue> getPersonNameToPersonValueMap(){
+        HashMap<String, PersonValue> result = new HashMap();
+        List<PersonValue>   people         = DBUtils.getPersons();
+         for(PersonValue p : people)
+        {
+            result.put(p.getText(), p);
+        }
+         return result;
+        
+    }
     /**
      * Finds a value in a selected facet of the facet tree.
      *
