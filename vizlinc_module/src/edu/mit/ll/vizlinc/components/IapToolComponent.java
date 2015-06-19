@@ -259,7 +259,7 @@ public class IapToolComponent extends javax.swing.JPanel implements java.beans.C
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel4)
                             .addComponent(jLabel2))
                         .addComponent(jLabel5, javax.swing.GroupLayout.Alignment.TRAILING))
                     .addComponent(jLabel3, javax.swing.GroupLayout.Alignment.TRAILING))
@@ -282,7 +282,7 @@ public class IapToolComponent extends javax.swing.JPanel implements java.beans.C
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jButton1)
                             .addComponent(jButton2))))
-                .addContainerGap(178, Short.MAX_VALUE))
+                .addContainerGap(87, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -308,12 +308,12 @@ public class IapToolComponent extends javax.swing.JPanel implements java.beans.C
                         .addComponent(leadershipKeyWords, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addGap(8, 8, 8)
-                        .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(jLabel4)))
                 .addGap(21, 21, 21)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(leadershipExcludeKeyWords, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel3))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 69, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 83, Short.MAX_VALUE)
                 .addComponent(jButton3)
                 .addGap(18, 18, 18))
         );
@@ -361,7 +361,7 @@ public class IapToolComponent extends javax.swing.JPanel implements java.beans.C
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel7Layout.createSequentialGroup()
                 .addGap(91, 91, 91)
                 .addComponent(label2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 104, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 22, Short.MAX_VALUE)
                 .addComponent(micResultTxtField, javax.swing.GroupLayout.PREFERRED_SIZE, 344, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(114, 114, 114))
             .addGroup(jPanel7Layout.createSequentialGroup()
@@ -389,7 +389,7 @@ public class IapToolComponent extends javax.swing.JPanel implements java.beans.C
                 .addComponent(rmvnodesNotInGrapgBtn)
                 .addGap(18, 18, 18)
                 .addComponent(rmvIsolatedNodesBtn)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 80, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 82, Short.MAX_VALUE)
                 .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(micResultTxtField, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(label2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -439,7 +439,7 @@ public class IapToolComponent extends javax.swing.JPanel implements java.beans.C
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel8Layout.createSequentialGroup()
                 .addGap(0, 0, Short.MAX_VALUE)
                 .addComponent(rmvIsolatedNodeRemoveBtn)
-                .addGap(266, 266, 266))
+                .addContainerGap(479, Short.MAX_VALUE))
             .addGroup(jPanel8Layout.createSequentialGroup()
                 .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(jPanel8Layout.createSequentialGroup()
@@ -459,7 +459,7 @@ public class IapToolComponent extends javax.swing.JPanel implements java.beans.C
                             .addComponent(rmvIsolatedNodeInputFieldTxtField, javax.swing.GroupLayout.PREFERRED_SIZE, 341, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGap(18, 18, 18)
                             .addComponent(rmvIsolatedNodesSearchBtn))))
-                .addContainerGap(137, Short.MAX_VALUE))
+                .addContainerGap(55, Short.MAX_VALUE))
         );
         jPanel8Layout.setVerticalGroup(
             jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -478,9 +478,9 @@ public class IapToolComponent extends javax.swing.JPanel implements java.beans.C
                     .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(rmvIsolatedNodeOutputFieldTxtField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(rmvIsolatedNodesOutputFileSearchBtn)))
-                .addGap(26, 26, 26)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 26, Short.MAX_VALUE)
                 .addComponent(rmvIsolatedNodeRemoveBtn)
-                .addContainerGap(141, Short.MAX_VALUE))
+                .addContainerGap(143, Short.MAX_VALUE))
         );
 
         jTabbedPane1.addTab("RmvIsolatedNodes", jPanel8);
@@ -523,7 +523,7 @@ public class IapToolComponent extends javax.swing.JPanel implements java.beans.C
                     .addComponent(metricAvrgBetweenessCheckBox1)
                     .addComponent(metricAvrgNumNeightbosCheckBox1)
                     .addComponent(metricAvrgDegreeCheckBox))
-                .addGap(18, 27, Short.MAX_VALUE)
+                .addGap(18, 18, Short.MAX_VALUE)
                 .addGroup(jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel12Layout.createSequentialGroup()
                         .addComponent(metricAvrgNeighAvrgCheckBox1)
@@ -538,9 +538,9 @@ public class IapToolComponent extends javax.swing.JPanel implements java.beans.C
                                     .addComponent(metricAvrgPageRankChackBox1)
                                     .addComponent(metricAvrgClosenessChackBox1))
                                 .addGap(109, 109, 109)))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 9, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(metricAvrgRunBtn)))
-                .addGap(74, 74, 74))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel12Layout.setVerticalGroup(
             jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -569,7 +569,7 @@ public class IapToolComponent extends javax.swing.JPanel implements java.beans.C
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel12Layout.createSequentialGroup()
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 113, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(metricAvrgRunBtn)))
-                .addContainerGap(94, Short.MAX_VALUE))
+                .addContainerGap(96, Short.MAX_VALUE))
         );
 
         jTabbedPane2.addTab("Metric Avrg of Neighbors", jPanel12);
@@ -677,19 +677,19 @@ public class IapToolComponent extends javax.swing.JPanel implements java.beans.C
         jPanel6Layout.setHorizontalGroup(
             jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel6Layout.createSequentialGroup()
-                .addGap(22, 22, 22)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(jLabel7)
                     .addComponent(jLabel8)
                     .addComponent(jLabel6))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED, 12, Short.MAX_VALUE)
                 .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                         .addGroup(jPanel6Layout.createSequentialGroup()
                             .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                 .addComponent(rankingSavingNumNeightbosCheckBox)
                                 .addComponent(rankingSavingBetweenessCheckBox))
-                            .addGap(50, 50, 50)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                 .addGroup(jPanel6Layout.createSequentialGroup()
                                     .addComponent(jCheckBox6)
@@ -700,7 +700,7 @@ public class IapToolComponent extends javax.swing.JPanel implements java.beans.C
                             .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                 .addComponent(rankingSavingOutputFileTxtField, javax.swing.GroupLayout.PREFERRED_SIZE, 321, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addComponent(rankingSavingInputFileTxtField, javax.swing.GroupLayout.PREFERRED_SIZE, 321, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                 .addComponent(rankingSavingSearchBtn1)
                                 .addComponent(rankingSavingSearchBtn)))
@@ -719,7 +719,7 @@ public class IapToolComponent extends javax.swing.JPanel implements java.beans.C
                                 .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(closenessAvrgCheckBtn)
                                     .addComponent(eigenAvrgCheckBtn))
-                                .addGap(18, 18, 18)
+                                .addGap(18, 18, Short.MAX_VALUE)
                                 .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(rankingSavingNeighAvrgCheckBox)
                                     .addComponent(rankingSavingNeighLogCheckBox))
@@ -727,29 +727,29 @@ public class IapToolComponent extends javax.swing.JPanel implements java.beans.C
                                 .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(jCheckBox8)
                                     .addComponent(jCheckBox7))))))
-                .addContainerGap(85, Short.MAX_VALUE))
+                .addContainerGap(13, Short.MAX_VALUE))
         );
         jPanel6Layout.setVerticalGroup(
             jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel6Layout.createSequentialGroup()
-                .addContainerGap()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(rankingSavingInputFileTxtField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel8)
                     .addComponent(rankingSavingSearchBtn1))
-                .addGap(3, 3, 3)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(rankingSavingOutputFileTxtField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel7)
                     .addComponent(rankingSavingSearchBtn))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel6Layout.createSequentialGroup()
                         .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(rankingSavingClosenessChackBox)
                             .addComponent(jLabel6)
                             .addComponent(closenessAvrgCheckBtn))
-                        .addGap(4, 4, 4)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 4, Short.MAX_VALUE)
                         .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(rankingSavingEigenvectorCentCheckBox)
                             .addComponent(eigenAvrgCheckBtn)))
@@ -779,9 +779,9 @@ public class IapToolComponent extends javax.swing.JPanel implements java.beans.C
                     .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(rankingSavingBetweenessCheckBox)
                         .addComponent(jCheckBox6)))
-                .addGap(18, 18, 18)
+                .addGap(18, 18, Short.MAX_VALUE)
                 .addComponent(rankingSavingSaveBtn1)
-                .addContainerGap(43, Short.MAX_VALUE))
+                .addContainerGap(41, Short.MAX_VALUE))
         );
 
         jTabbedPane1.addTab("RankingSaving", jPanel6);
@@ -845,11 +845,11 @@ public class IapToolComponent extends javax.swing.JPanel implements java.beans.C
             .addGroup(jPanel9Layout.createSequentialGroup()
                 .addGroup(jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel9Layout.createSequentialGroup()
-                        .addGap(28, 28, 28)
+                        .addContainerGap(20, Short.MAX_VALUE)
                         .addGroup(jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel9Layout.createSequentialGroup()
                                 .addComponent(jLabel16)
-                                .addGap(145, 145, 145)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addComponent(jLabel13))
                             .addGroup(jPanel9Layout.createSequentialGroup()
                                 .addComponent(label7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -871,25 +871,25 @@ public class IapToolComponent extends javax.swing.JPanel implements java.beans.C
                                     .addGap(18, 18, 18)
                                     .addComponent(rmvDuplicatesF1Btn)))))
                     .addGroup(jPanel9Layout.createSequentialGroup()
-                        .addGap(247, 247, 247)
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGroup(jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel9Layout.createSequentialGroup()
-                                .addGap(67, 67, 67)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addComponent(rmvDuplicateRemoveBtn))
                             .addGroup(jPanel9Layout.createSequentialGroup()
                                 .addComponent(jLabel17)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addComponent(rmvDuplicateResultTxtField, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)))))
-                .addContainerGap(128, Short.MAX_VALUE))
+                .addContainerGap(54, Short.MAX_VALUE))
         );
         jPanel9Layout.setVerticalGroup(
             jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel9Layout.createSequentialGroup()
-                .addContainerGap()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jLabel16)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel13)
-                .addGap(39, 39, 39)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 39, Short.MAX_VALUE)
                 .addGroup(jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(jPanel9Layout.createSequentialGroup()
                         .addGroup(jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
@@ -897,22 +897,22 @@ public class IapToolComponent extends javax.swing.JPanel implements java.beans.C
                                 .addComponent(label6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addComponent(rmvDuplicateFile1Txtfield, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addComponent(rmvDuplicatesF1Btn))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGroup(jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(rmvDuplicateFile2Txtfield, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(rmvDuplicatesF2btn)))
                     .addComponent(label8, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(label7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(rmvDuplicateOutputFileTxtField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(rmvDuplicateOutputFSearchBtn)))
-                .addGap(26, 26, 26)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 26, Short.MAX_VALUE)
                 .addGroup(jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel17)
                     .addComponent(rmvDuplicateResultTxtField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(14, 14, 14)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 14, Short.MAX_VALUE)
                 .addComponent(rmvDuplicateRemoveBtn)
                 .addContainerGap(54, Short.MAX_VALUE))
         );
@@ -975,37 +975,35 @@ public class IapToolComponent extends javax.swing.JPanel implements java.beans.C
         jPanel3Layout.setHorizontalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
-                .addGap(254, 254, 254)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jLabel12)
                 .addGap(0, 0, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
-                .addContainerGap(34, Short.MAX_VALUE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel10, javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(jLabel9, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel15, javax.swing.GroupLayout.Alignment.TRAILING))
-                .addGap(18, 41, Short.MAX_VALUE)
+                .addGap(18, 18, Short.MAX_VALUE)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(inputFileTxtField, javax.swing.GroupLayout.PREFERRED_SIZE, 325, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(outputFileTxtField, javax.swing.GroupLayout.PREFERRED_SIZE, 325, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(26, 26, 26)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 11, Short.MAX_VALUE)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jButton8)
                     .addComponent(jButton7))
-                .addGap(86, 86, 86))
+                .addContainerGap(66, Short.MAX_VALUE))
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addGap(305, 305, 305)
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(jButton9))
                     .addGroup(jPanel3Layout.createSequentialGroup()
                         .addGap(258, 258, 258)
                         .addComponent(jLabel11)
-                        .addGap(javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel3Layout.createSequentialGroup()
-                                .addComponent(wikiDataRadBtn)
-                                .addGap(6, 6, 6))
+                            .addComponent(wikiDataRadBtn)
                             .addComponent(wikiMediaRadBtn)
                             .addComponent(bothwikiBrn))))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -1015,18 +1013,19 @@ public class IapToolComponent extends javax.swing.JPanel implements java.beans.C
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jLabel12)
-                .addGap(18, 18, 18)
+                .addGap(18, 18, Short.MAX_VALUE)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(inputFileTxtField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jButton7)
                     .addComponent(jLabel10))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED, 13, Short.MAX_VALUE)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel9)
-                    .addComponent(jButton8)
-                    .addComponent(outputFileTxtField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel15))
-                .addGap(18, 18, 18)
+                    .addComponent(jButton8, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(outputFileTxtField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jLabel15)))
+                .addGap(18, 18, Short.MAX_VALUE)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel11)
                     .addComponent(wikiMediaRadBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -1034,9 +1033,9 @@ public class IapToolComponent extends javax.swing.JPanel implements java.beans.C
                 .addComponent(wikiDataRadBtn)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(bothwikiBrn)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 53, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 28, Short.MAX_VALUE)
                 .addComponent(jButton9)
-                .addGap(28, 28, 28))
+                .addContainerGap(53, Short.MAX_VALUE))
         );
 
         jTabbedPane1.addTab("AutomatAnnot", jPanel3);
@@ -1044,34 +1043,165 @@ public class IapToolComponent extends javax.swing.JPanel implements java.beans.C
         add(jTabbedPane1, java.awt.BorderLayout.CENTER);
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
-        GraphModel          graphM          = Lookup.getDefault().lookup(GraphController.class).getModel();
-        RankingController   rc              = Lookup.getDefault().lookup(RankingController.class);
-        RankingModel        rm              = rc.getModel();
-        Ranking             degreeRanking   = rm.getRanking(Ranking.NODE_ELEMENT, Ranking.DEGREE_RANKING);
+    private void jButton9ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton9ActionPerformed
 
-        //Sets degree rank, if it was not already set
-        if(degreeRanking == null){
-            AttributeModel  aM      = Lookup.getDefault().lookup(AttributeController.class).getModel();
-            Degree degree = new Degree();
-            degree.execute(graphM, aM);
-            degreeRanking   = rm.getRanking(Ranking.NODE_ELEMENT, Ranking.DEGREE_RANKING);
+        if(wikiDataRadBtn.isSelected()){
+            dataBaseType = AutomaticAnnotation.DataBaseWiki.WIKIDATA;
+        }else if(wikiMediaRadBtn.isSelected()){
+            dataBaseType = AutomaticAnnotation.DataBaseWiki.MEDIAWIKI;
+        }else if(bothwikiBrn.isSelected()){
+            dataBaseType = AutomaticAnnotation.DataBaseWiki.WIKIDATA_MEDIAWIKI;
         }
 
-        int count = 0;      //amount of isolated nodes.
-        for(Node n : graphM.getGraphVisible().getNodes()){
-            if( (int) degreeRanking.getValue(n) == 0){
-                count++;
+        if(inputFile == null || outputFile == null || dataBaseType == null){
+            return;
+        }
+
+        this.setEnabled(false);
+        final VizLincLongTask task = new VizLincLongTask("Executing automatic annotation..."){
+            @Override
+            public void execute()
+            {
+                ProgressTicket pt = this.getProgressTicket();
+                Progress.setDisplayName(pt, "Executing automatic annotation...");
+
+                try {
+                    iap.AutomaticAnnotation automaticAnnotation = new AutomaticAnnotation(this);
+                    automaticAnnotation.setInputFile(inputFile);
+                    automaticAnnotation.setOutputFile(outputFile);
+                    automaticAnnotation.setWikiToUse(dataBaseType);
+                    automaticAnnotation.execute();
+                } catch (Exception ex) {
+                    JOptionPane.showMessageDialog(null, ex, "File Error", JOptionPane.ERROR_MESSAGE);
+                }
+            }
+        };
+        task.run();
+        this.setEnabled(true);
+    }//GEN-LAST:event_jButton9ActionPerformed
+
+    private void jButton8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton8ActionPerformed
+        try {
+            outputFile =  iap.Utils.selectAnOutputFile();
+
+        } catch (IOException ex) {
+            Exceptions.printStackTrace(ex);
+        }
+    }//GEN-LAST:event_jButton8ActionPerformed
+
+    private void wikiDataRadBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_wikiDataRadBtnActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_wikiDataRadBtnActionPerformed
+
+    private void jButton7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton7ActionPerformed
+
+        inputFile = iap.Utils.selectAnInputFile();
+    }//GEN-LAST:event_jButton7ActionPerformed
+
+    private void rmvDuplicateRemoveBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rmvDuplicateRemoveBtnActionPerformed
+        iap.RemoveDuplicatesLinesInfile duplicateRemover = new RemoveDuplicatesLinesInfile();
+        try {
+            duplicateRemover.execute(rmvDupFile1, rmvDupFile2, rmvDupOutputFile);
+            rmvDuplicateResultTxtField.setText(duplicateRemover.getAmountOfRemovedLines() + "");
+        } catch (IOException ex) {
+            JOptionPane.showMessageDialog(null, ex);
+        }
+    }//GEN-LAST:event_rmvDuplicateRemoveBtnActionPerformed
+
+    private void rmvDuplicateOutputFSearchBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rmvDuplicateOutputFSearchBtnActionPerformed
+        try {
+            rmvDupOutputFile = iap.Utils.selectAnOutputFile();
+            if(rmvDupOutputFile != null ){
+                rmvDuplicateOutputFileTxtField.setText(rmvDupOutputFile.getPath());
+                if(rmvDupFile2 != null && rmvDupFile1 != null)
+                rmvDuplicateRemoveBtn.setEnabled(true);
+            }
+        } catch (IOException ex) {
+            Exceptions.printStackTrace(ex);
+        }
+
+    }//GEN-LAST:event_rmvDuplicateOutputFSearchBtnActionPerformed
+
+    private void rmvDuplicatesF2btnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rmvDuplicatesF2btnActionPerformed
+        rmvDupFile2 = iap.Utils.selectAnInputFile();
+        if(rmvDupFile2 != null ){
+            rmvDuplicateFile2Txtfield.setText(rmvDupFile2.getPath());
+            if(rmvDupFile1 != null && rmvDupOutputFile != null)
+            rmvDuplicateRemoveBtn.setEnabled(true);
+        }
+    }//GEN-LAST:event_rmvDuplicatesF2btnActionPerformed
+
+    private void rmvDuplicatesF1BtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rmvDuplicatesF1BtnActionPerformed
+        rmvDupFile1 = iap.Utils.selectAnInputFile();
+
+        if(rmvDupFile1 != null ){
+            rmvDuplicateFile1Txtfield.setText(rmvDupFile1.getPath());
+            if(rmvDupFile2 != null && rmvDupOutputFile != null)
+            rmvDuplicateRemoveBtn.setEnabled(true);
+        }
+    }//GEN-LAST:event_rmvDuplicatesF1BtnActionPerformed
+
+    private void rmvDuplicateFile1TxtfieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rmvDuplicateFile1TxtfieldActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_rmvDuplicateFile1TxtfieldActionPerformed
+
+    private void rankingSavingSaveBtn1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rankingSavingSaveBtn1ActionPerformed
+        if(rankingSavingOutputFile == null){
+            JOptionPane.showMessageDialog(null, "An output file have to be selected");
+            return;
+        }
+
+        Graph graph = Lookup.getDefault().lookup(GraphController.class).getModel().getGraphVisible();
+
+        ArrayList<Ranking> ranks = new ArrayList();
+        setMetricAvrgNeighList(ranks);
+
+        if(ranks.size() > 0){
+            try {
+                BufferedWriter writer = new BufferedWriter(new FileWriter(rankingSavingOutputFile));
+
+                //writhe name of the matrics
+                writer.write("label");
+                for(Ranking rank : ranks){
+                    writer.write("," + rank.getDisplayName());
+                }
+                writer.newLine();
+
+                if(rankingSavingInputFile == null){
+                    for(Node node : graph.getNodes()){
+                        writer.write(node.getNodeData().getLabel());                //write name of the person
+                        for(Ranking rank : ranks){
+                            writer.write("," + rank.getValue(node).toString());
+                        }
+                        writer.newLine();
+                        writer.flush();
+                    }
+                }else{
+                    HashMap<String, Node> labelToNodeMap = iap.Utils.getLabelToNodeMap();
+                    BufferedReader reader = new BufferedReader(new FileReader(rankingSavingInputFile));
+                    String line;
+                    while((line = reader.readLine()) != null){                                                  //go trought the whole input file
+                        String nodeLabelInFile = line.split(",")[0].trim().toUpperCase();                       //extract node lable from the input file
+                        if(labelToNodeMap.containsKey(nodeLabelInFile)){                                        //save the result only if the input node exist in the graph
+
+                            String line2Write = line;
+                            for(Ranking rank :ranks){
+                                line2Write += "," + rank.getValue(labelToNodeMap.get(nodeLabelInFile));
+                            }
+                            writer.write(line2Write);
+                            writer.newLine();
+                            writer.flush();
+                        }
+                    }
+                }
+                writer.close();
+            } catch (IOException ex) {
+                Exceptions.printStackTrace(ex);
             }
         }
 
-        micResultTxtField.setText("Amount of isolated nodes = " + count);
-    }//GEN-LAST:event_jButton5ActionPerformed
-
-    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
-        Graph graph = Lookup.getDefault().lookup(GraphController.class).getModel().getGraphVisible();
-        micResultTxtField.setText("Amount of edges in graph: " + graph.getEdgeCount());
-    }//GEN-LAST:event_jButton4ActionPerformed
+        JOptionPane.showMessageDialog(null, "Finish");
+    }//GEN-LAST:event_rankingSavingSaveBtn1ActionPerformed
 
     private void rankingSavingSearchBtn1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rankingSavingSearchBtn1ActionPerformed
         rankingSavingInputFile = iap.Utils.selectAnInputFile();
@@ -1179,7 +1309,6 @@ public class IapToolComponent extends javax.swing.JPanel implements java.beans.C
                 Exceptions.printStackTrace(ex);
             }
         }*/
-
     }//GEN-LAST:event_rankingSavingSaveBtnActionPerformed
 
     private void rankingSavingSearchBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rankingSavingSearchBtnActionPerformed
@@ -1193,6 +1322,126 @@ public class IapToolComponent extends javax.swing.JPanel implements java.beans.C
             Exceptions.printStackTrace(ex);
         }
     }//GEN-LAST:event_rankingSavingSearchBtnActionPerformed
+
+    private void metricAvrgRunBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_metricAvrgRunBtnActionPerformed
+        Graph graph = Lookup.getDefault().lookup(GraphController.class).getModel().getGraphVisible();
+
+        ArrayList<Ranking> ranks = new ArrayList();
+        setRanksToUseForMetricAvrg(ranks);
+
+        GraphManager.getInstance().metricAvrgOfNeighbors(ranks);
+
+    }//GEN-LAST:event_metricAvrgRunBtnActionPerformed
+
+    private void rmvIsolatedNodesOutputFileSearchBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rmvIsolatedNodesOutputFileSearchBtnActionPerformed
+        try {
+            rmvIsolatedNOutputfile = iap.Utils.selectAnOutputFile();
+            if(rmvIsolatedNOutputfile != null){
+                rmvIsolatedNodeOutputFieldTxtField.setText(rmvIsolatedNOutputfile.getPath());
+            }
+        } catch (IOException ex) {
+            JOptionPane.showMessageDialog(null, ex);
+        }
+
+    }//GEN-LAST:event_rmvIsolatedNodesOutputFileSearchBtnActionPerformed
+
+    private void rmvIsolatedNodeRemoveBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rmvIsolatedNodeRemoveBtnActionPerformed
+        iap.RemoveIsolatedNodes rmvIsolatedNodes = new RemoveIsolatedNodes();
+        try {
+            if(rmvIsolatedNOutputfile == null){
+                rmvIsolatedNodes.execute(rmvIsolatedNFile);
+            }else{
+                rmvIsolatedNodes.execute(rmvIsolatedNFile, rmvIsolatedNOutputfile);
+            }
+            JOptionPane.showMessageDialog(null, "Finish");
+
+        } catch (IOException ex) {
+            JOptionPane.showMessageDialog(null, ex);
+        }
+    }//GEN-LAST:event_rmvIsolatedNodeRemoveBtnActionPerformed
+
+    private void rmvIsolatedNodesSearchBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rmvIsolatedNodesSearchBtnActionPerformed
+        rmvIsolatedNFile = iap.Utils.selectAnInputFile();
+        if(rmvIsolatedNFile != null){
+            rmvIsolatedNodeRemoveBtn.setEnabled(true);
+            rmvIsolatedNodeInputFieldTxtField.setText(rmvIsolatedNFile.getPath());
+        }
+    }//GEN-LAST:event_rmvIsolatedNodesSearchBtnActionPerformed
+
+    private void rmvIsolatedNodesBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rmvIsolatedNodesBtnActionPerformed
+        //Get the graph
+        Graph graph = Lookup.getDefault().lookup(GraphController.class).getModel().getGraph();
+        Ranking degreeRank = Lookup.getDefault().lookup(RankingController.class).getModel().getRanking(Ranking.NODE_ELEMENT, Ranking.DEGREE_RANKING);
+        LinkedList<Node> node2Rmv = new LinkedList();
+        //iterate trough all the nodes, if the degree is = 0 remove ir
+        int counter = 0;
+        for(Node n : graph.getNodes()){
+            int degree = (int)degreeRank.getValue(n);
+            if(degree == 0){
+                node2Rmv.add(n);
+                counter++;
+            }
+        }
+
+        for(Node n : node2Rmv){
+            graph.removeNode(n);
+        }
+        micResultTxtField.setText("Removed nodes: " + counter);
+    }//GEN-LAST:event_rmvIsolatedNodesBtnActionPerformed
+
+    private void rmvnodesNotInGrapgBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rmvnodesNotInGrapgBtnActionPerformed
+        File inputFile = iap.Utils.selectAnInputFile();
+
+        if(inputFile != null){
+            try {
+                ArrayList<String>       result          = new ArrayList();
+                HashMap<String, Node>   labelToNodeMap  = iap.Utils.getLabelToNodeMap();
+                HashMap<String, String> labelToLine     = iap.Utils.getLabelsToLineMap(inputFile);
+
+                for(String label : labelToLine.keySet()){
+                    if(labelToNodeMap.containsKey(label.toUpperCase())){
+                        result.add(labelToLine.get(label));
+                    }
+                }
+
+                iap.Utils.writeListToFile(result, inputFile);
+
+                JOptionPane.showMessageDialog(null, "Finish");
+            } catch (IOException ex) {
+                Exceptions.printStackTrace(ex);
+            }
+
+        }
+    }//GEN-LAST:event_rmvnodesNotInGrapgBtnActionPerformed
+
+    private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
+        GraphModel          graphM          = Lookup.getDefault().lookup(GraphController.class).getModel();
+        RankingController   rc              = Lookup.getDefault().lookup(RankingController.class);
+        RankingModel        rm              = rc.getModel();
+        Ranking             degreeRanking   = rm.getRanking(Ranking.NODE_ELEMENT, Ranking.DEGREE_RANKING);
+
+        //Sets degree rank, if it was not already set
+        if(degreeRanking == null){
+            AttributeModel  aM      = Lookup.getDefault().lookup(AttributeController.class).getModel();
+            Degree degree = new Degree();
+            degree.execute(graphM, aM);
+            degreeRanking   = rm.getRanking(Ranking.NODE_ELEMENT, Ranking.DEGREE_RANKING);
+        }
+
+        int count = 0;      //amount of isolated nodes.
+        for(Node n : graphM.getGraphVisible().getNodes()){
+            if( (int) degreeRanking.getValue(n) == 0){
+                count++;
+            }
+        }
+
+        micResultTxtField.setText("Amount of isolated nodes = " + count);
+    }//GEN-LAST:event_jButton5ActionPerformed
+
+    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
+        Graph graph = Lookup.getDefault().lookup(GraphController.class).getModel().getGraphVisible();
+        micResultTxtField.setText("Amount of edges in graph: " + graph.getEdgeCount());
+    }//GEN-LAST:event_jButton4ActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
         if(leadAnnotOutputFile == null || leadAnnotInputFile == null){
@@ -1241,197 +1490,6 @@ public class IapToolComponent extends javax.swing.JPanel implements java.beans.C
         leadAnnotInputFile = iap.Utils.selectAnInputFile(new FileNameExtensionFilter("Comma Separated Value", "csv"));
         inputFileTxtFieldLeadshipAnnot.setText(leadAnnotInputFile.getPath());
     }//GEN-LAST:event_jButton1ActionPerformed
-
-    private void jButton9ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton9ActionPerformed
-
-        if(wikiDataRadBtn.isSelected()){
-            dataBaseType = AutomaticAnnotation.DataBaseWiki.WIKIDATA;
-        }else if(wikiMediaRadBtn.isSelected()){
-            dataBaseType = AutomaticAnnotation.DataBaseWiki.MEDIAWIKI;
-        }else if(bothwikiBrn.isSelected()){
-            dataBaseType = AutomaticAnnotation.DataBaseWiki.WIKIDATA_MEDIAWIKI;
-        }
-
-        if(inputFile == null || outputFile == null || dataBaseType == null){
-            return;
-        }
-
-        this.setEnabled(false);
-        final VizLincLongTask task = new VizLincLongTask("Executing automatic annotation..."){
-            @Override
-            public void execute()
-            {
-                ProgressTicket pt = this.getProgressTicket();
-                Progress.setDisplayName(pt, "Executing automatic annotation...");
-
-                try {
-                    iap.AutomaticAnnotation automaticAnnotation = new AutomaticAnnotation(this);
-                    automaticAnnotation.setInputFile(inputFile);
-                    automaticAnnotation.setOutputFile(outputFile);
-                    automaticAnnotation.setWikiToUse(dataBaseType);
-                    automaticAnnotation.execute();
-                } catch (Exception ex) {
-                    JOptionPane.showMessageDialog(null, ex, "File Error", JOptionPane.ERROR_MESSAGE);
-                }
-            }
-        };
-        task.run();
-        this.setEnabled(true);
-    }//GEN-LAST:event_jButton9ActionPerformed
-
-    private void jButton8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton8ActionPerformed
-        try {
-            outputFile =  iap.Utils.selectAnOutputFile();
-
-        } catch (IOException ex) {
-            Exceptions.printStackTrace(ex);
-        }
-    }//GEN-LAST:event_jButton8ActionPerformed
-
-    private void wikiDataRadBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_wikiDataRadBtnActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_wikiDataRadBtnActionPerformed
-
-    private void jButton7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton7ActionPerformed
-
-        inputFile = iap.Utils.selectAnInputFile();
-    }//GEN-LAST:event_jButton7ActionPerformed
-
-    private void rmvIsolatedNodesSearchBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rmvIsolatedNodesSearchBtnActionPerformed
-        rmvIsolatedNFile = iap.Utils.selectAnInputFile();
-        if(rmvIsolatedNFile != null){
-            rmvIsolatedNodeRemoveBtn.setEnabled(true);
-            rmvIsolatedNodeInputFieldTxtField.setText(rmvIsolatedNFile.getPath());
-        }
-    }//GEN-LAST:event_rmvIsolatedNodesSearchBtnActionPerformed
-
-    private void rmvIsolatedNodeRemoveBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rmvIsolatedNodeRemoveBtnActionPerformed
-        iap.RemoveIsolatedNodes rmvIsolatedNodes = new RemoveIsolatedNodes();
-        try {
-            if(rmvIsolatedNOutputfile == null){
-                rmvIsolatedNodes.execute(rmvIsolatedNFile);
-            }else{
-                rmvIsolatedNodes.execute(rmvIsolatedNFile, rmvIsolatedNOutputfile);
-            }
-            JOptionPane.showMessageDialog(null, "Finish");
-            
-        } catch (IOException ex) {
-            JOptionPane.showMessageDialog(null, ex);
-        }
-    }//GEN-LAST:event_rmvIsolatedNodeRemoveBtnActionPerformed
-
-    private void rmvIsolatedNodesOutputFileSearchBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rmvIsolatedNodesOutputFileSearchBtnActionPerformed
-        try {
-            rmvIsolatedNOutputfile = iap.Utils.selectAnOutputFile();
-            if(rmvIsolatedNOutputfile != null){
-            rmvIsolatedNodeOutputFieldTxtField.setText(rmvIsolatedNOutputfile.getPath());
-        }
-        } catch (IOException ex) {
-            JOptionPane.showMessageDialog(null, ex);
-        }
-        
-    }//GEN-LAST:event_rmvIsolatedNodesOutputFileSearchBtnActionPerformed
-
-    private void rmvDuplicatesF1BtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rmvDuplicatesF1BtnActionPerformed
-        rmvDupFile1 = iap.Utils.selectAnInputFile();
-        
-        if(rmvDupFile1 != null ){
-            rmvDuplicateFile1Txtfield.setText(rmvDupFile1.getPath());
-            if(rmvDupFile2 != null && rmvDupOutputFile != null)
-                rmvDuplicateRemoveBtn.setEnabled(true);
-        }
-    }//GEN-LAST:event_rmvDuplicatesF1BtnActionPerformed
-
-    private void rmvDuplicatesF2btnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rmvDuplicatesF2btnActionPerformed
-        rmvDupFile2 = iap.Utils.selectAnInputFile();
-        if(rmvDupFile2 != null ){
-            rmvDuplicateFile2Txtfield.setText(rmvDupFile2.getPath());
-            if(rmvDupFile1 != null && rmvDupOutputFile != null)
-                rmvDuplicateRemoveBtn.setEnabled(true);
-        }
-    }//GEN-LAST:event_rmvDuplicatesF2btnActionPerformed
-
-    private void rmvDuplicateOutputFSearchBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rmvDuplicateOutputFSearchBtnActionPerformed
-        try {
-            rmvDupOutputFile = iap.Utils.selectAnOutputFile();
-            if(rmvDupOutputFile != null ){
-                rmvDuplicateOutputFileTxtField.setText(rmvDupOutputFile.getPath());
-                if(rmvDupFile2 != null && rmvDupFile1 != null)
-                    rmvDuplicateRemoveBtn.setEnabled(true);
-            }
-        } catch (IOException ex) {
-            Exceptions.printStackTrace(ex);
-        }
-        
-        
-    }//GEN-LAST:event_rmvDuplicateOutputFSearchBtnActionPerformed
-
-    private void rmvDuplicateRemoveBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rmvDuplicateRemoveBtnActionPerformed
-        iap.RemoveDuplicatesLinesInfile duplicateRemover = new RemoveDuplicatesLinesInfile();
-        try {
-            duplicateRemover.execute(rmvDupFile1, rmvDupFile2, rmvDupOutputFile);
-            rmvDuplicateResultTxtField.setText(duplicateRemover.getAmountOfRemovedLines() + "");
-        } catch (IOException ex) {
-            JOptionPane.showMessageDialog(null, ex);
-        }
-    }//GEN-LAST:event_rmvDuplicateRemoveBtnActionPerformed
-
-    private void rmvnodesNotInGrapgBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rmvnodesNotInGrapgBtnActionPerformed
-        File inputFile = iap.Utils.selectAnInputFile();
-        
-        if(inputFile != null){
-            try {
-                ArrayList<String>       result          = new ArrayList();
-                HashMap<String, Node>   labelToNodeMap  = iap.Utils.getLabelToNodeMap();
-                HashMap<String, String> labelToLine     = iap.Utils.getLabelsToLineMap(inputFile);
-                
-                for(String label : labelToLine.keySet()){
-                    if(labelToNodeMap.containsKey(label.toUpperCase())){
-                        result.add(labelToLine.get(label));
-                    }
-                }
-                
-                iap.Utils.writeListToFile(result, inputFile);
-                
-                JOptionPane.showMessageDialog(null, "Finish");
-            } catch (IOException ex) {
-                Exceptions.printStackTrace(ex);
-            }
-            
-        }
-    }//GEN-LAST:event_rmvnodesNotInGrapgBtnActionPerformed
-
-    private void rmvIsolatedNodesBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rmvIsolatedNodesBtnActionPerformed
-        //Get the graph
-        Graph graph = Lookup.getDefault().lookup(GraphController.class).getModel().getGraph();
-        Ranking degreeRank = Lookup.getDefault().lookup(RankingController.class).getModel().getRanking(Ranking.NODE_ELEMENT, Ranking.DEGREE_RANKING);
-        LinkedList<Node> node2Rmv = new LinkedList();
-        //iterate trough all the nodes, if the degree is = 0 remove ir
-        int counter = 0;
-        for(Node n : graph.getNodes()){
-            int degree = (int)degreeRank.getValue(n);
-            if(degree == 0){
-                node2Rmv.add(n);
-                counter++;
-            }
-        }
-        
-        for(Node n : node2Rmv){
-            graph.removeNode(n);
-        }
-        micResultTxtField.setText("Removed nodes: " + counter);
-    }//GEN-LAST:event_rmvIsolatedNodesBtnActionPerformed
-
-    private void metricAvrgRunBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_metricAvrgRunBtnActionPerformed
-        Graph graph = Lookup.getDefault().lookup(GraphController.class).getModel().getGraphVisible();
-
-        ArrayList<Ranking> ranks = new ArrayList();
-        setRanksToUseForMetricAvrg(ranks);
-        
-        GraphManager.getInstance().metricAvrgOfNeighbors(ranks);
-
-        
-    }//GEN-LAST:event_metricAvrgRunBtnActionPerformed
     
     private void setMetricAvrgNeighList(ArrayList<Ranking> ranks){
         RankingController rankingController = Lookup.getDefault().lookup(RankingController.class);
@@ -1462,68 +1520,6 @@ public class IapToolComponent extends javax.swing.JPanel implements java.beans.C
                 ranks.add(rankModel.getRanking(Ranking.NODE_ELEMENT, iap.MetricAvrgOfNeighbors.NEIGHBORS_METRIC_AVRG + WeightedDegree.WDEGREE));
         
     }
-    private void rankingSavingSaveBtn1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rankingSavingSaveBtn1ActionPerformed
-        if(rankingSavingOutputFile == null){
-            JOptionPane.showMessageDialog(null, "An output file have to be selected");
-            return;
-        }
-
-        Graph graph = Lookup.getDefault().lookup(GraphController.class).getModel().getGraphVisible();
-
-        ArrayList<Ranking> ranks = new ArrayList();
-        setMetricAvrgNeighList(ranks);
-
-        if(ranks.size() > 0){
-            try {
-                BufferedWriter writer = new BufferedWriter(new FileWriter(rankingSavingOutputFile));
-
-                //writhe name of the matrics
-                writer.write("label");
-                for(Ranking rank : ranks){
-                    writer.write("," + rank.getDisplayName());
-                }
-                writer.newLine();
-
-                if(rankingSavingInputFile == null){
-                    for(Node node : graph.getNodes()){
-                        writer.write(node.getNodeData().getLabel());                //write name of the person
-                        for(Ranking rank : ranks){
-                            writer.write("," + rank.getValue(node).toString());
-                        }
-                        writer.newLine();
-                        writer.flush();
-                    }
-                }else{
-                    HashMap<String, Node> labelToNodeMap = iap.Utils.getLabelToNodeMap();
-                    BufferedReader reader = new BufferedReader(new FileReader(rankingSavingInputFile));
-                    String line;
-                    while((line = reader.readLine()) != null){                                                  //go trought the whole input file
-                        String nodeLabelInFile = line.split(",")[0].trim().toUpperCase();                       //extract node lable from the input file
-                        if(labelToNodeMap.containsKey(nodeLabelInFile)){                                        //save the result only if the input node exist in the graph
-
-                            String line2Write = line;
-                            for(Ranking rank :ranks){
-                                line2Write += "," + rank.getValue(labelToNodeMap.get(nodeLabelInFile));
-                            }
-                            writer.write(line2Write);
-                            writer.newLine();
-                            writer.flush();
-                        }
-                    }
-                }
-                writer.close();
-            } catch (IOException ex) {
-                Exceptions.printStackTrace(ex);
-            }
-        }
-
-        JOptionPane.showMessageDialog(null, "Finish");
-    }//GEN-LAST:event_rankingSavingSaveBtn1ActionPerformed
-
-    private void rmvDuplicateFile1TxtfieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rmvDuplicateFile1TxtfieldActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_rmvDuplicateFile1TxtfieldActionPerformed
-
     private void setRanksToSave(ArrayList<Ranking> ranks){
         RankingController rankingController = Lookup.getDefault().lookup(RankingController.class);
         RankingModel rankModel = rankingController.getModel();
